@@ -1,0 +1,192 @@
+/* PrototypeView.module.css */
+
+/* 全体レイアウト */
+.pageContainer {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f9fafb;
+}
+
+.mainContent {
+  flex-grow: 1;
+}
+
+.contentWrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ヘッダー */
+.header {
+  background-color: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.headerInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  display: flex;
+  flex-direction: column;
+}
+
+.logoTop {
+  font-size: 0.75rem;
+  color: #6b7280;
+  letter-spacing: 0.1em;
+}
+
+.logoBottom {
+  font-size: 1.875rem;
+  color: #374151;
+  font-weight: 300;
+  letter-spacing: -0.025em;
+}
+
+.logoAccent {
+  color: #bfdbfe;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.logoutLink {
+  font-size: 0.875rem;
+  color: #60a5fa;
+  text-decoration: none;
+}
+
+.logoutLink:hover {
+  color: #2563eb;
+}
+
+.newProtoBtn {
+  padding: 8px 20px;
+  font-size: 0.875rem;
+  color: #60a5fa;
+  background-color: transparent;
+  border: 1px solid #93c5fd;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.newProtoBtn:hover {
+  background-color: #eff6ff;
+}
+
+/* 挨拶エリア */
+.greetingArea {
+  padding: 40px 0;
+}
+
+.greetingText {
+  font-size: 1.125rem;
+  color: #1f2937;
+}
+
+.userName {
+  color: #4b5563;
+  text-decoration: underline;
+}
+
+.userName:hover {
+  color: #111827;
+}
+
+/* グリッドとカード */
+.gridContainer {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  column-gap: 40px;
+  row-gap: 64px;
+  padding-bottom: 80px;
+}
+
+@media (min-width: 768px) {
+  .gridContainer {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+}
+
+.imageWrapper {
+  width: 100%;
+  aspect-ratio: 16 / 9; /* 画像の縦横比を固定 */
+  background-color: #cffafe;
+  border: 1px solid #f3f4f6;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  overflow: hidden;
+  position: relative; /* next/imageのfillを使用するために必須 */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.cardContent {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 4px;
+}
+
+.cardTitle {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #111827;
+  margin: 0;
+}
+
+.cardCatchcopy {
+  font-size: 0.875rem;
+  color: #4b5563;
+  margin: 0 0 8px 0;
+}
+
+.cardAuthor {
+  text-align: right;
+}
+
+.authorLink {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  text-decoration: underline;
+}
+
+.authorLink:hover {
+  color: #4b5563;
+}
+
+/* フッター */
+.footer {
+  background-color: #6b7280;
+  margin-top: 80px;
+}
+
+.footerInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px 24px;
+  text-align: center;
+}
+
+.footerText {
+  font-size: 0.75rem;
+  color: #ffffff;
+  opacity: 0.8;
+  margin: 0;
+}

@@ -1,8 +1,7 @@
-import { apiClient } from './apiClient';
+import apiClient from './apiClient';
 import { PrototypeData } from './prototypeData';
 
-
-export const getPrototypes = async (): Promise<PrototypeData[]> => {
-  const response = await apiClient.get<PrototypeData[]>('/prototypes/');
+export const fetchPrototypes = async (): Promise<PrototypeData[]> => {
+  const response = await apiClient.get('/api/prototypes');
   return response.data;
 };

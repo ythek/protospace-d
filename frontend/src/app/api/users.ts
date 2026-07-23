@@ -1,11 +1,27 @@
 import axios from 'axios';
-import { responseCookiesToRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies';
 import qs from 'qs';
 
 const api = axios.create({
   baseURL: 'http://localhost:8080/api',
   withCredentials: true,
 });
+
+// 401が返ったときの処理
+api.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      // ローカルに残っているユーザー情報を消す
+      localStorage.removeItem('user'); 
+      // ログイン画面に飛ばす
+      window.location.href = '/login';
+    }
+
+    return Promise.reject(error);
+  }
+);
 
 interface SignUpForm {
   email: string;
@@ -81,3 +97,5 @@ export const logout = async (): Promise<void> => {
     }
   }
 };
+
+export default api;

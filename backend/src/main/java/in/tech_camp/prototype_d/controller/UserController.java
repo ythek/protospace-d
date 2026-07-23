@@ -2,9 +2,7 @@ package in.tech_camp.prototype_d.controller;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -38,19 +36,8 @@ public class UserController {
       result.rejectValue("email", "null", "Email already exists");
     }
 
-    if (result.hasErrors()) {
-      List<String> errorMessages = result.getAllErrors().stream()
-              .map(DefaultMessageSourceResolvable::getDefaultMessage)
-              .collect(Collectors.toList());
-      return ResponseEntity.badRequest().body(Map.of("messages", errorMessages));
-    }
-
-    // 値を詰める
-    UserEntity userEntity = userService.setUserData(userForm);
-
-    // パスワード暗号化してDB登録
     try {
-      userService.createUserWithEncryptedPassword(userEntity);
+      UserEntity userEntity = userService.registerUser(userForm);
       return ResponseEntity.ok().body(Map.of(
         "id", userEntity.getId(),
         "username", userEntity.getUsername()

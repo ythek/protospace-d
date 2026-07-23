@@ -2,6 +2,7 @@ package in.tech_camp.prototype_d.service;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import in.tech_camp.prototype_d.entity.AffiliationEntity;
 import in.tech_camp.prototype_d.entity.PositionEntity;
@@ -20,44 +21,45 @@ public class UserService {
   private final PositionRepository positionRepository;
   private final PasswordEncoder passwordEncoder;
 
-  public void createUserWithEncryptedPassword(UserEntity userEntity) {
-    String encodedPassword = encodePassword(userEntity.getPassword());
-    userEntity.setPassword(encodedPassword);
+  @Transactional
+      public UserEntity registerUser(UserForm userForm) {
 
-    // 所属のIDを取得（無ければ新規作成)
-    Integer affiliationId = affiliationRepository.findIdByName(userEntity.getAffiliation());
-        if (affiliationId == null) {
-            AffiliationEntity newAffiliation = new AffiliationEntity();
-            newAffiliation.setAffiliationName(userEntity.getAffiliation());
-            affiliationRepository.insert(newAffiliation); // ここでDBに保存され、IDが発行される
-            affiliationId = newAffiliation.getId(); // 発行されたIDを取得
-        }
+          //所属（affiliation）テーブルへ登録
+          Integer affiliationId = affiliationRepository.findIdByName(userForm.getAffiliation());
+          if (affiliationId == null) {
+              AffiliationEntity affiliation = new AffiliationEntity();
+              affiliation.setAffiliationName(userForm.getAffiliation());
+              affiliationRepository.insert(affiliation); // ここでDBに保存され、IDが発行される
+              affiliationId = affiliation.getId(); // 発行されたIDを取得
+          }
+          
+          //役職（Position）テーブルへ登録
+          Integer positionId = positionRepository.findIdByName(userForm.getPosition());
+          if (positionId == null) {
+              PositionEntity position = new PositionEntity();
+              position.setPositionName(userForm.getPosition());
+              positionRepository.insert(position); // ここでDBに保存され、IDが発行される
+              positionId = position.getId(); // 発行されたIDを取得
+          }
 
-    // 役職のIDを取得（無ければ新規作成）
-    Integer positionId = positionRepository.findIdByName(userEntity.getPosition());
-        if (positionId == null) {
-            PositionEntity newPosition = new PositionEntity();
-            newPosition.setPositionName(userEntity.getPosition());
-            positionRepository.insert(newPosition); // ここでDBに保存され、IDが発行される
-            positionId = newPosition.getId(); // 発行されたIDを取得
-        }
-    userEntity.setAffiliationId(affiliationId);
-    userEntity.setPositionId(positionId);
-    userRepository.insert(userEntity);
-  }
+          createUserWithEncryptedPassword(userForm);
 
-    public UserEntity setUserData(UserForm userForm){
-            UserEntity userEntity = new UserEntity();
-            userEntity.setEmail(userForm.getEmail());
-            userEntity.setPassword(userForm.getPassword());
-            userEntity.setUsername(userForm.getUsername());
-            userEntity.setProfile(userForm.getProfile());
-            userEntity.setAffiliation(userForm.getAffiliation());
-            userEntity.setPosition(userForm.getPosition());
-            return userEntity;
+          UserEntity userEntity = new UserEntity();
+          userEntity.setEmail(userForm.getEmail());
+          userEntity.setPassword(userForm.getPassword());
+          userEntity.setUsername(userForm.getUsername());
+          userEntity.setProfile(userForm.getProfile());
+          userEntity.setAffiliationId(affiliationId);
+          userEntity.setPositionId(positionId);
+
+          userRepository.insert(userEntity);
+          return userEntity;
+      }
+
+  private void createUserWithEncryptedPassword(UserForm userForm) {
+    String encodedPassword = encodePassword(userForm.getPassword());
+    userForm.setPassword(encodedPassword);
     }
-
-
 
   private String encodePassword(String password) {
     return passwordEncoder.encode(password);

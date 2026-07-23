@@ -3,10 +3,27 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
+import { useAuthContext } from "../context/AuthContext";
+import { useRouter } from "next/navigation";
+import { logout } from "../api/users";
 
 export default function Header() {
-  // 仮のログイン状態（実際はバックエンドと連携）
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const router = useRouter();
+
+  // ログイン状態
+  const {user, logout} = useAuthContext();
+  const isLoggedIn = user?.isAuthenticated ?? false;
+
+  // ログアウト処理
+  const handleLogout = async () => {
+    try {
+      await logout();
+      router.push('/'); 
+    } catch (error) {
+      console.error('ログアウト処理に失敗しました:', error);
+      alert('ログアウトに失敗しました。もう一度お試しください。');
+    }
+  };
 
   return (
     <header style={{ display: 'flex', justifyContent: 'space-between', padding: '20px 40px', backgroundColor: '#eef6fc', alignItems: 'center' }}>
@@ -26,10 +43,8 @@ export default function Header() {
         {isLoggedIn ? (
           // ログイン時の表示
           <>
-            <button 
-              onClick={() => setIsLoggedIn(false)} 
-              style={{ border: 'none', background: 'none', color: '#30a3f0', cursor: 'pointer', fontSize: '14px' }}
-            >
+            <button onClick={handleLogout}
+              style={{ border: 'none', background: 'none', color: '#30a3f0', cursor: 'pointer', fontSize: '14px' }}>
               ログアウト
             </button>
             <Link href="/new" style={{ border: '1px solid #30a3f0', color: '#30a3f0', padding: '8px 24px', textDecoration: 'none', fontSize: '14px', backgroundColor: 'transparent' }}>
@@ -39,10 +54,10 @@ export default function Header() {
         ) : (
           // ログアウト時の表示
           <>
-            <Link href="/login" style={{ border: 'none', background: 'none', color: '#30a3f0', cursor: 'pointer', fontSize: '14px', textDecoration: 'none' }}>
+            <Link href="/users/sign_in" style={{ border: '1px solid #30a3f0', color: '#30a3f0', padding: '8px 24px', textDecoration: 'none', fontSize: '14px', backgroundColor: 'transparent' }}>
               ログイン
             </Link>
-            <Link href="/register" style={{ border: '1px solid #30a3f0', color: '#30a3f0', padding: '8px 24px', textDecoration: 'none', fontSize: '14px', backgroundColor: 'transparent' }}>
+            <Link href="/users/sign_up" style={{ border: '1px solid #30a3f0', color: '#30a3f0', padding: '8px 24px', textDecoration: 'none', fontSize: '14px', backgroundColor: 'transparent' }}>
               新規登録
             </Link>
           </>

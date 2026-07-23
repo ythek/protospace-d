@@ -2,7 +2,6 @@
 "use client";
 
 import Link from 'next/link'
-import { } from '../lib/prototypeData';
 import styles from './PrototypeDetail.module.css';
 import React, { useEffect, useState } from 'react';
 
@@ -19,7 +18,7 @@ import React, { useEffect, useState } from 'react';
 
 interface Props{
   prototype: PrototypeData;
-  currentUserName?: String | null; //ログイン中のユーザー名OR　NULL
+  currentUserName?: string | null; //ログイン中のユーザー名OR　NULL
 }
  
 export default function PrototypeDetail ({ prototype, currentUserName }: Props )  {

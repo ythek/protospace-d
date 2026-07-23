@@ -20,8 +20,6 @@ public class CustomUserDetail implements UserDetails {
         return user;
     }
 
-    // --- 以下、UserDetails インターフェースの必須メソッド ---
-
     @Override
     public String getUsername() {
         // UserEntity の email または名前などをユーザー名として返します

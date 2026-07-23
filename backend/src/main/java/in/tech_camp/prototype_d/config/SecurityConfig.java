@@ -9,8 +9,8 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import java.util.List; // ★追加
-import org.springframework.web.cors.CorsConfiguration; // ★追加
+import java.util.List;
+import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
 @EnableWebSecurity
@@ -23,7 +23,6 @@ public class SecurityConfig {
                 .cors(cors -> cors
                     .configurationSource(request -> {
                         var corsConfiguration = new CorsConfiguration();
-                        // ★ 3001番ポートや 127.0.0.1 からのアクセスも許可
                         corsConfiguration.setAllowedOrigins(List.of(
                             "http://localhost:3000", 
                             "http://localhost:3001",
@@ -36,17 +35,19 @@ public class SecurityConfig {
                     })
                 )
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        // ここに記述されたGETリクエストは許可されます（ログイン不要です）
+                        // GETリクエスト（閲覧系）は全員に許可
                         .requestMatchers(HttpMethod.GET, "/css/**", "/images/**", "/users/sign_up", "/users/login", "/tweets/{id:[0-9]+}", "/users/{id:[0-9]+}", "/tweets/search", "/error").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/tweets/**").permitAll()
+                        
+                        // ★★★ ここを変更！プロトタイプのGET（閲覧）のみ許可する ★★★
+                        .requestMatchers(HttpMethod.GET, "/api/prototypes/**").permitAll()
 
-                        // ★★★ ここを追加！プロトタイプ一覧・詳細のGETリクエストを全員に許可 ★★★
-                        .requestMatchers("/api/prototypes/**").permitAll()
-                        // ここに記述されたPOSTリクエストは許可されます（ログイン不要です）
+                        // POSTリクエストの個別許可（ユーザー作成など）
                         .requestMatchers(HttpMethod.POST, "/user").permitAll()
-                        // 上記以外のリクエストは認証されたユーザーのみ許可されます（要ログイン）
+                        
+                        // ★ 上記以外のすべてのリクエスト（POST /api/prototypes 等の新規投稿）は認証（要ログイン）が必要
                         .anyRequest().authenticated()
-                );                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                );
 
         return http.build();
     }

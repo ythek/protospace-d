@@ -18,11 +18,11 @@ import in.tech_camp.prototype_d.form.UserForm;
 import in.tech_camp.prototype_d.repository.UserRepository;
 import in.tech_camp.prototype_d.service.UserService;
 import in.tech_camp.prototype_d.validation.ValidationOrder;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/users")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserController {
   private final UserService userService;
   private final UserRepository userRepository;
@@ -45,13 +45,8 @@ public class UserController {
       return ResponseEntity.badRequest().body(Map.of("messages", errorMessages));
     }
 
-    UserEntity userEntity = new UserEntity();
-    userEntity.setEmail(userForm.getEmail());
-    userEntity.setPassword(userForm.getPassword());
-    userEntity.setUsername(userForm.getUsername());
-    userEntity.setProfile(userForm.getProfile());
-    userEntity.setAffiliation(userForm.getAffiliation());
-    userEntity.setPosition(userForm.getPosition());
+    // 値を詰める
+    UserEntity userEntity = userService.setUserData(userForm);
 
     // パスワード暗号化してDB登録
     try {
@@ -66,4 +61,3 @@ public class UserController {
     }
   }
 }
-// バリデーションを設定

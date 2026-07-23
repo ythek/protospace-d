@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import in.tech_camp.prototype_d.entity.AffiliationEntity;
 import in.tech_camp.prototype_d.entity.PositionEntity;
 import in.tech_camp.prototype_d.entity.UserEntity;
+import in.tech_camp.prototype_d.form.UserForm;
 import in.tech_camp.prototype_d.repository.AffiliationRepository;
 import in.tech_camp.prototype_d.repository.PositionRepository;
 import in.tech_camp.prototype_d.repository.UserRepository;
@@ -44,6 +45,19 @@ public class UserService {
     userEntity.setPositionId(positionId);
     userRepository.insert(userEntity);
   }
+
+    public UserEntity setUserData(UserForm userForm){
+            UserEntity userEntity = new UserEntity();
+            userEntity.setEmail(userForm.getEmail());
+            userEntity.setPassword(userForm.getPassword());
+            userEntity.setUsername(userForm.getUsername());
+            userEntity.setProfile(userForm.getProfile());
+            userEntity.setAffiliation(userForm.getAffiliation());
+            userEntity.setPosition(userForm.getPosition());
+            return userEntity;
+    }
+
+
 
   private String encodePassword(String password) {
     return passwordEncoder.encode(password);

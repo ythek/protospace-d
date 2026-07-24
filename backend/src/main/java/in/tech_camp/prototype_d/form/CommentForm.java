@@ -5,7 +5,6 @@ import lombok.Data;
 
 @Data
 public class CommentForm {
-  // もしかしたらエラーメッセージがフロントとバックで二重になるかも
   @NotBlank(message = "コメントを入力してください")
   private String comment;
 }

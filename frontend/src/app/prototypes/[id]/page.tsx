@@ -23,7 +23,7 @@ export default function PrototypeDetailPage() {
 
     if (!prototype) return <div>読み込み中・・・</div>;
 
-  return (<PrototypeDetail 
+  return (<PrototypeDetail
     prototype={prototype} 
     //currentUserName={currentUserName}
     />);

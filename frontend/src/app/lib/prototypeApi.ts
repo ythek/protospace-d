@@ -1,17 +1,19 @@
 import apiClient from './apiClient';
 import { PrototypeData } from './prototypeData';
 import { CommentData } from './commentData';
+// import { PrototypeData } from "@/app/components/PrototypeDetail";
 
+// プロトタイプ一覧取得
 export const fetchPrototypes = async (): Promise<PrototypeData[]> => {
   const response = await apiClient.get('/api/prototypes');
   return response.data;
 };
 
-// 詳細画面取得（担当外なのでコメントアウトしておきます）
-// export const fetchByPrototypeId = async (prototypeId: string ): Promise<PrototypeData[]> => {
-//   const response = await apiClient.get(`/api/prototypes/${prototypeId}`);
-//   return response.data;
-// }
+// 詳細画面取得
+export const fetchPrototypeById = async (prototypeId: number | string): Promise<PrototypeData> => {
+  const response = await apiClient.get(`/api/prototypes/${prototypeId}`);
+  return response.data;
+};
 
 // コメント一覧取得
 export const fetchComments = async (prototypeId: string ): Promise<CommentData[]> => {

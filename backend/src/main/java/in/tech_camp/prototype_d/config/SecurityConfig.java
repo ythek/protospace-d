@@ -43,8 +43,8 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers(HttpMethod.GET, "/css/**", "/images/**","/users/{id:[0-9]+}","/error").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/prototypes/").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/users/", "/api/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/prototypes/","/api/users/*/prototypes","/api/users/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/users/", "/api/sign_in").permitAll()
                         .anyRequest().authenticated())
 
                 .formLogin(login -> login

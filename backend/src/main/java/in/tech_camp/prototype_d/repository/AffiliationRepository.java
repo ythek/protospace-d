@@ -12,6 +12,9 @@ public interface AffiliationRepository {
     @Select("SELECT id FROM affiliations WHERE affiliation = #{affiliationName}")
     Integer findIdByName(String affiliationName);
 
+    @Select("SELECT affiliation FROM affiliations WHERE id = #{id}")
+    String findNameById(Integer id);
+
     @Insert("INSERT INTO affiliations (affiliation) VALUES (#{affiliationName})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insert(AffiliationEntity affiliation);

@@ -9,4 +9,5 @@ public class PrototypeEntity {
   private String catchcopy;
   private String concept;
   private String image;
+  private Integer userId;
 }

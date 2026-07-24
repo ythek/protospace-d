@@ -52,4 +52,15 @@ public class PrototypeController {
       
 }
 }
+  
+  @GetMapping({"/users/{userId}/prototypes"})
+  public ResponseEntity<?> getPrototypesByUserId(@PathVariable Integer userId) {
+    try {
+      List<PrototypeDto> prototypes = prototypeService.getPrototypesByUserId(userId);
+      return ResponseEntity.ok().body(prototypes);
+    } catch (Exception e) {
+      e.printStackTrace(); 
+      return ResponseEntity.internalServerError().body(Map.of("messages", List.of("投稿の取得に失敗しました。")));
+    }
+  }
 }

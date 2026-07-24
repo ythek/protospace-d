@@ -6,16 +6,21 @@ import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import in.tech_camp.prototype_d.dto.UserDetailDto;
 import in.tech_camp.prototype_d.entity.UserEntity;
 import in.tech_camp.prototype_d.form.UserForm;
 import in.tech_camp.prototype_d.repository.UserRepository;
 import in.tech_camp.prototype_d.service.UserService;
 import in.tech_camp.prototype_d.validation.ValidationOrder;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -27,7 +32,7 @@ public class UserController {
 
   // ユーザー登録
   @PostMapping("/")
-  public ResponseEntity<?> createUser(@RequestBody  @Validated(ValidationOrder.class) UserForm userForm, BindingResult result){
+  public ResponseEntity<?> createUser(@RequestBody  @Validated(ValidationOrder.class) UserForm userForm, BindingResult result, HttpServletRequest request, HttpServletResponse response){
 
     // パスワードのチェック
     userForm.validatePasswordConfirmation(result);
@@ -37,7 +42,7 @@ public class UserController {
     }
 
     try {
-      UserEntity userEntity = userService.registerUser(userForm);
+      UserEntity userEntity = userService.registerUser(userForm, request, response );
       return ResponseEntity.ok().body(Map.of(
         "id", userEntity.getId(),
         "username", userEntity.getUsername()
@@ -45,6 +50,18 @@ public class UserController {
     } catch (Exception e) {
       System.out.println("エラー：" + e);
       return ResponseEntity.internalServerError().body(Map.of("messages", List.of("Internal Server Error")));    
+    }
+  }
+
+  // 指定されたIdのユーザーを取得
+  @GetMapping({"/{userId}"})
+  public ResponseEntity<?> getUserById(@PathVariable Integer userId) {
+        try {
+      UserDetailDto userDetailDto = userService.getUser(userId);
+      return ResponseEntity.ok().body(userDetailDto);
+    } catch (Exception e) {
+      e.printStackTrace(); 
+      return ResponseEntity.internalServerError().body(Map.of("messages", List.of("ユーザーの取得に失敗しました。")));
     }
   }
 }

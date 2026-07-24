@@ -1,13 +1,10 @@
+import apiClient from './apiClient';
 import axios from 'axios';
 import qs from 'qs';
-
-const api = axios.create({
-  baseURL: 'http://localhost:8080/api',
-  withCredentials: true,
-});
+import { UserData } from './userData';
 
 // 401が返ったときの処理
-api.interceptors.response.use(
+apiClient.interceptors.response.use(
   (response) => {
     return response;
   },
@@ -16,9 +13,8 @@ api.interceptors.response.use(
       // ローカルに残っているユーザー情報を消す
       localStorage.removeItem('user'); 
       // ログイン画面に飛ばす
-      window.location.href = '/login';
+      window.location.href = '/users/sign_in';
     }
-
     return Promise.reject(error);
   }
 );
@@ -38,12 +34,6 @@ interface UserResponse {
   username: string;
 }
 
-interface UserInfo {
-  isLoggedIn:boolean;
-  id: number | null;
-  username: string | null;
-} 
-
 interface LoginCredentials {
   email: string;
   password: string;
@@ -53,7 +43,7 @@ interface LoginCredentials {
 // 新規登録
 export const signUp = async (formData: SignUpForm): Promise<UserResponse> => {
   try {
-    const response = await api.post<UserResponse>('/users/', formData);
+    const response = await apiClient.post<UserResponse>('/api/users/', formData);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -68,7 +58,7 @@ export const signUp = async (formData: SignUpForm): Promise<UserResponse> => {
 // ログイン
 export const login = async (credentials: LoginCredentials): Promise<UserResponse> => {
   try {
-    const response = await api.post<UserResponse >('/sign_in', qs.stringify({
+    const response = await apiClient.post<UserResponse >('/api/sign_in', qs.stringify({
       email: credentials.email,
       password: credentials.password,
     }), {
@@ -89,7 +79,7 @@ export const login = async (credentials: LoginCredentials): Promise<UserResponse
 // ログアウト
 export const logout = async (): Promise<void> => {
   try {
-    await api.get('/sign_out');
+    await apiClient.get('/api/sign_out');
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.error('Logout error:', error.response?.data);
@@ -98,4 +88,8 @@ export const logout = async (): Promise<void> => {
   }
 };
 
-export default api;
+// ユーザー取得
+export const fetchUserById = async (userId: number): Promise<UserData> => {
+  const response = await apiClient.get<UserData>(`/api/users/${userId}`);
+  return response.data;
+};

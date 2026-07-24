@@ -1,7 +1,7 @@
 'use client'
 
 import React, { createContext, useContext, useState, useEffect } from 'react'
-import { login as apiLogin, logout as apiLogout } from '@/app/api/users';
+import { login as apiLogin, logout as apiLogout } from '@/app/lib/userApi';
 
 type User = {
   id: number

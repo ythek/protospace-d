@@ -10,3 +10,8 @@ export const fetchPrototypeById = async (prototypeId: number | string): Promise<
   const response = await apiClient.get(`/api/prototypes/${prototypeId}`);
   return response.data;
 };
+
+export const fetchPrototypesByUserId = async (userId: number): Promise<PrototypeData[]> => {
+  const response = await apiClient.get<PrototypeData[]>(`/api/users/${userId}/prototypes`);
+  return response.data;
+};

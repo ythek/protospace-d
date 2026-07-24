@@ -77,35 +77,7 @@ export default function PrototypeDetailPage() {
           ログイン状態を変更
         </button>
       </div>
-
-
-
-{/* 
-    <div className={styles.card}>
-      <Link href={`/prototypes/${prototype.id}`} className={styles.imageWrapper}>
-        <img 
-          src={prototype.image} 
-          alt={prototype.title} 
-          className={styles.image}
-        />
-      </Link>
-      <div className={styles.content}>
-        <h2 className={styles.title}>
-          <Link href={`/prototypes/${prototype.id}`} className={styles.titleLink}>
-            {prototype.title}
-          </Link>
-        </h2>
-        <p className={styles.catchcopy}>{prototype.catchcopy}</p>
-        <div className={styles.author}>
-          by <a href="#">{prototype.user?.username}</a>
-        </div>
-      </div>
-    </div> 
-*/}
-
-
-
-
+      
       {/* プロトタイプ詳細エリア */}
       <h1 className={styles.title}>{prototype.title}</h1>
       <p className={styles.author}>

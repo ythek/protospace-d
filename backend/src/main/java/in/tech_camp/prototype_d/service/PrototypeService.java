@@ -47,4 +47,31 @@ public class PrototypeService {
 
     return dtos;
   }
+  //編集用データ
+    public PrototypeDto getPrototypeForEdit(Integer id) {
+        PrototypeEntity entity = prototypeRepository.findById(id);
+        
+        if (entity == null) {
+            return null;
+        }
+
+        PrototypeDto dto = new PrototypeDto();
+        dto.setTitle(entity.getTitle());
+        dto.setCatchcopy(entity.getCatchcopy());
+        dto.setConcept(entity.getConcept());
+
+        return dto;
+    }
+
+    //更新処理
+    public void updatePrototype(Integer prototypeId, PrototypeDto dto) {
+        PrototypeEntity entity = new PrototypeEntity();
+        
+        entity.setId(prototypeId);
+        entity.setTitle(dto.getTitle());
+        entity.setCatchcopy(dto.getCatchcopy());
+        entity.setConcept(dto.getConcept());
+
+        prototypeRepository.update(entity);
+    }
 }

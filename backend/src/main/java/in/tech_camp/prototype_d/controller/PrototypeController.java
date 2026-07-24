@@ -1,12 +1,14 @@
 package in.tech_camp.prototype_d.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import in.tech_camp.prototype_d.custom_user.CustomUserDetail;
 import in.tech_camp.prototype_d.dto.PrototypeDto;
 import in.tech_camp.prototype_d.service.PrototypeService;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +43,7 @@ public class PrototypeController {
 
   // プロトタイプ詳細表示
   @GetMapping("/prototypes/{prototypeId}")
-  public ResponseEntity<?> showPrototypeDetail(@PathVariable("prototypeId") Integer prototypeId) {
+  public ResponseEntity<?> showPrototypeDetail(@PathVariable("prototypeId") Long prototypeId) {
     try {
       PrototypeEntity prototype = prototypeRepository.findById(prototypeId);
       if(prototype == null){
@@ -56,13 +58,17 @@ public class PrototypeController {
   }
 
   // プロトタイプ削除機能
-  @DeleteMapping("/prototypes/${prototypeId}/delete")
-  public ResponseEntity<?> deletePrototype(@PathVariable("prototypeId") Long prototypeId) {
+  @DeleteMapping("/prototypes/{prototypeId}/delete")
+  public ResponseEntity<?> deletePrototype(@PathVariable("prototypeId") Long prototypeId, 
+                                          @AuthenticationPrincipal CustomUserDetail currentUser) {
     try {
-      prototypeService.deletePrototype(prototypeId);
+      prototypeService.deletePrototype(prototypeId, currentUser.getId());
       return ResponseEntity.ok().body(Map.of(
         "Message", "プロトタイプを削除しました", "deletePrototypeId", prototypeId
       ));
+    } catch (IllegalArgumentException e) {
+      // 削除が許可されてないユーザーをはじく処理
+      return ResponseEntity.status(403).body(Map.of("messages", List.of(e.getMessage())));
     } catch (Exception e) {
       e.printStackTrace();
       return ResponseEntity.internalServerError().body(Map.of("messages", List.of("プロトタイプの削除に失敗しました")));

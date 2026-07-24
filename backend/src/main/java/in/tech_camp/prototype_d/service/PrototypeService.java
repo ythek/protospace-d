@@ -51,7 +51,13 @@ public class PrototypeService {
 
   // プロトタイプ削除機能
   @Transactional
-  public void deletePrototype(Long prototypeId) {
-      prototypeRepository.deletePrototype(prototypeId);
+  public void deletePrototype(Long prototypeId, Integer currentUserId) {
+    Integer ownerId = prototypeRepository.findUserIdById(prototypeId);
+
+    if (!ownerId.equals(currentUserId)) {
+        throw new IllegalArgumentException("削除する権限がありません");
+    }
+
+    prototypeRepository.deletePrototype(prototypeId);
   }
 }

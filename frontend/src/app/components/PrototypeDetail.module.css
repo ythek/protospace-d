@@ -106,52 +106,79 @@
 }
 
 
-
+/* コメント欄全体の枠 */
 .prototype_comments {
-  /* コメント欄全体のグレー枠 */
   width: 100%;
-  max-width: 1600px;
-  background-color: #f4f4f4;
+  max-width: 1024px;
+  background-color: #f6f6f6;
   padding: 30px;
-  margin: 28px 0 40px 0;
   color: #272527;
   border-radius: 4px;
   box-sizing: border-box;
   text-align: left;
 }
 
+/* フォーム要素のグループ */
 .field {
-  /* フォーム要素のグループ */
   display: flex;
   flex-direction: column;
- align-items: flex-start;
- gap: 8px;
+  align-items: flex-start;
+  gap: 8px;
 }
 
+/* コメント入力欄 */
 .comment_input {
-  /* コメント入力欄（inputタグ） */
-  width: auto;
-  height: 22px;
+  width: 100%;
+  max-width: 600px;
+  height: 32px;
+  padding: 4px 8px;
   border: 1px solid #767676;
-  color: #ffffff;
+  background-color: #fff;
+  border-radius: 4px;
 }
 
+/* コメント送信ボタン配置エリア */
 .actions {
-  /* ボタン配置エリア */
-  display: flex;
-  flex-direction: row;
   color: #2a77a7;
-  padding:5px 20px 6px 20px;
-  margin: 10px;
+  margin: 10px 0;
 }
 
+/* コメント送信ボタン */
 .form_btn {
-  /* 「送信する」ボタン（buttonタグ） */
-  background-color: #87ceeb; /* 水色 */
+  background-color: #87ceeb;
   color: #ffffff;
   border: none;
   padding: 8px 20px;
   font-size: 14px;
   border-radius: 4px;
-  
+}
+
+.errorMessage {
+  color: red;
+  font-size: 14px;
+  margin: 0;
+}
+
+.loginNotice {
+  color: #666;
+  margin-bottom: 16px;
+}
+
+.commentList {
+  margin-bottom: 20px;
+}
+
+.commentItem {
+  padding: 8px 0;
+  border-bottom: 1px solid #ccc;
+}
+
+.commentText {
+  margin: 0;
+}
+
+.commentAuthor {
+  color: #666;
+  font-size: 14px;
+  margin-left: 8px;
 }

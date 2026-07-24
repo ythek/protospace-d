@@ -16,7 +16,11 @@ public interface PrototypeRepository {
 
   // プロトタイプ詳細
   @Select("SELECT * FROM prototypes WHERE id = #{id}") 
-  PrototypeEntity findById(Integer id);
+  PrototypeEntity findById(Long id);
+
+  // 削除権限チェック用
+  @Select("SELECT user_id FROM prototypes WHERE id = #{id}")
+  Integer findUserIdById(Long id);
 
   // プロトタイプ削除
   @Delete("DELETE FROM prototypes WHERE id = #{id}")

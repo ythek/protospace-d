@@ -15,13 +15,13 @@ export const fetchPrototypeById = async (prototypeId: number | string): Promise<
 };
 
 // コメント一覧取得
-export const fetchComments = async (prototypeId: string ): Promise<CommentData[]> => {
+export const fetchComments = async (prototypeId: number | string ): Promise<CommentData[]> => {
   const response = await apiClient.get<CommentData[]>(`/api/prototypes/${prototypeId}/comments`);
   return response.data;
 };
 
 // コメント投稿
-export const createComment = async (prototypeId: string , comment: string) => {
+export const createComment = async (prototypeId: number | string , comment: string) => {
   const response = await apiClient.post(`/api/prototypes/${prototypeId}/comments`, {
     comment,
   });

@@ -1,7 +1,6 @@
 import apiClient from './apiClient';
 import { PrototypeData } from './prototypeData';
 import { CommentData } from './commentData';
-// import { PrototypeData } from "@/app/components/PrototypeDetail";
 
 // プロトタイプ一覧取得
 export const fetchPrototypes = async (): Promise<PrototypeData[]> => {

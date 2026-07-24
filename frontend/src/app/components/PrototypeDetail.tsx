@@ -4,17 +4,9 @@
 import Link from 'next/link'
 import styles from './PrototypeDetail.module.css';
 import React, { useEffect, useState } from 'react';
+import { PrototypeData } from '../lib/prototypeData';
 
-
-  export interface PrototypeData {
-    id: number;
-    title: string;
-    catchCopy: string;
-    concept: string;
-    userName: string;
-    image: string;
-
-}
+    
 
 interface Props{
   prototype: PrototypeData;
@@ -24,7 +16,7 @@ interface Props{
 export default function PrototypeDetail ({ prototype, currentUserName }: Props )  {
    const [commentText, setCommentText] = useState(""); //コメントはcommentTextにしてます
 
-   const isOwner = currentUserName === prototype.userName;
+   const isOwner = currentUserName === prototype.user?.username;
 
    const handelSubmit = (e: React.SubmitEvent) => {
     e.preventDefault(); //ページリロードを防ぐメソッド
@@ -38,7 +30,7 @@ export default function PrototypeDetail ({ prototype, currentUserName }: Props )
   
 
     <div className={styles.prototype_title}>{prototype.title}</div>
-    <a href={'/'} className={styles.userName}>{prototype.userName}</a> 
+    <a href={'/'} className={styles.userName}>{prototype.user?.username}</a> 
    
    { isOwner &&(
     <div className={styles.prototype_manage}>
@@ -57,7 +49,7 @@ export default function PrototypeDetail ({ prototype, currentUserName }: Props )
     <div className ={styles.prototype_body}>
       <div className={styles.prototype_detail}>
         <p className={styles.detail_title}>キャッチコピー</p>
-        <p className={styles.detail_messages}>{prototype.catchCopy}</p>
+        <p className={styles.detail_messages}>{prototype.catchcopy}</p>
         </div>
       </div>
     <div className={styles.prototype_body}>

@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-// 👇 PrototypeDetail と PrototypeData を「同じファイル」から一緒にインポート！
-import PrototypeDetail, { PrototypeData } from "@/app/components/PrototypeDetail";
+import { PrototypeData } from "@/app/lib/prototypeData";
 import { fetchPrototypeById } from "@/app/lib/prototypeApi";
+import PrototypeDetail from "@/app/components/PrototypeDetail";
 
 
 

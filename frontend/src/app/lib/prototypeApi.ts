@@ -14,6 +14,11 @@ export const fetchPrototypeById = async (prototypeId: number | string): Promise<
   return response.data;
 };
 
+// 削除機能
+export const deletePrototype = async (prototypeId: number | string ): Promise<void> => {
+  await apiClient.delete(`/api/prototypes/${prototypeId}/delete`)
+}
+
 // コメント一覧取得
 export const fetchComments = async (prototypeId: number | string ): Promise<CommentData[]> => {
   const response = await apiClient.get<CommentData[]>(`/api/prototypes/${prototypeId}/comments`);

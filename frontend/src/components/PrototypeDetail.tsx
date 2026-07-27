@@ -3,11 +3,12 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link'
+import { useRouter } from 'next/navigation';
 import styles from './PrototypeDetail.module.css';
 import { PrototypeData } from '../lib/prototypeData';
 import { CommentData } from '../lib/commentData';
 import { useAuthContext } from '../app/context/AuthContext';
-import { fetchComments, createComment } from '../lib/prototypeApi';
+import { fetchComments, createComment, deletePrototype } from '../lib/prototypeApi';
 
 
 interface Props{
@@ -19,6 +20,7 @@ export default function PrototypeDetail ({ prototype }: Props ) {
   const { user } = useAuthContext();
   const isLoggedIn = user?.isAuthenticated ?? false;
 
+  const router = useRouter();
   const [comments, setComments] = useState<CommentData[]>([]);
   const [commentText, setCommentText] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -43,6 +45,22 @@ export default function PrototypeDetail ({ prototype }: Props ) {
       loadComments();
     }
   }, [prototype?.id]);
+
+  // 削除ボタンを押したときの処理
+  const handleDelete = async () => {
+    // 確認アラート
+    if (!window.confirm("このプロトタイプを削除しますか？")) {
+      return;
+    }
+
+    try {
+      await deletePrototype(prototype.id);
+      router.push('/');
+    } catch (error) {
+      console.error('削除エラー:', error);
+      alert('削除に失敗しました');
+    }
+  };
 
   // コメント送信
   const handleSubmitComment = async (e: React.FormEvent) => {
@@ -73,14 +91,14 @@ export default function PrototypeDetail ({ prototype }: Props ) {
   return (
     <div className={styles.container}>
     
-      <div className={styles.prototype_title}>{prototype.title} </div>
+      <div className={styles.prototype_title}>{prototype.title}</div>
       <Link href={'/#'} className={styles.userName}>{prototype.user?.username}</Link> 
       {/* <Link href={`users/${prototype.user?.id}`} className={styles.userName}>{prototype.user?.username}</Link>  */}
     
       { isOwner &&(
         <div className={styles.prototype_manage}>
           <Link href={`prototypes/${prototype.id}/edit`} className={styles.prototype_button}>編集する</Link>
-          <Link href={`prototypes/${prototype.id}/delete`} className={styles.prototype_button}>削除する</Link>
+          <button onClick={handleDelete} className={styles.prototype_button}>削除する</button>
         </div>
       )}
 

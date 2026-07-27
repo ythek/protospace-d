@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import in.tech_camp.prototype_d.dto.PrototypeDto;
 import in.tech_camp.prototype_d.dto.UserDto;
@@ -69,5 +70,21 @@ public class PrototypeService {
     }
 
     return dtos;
+  }
+
+  // プロトタイプ削除機能
+  @Transactional
+  public void deletePrototype(Long prototypeId, Integer currentUserId) {
+    Integer ownerId = prototypeRepository.findUserIdById(prototypeId);
+
+    if (ownerId == null) {
+        throw new IllegalArgumentException("対象のプロトタイプが見つかりません");
+    }
+
+    if (!ownerId.equals(currentUserId)) {
+        throw new IllegalArgumentException("削除する権限がありません");
+    }
+
+    prototypeRepository.deletePrototype(prototypeId);
   }
 }

@@ -4,11 +4,11 @@ import lombok.Data;
 
 @Data
 public class UserEntity {
-    private Integer id;
-    private String email;
-    private String password;
-    private String username;
-    private String profile;
-    private AffiliationEntity affiliation;
-    private PositionEntity position;
+  private Integer id;
+  private String username;
+  private String email;
+  private String password;
+  private String profile;
+  private Integer affiliationId;
+  private Integer positionId;
 }

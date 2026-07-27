@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Header from '@/app/_components/Header';
-import Footer from '@/app/_components/Footer';
-import PrototypeForm from '@/app/_components/PrototypeForm';
+import Header from '@/app/components/Header';
+import Footer from '@/app/components/Footer';
+import PrototypeForm from '@/app/components/PrototypeForm';
 
 // ★ 画像は File オブジェクトとして扱う（null 許容）
 export interface PrototypeFormData {
@@ -66,20 +66,16 @@ const CreatePrototypePage = () => {
   };
 
   return (
-    <>
-      <Header />
-      <div className="contents row">
-        <div className="container">
-          <h3 className="form-title">新規プロトタイプ投稿</h3>
-          <PrototypeForm
-            initialData={initialFormData}
-            errorMessages={errorMessages}
-            onSubmit={handleSubmit}
-          />
-        </div>
+    <div className="contents row">
+      <div className="container">
+        <h3 className="form-title">新規プロトタイプ投稿</h3>
+        <PrototypeForm
+          initialData={initialFormData}
+          errorMessages={errorMessages}
+          onSubmit={handleSubmit}
+        />
       </div>
-      <Footer />
-    </>
+    </div>
   );
 };
 

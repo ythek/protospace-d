@@ -7,8 +7,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import in.tech_camp.prototype_d.entity.UserEntity;
+import lombok.Getter;
 
-// ★ @Service などのアノテーションは一切つけません
+@Getter
 public class CustomUserDetail implements UserDetails {
 
     private final UserEntity user;
@@ -17,13 +18,19 @@ public class CustomUserDetail implements UserDetails {
         this.user = user;
     }
 
-    public UserEntity getUser() {
-        return user;
+    // 便利なヘルパーメソッド
+    public Integer getId() {
+        return user != null ? user.getId() : null;
     }
 
+    public String getEmail() {
+        return user != null ? user.getEmail() : null;
+    }
+
+    // UserDetails インターフェースの実装メソッド
     @Override
     public String getUsername() {
-        return user != null ? user.getEmail() : null; 
+        return user != null ? user.getEmail() : null;
     }
 
     @Override

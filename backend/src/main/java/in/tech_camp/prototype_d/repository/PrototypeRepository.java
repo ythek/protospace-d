@@ -30,7 +30,7 @@ public interface PrototypeRepository {
     })
     List<PrototypeEntity> findAll();
 
-    // ID指定で1件取得
+    // ID指定で1件取得（作成者ユーザー情報含む）
     @Select("SELECT id, title, catchcopy, concept, image, user_id FROM prototypes WHERE id = #{id}")
     @Results({
         @Result(property = "id", column = "id"),

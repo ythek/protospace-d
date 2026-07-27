@@ -1,0 +1,22 @@
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  min-height: calc(100vh - 160px);
+}
+
+.greeting {
+  margin-bottom: 40px;
+  color: #333;
+}
+
+.usernameLink {
+  color: #333;
+  text-decoration: underline;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+}

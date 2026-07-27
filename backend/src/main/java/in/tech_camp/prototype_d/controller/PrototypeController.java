@@ -1,11 +1,15 @@
 package in.tech_camp.prototype_d.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,57 +19,82 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import in.tech_camp.prototype_d.custom_user.CustomUserDetail;
+import in.tech_camp.prototype_d.dto.PrototypeDto;
 import in.tech_camp.prototype_d.entity.PrototypeEntity;
 import in.tech_camp.prototype_d.entity.UserEntity;
-import in.tech_camp.prototype_d.form.PrototypeForm;
 import in.tech_camp.prototype_d.form.CommentForm;
+import in.tech_camp.prototype_d.form.PrototypeForm;
 import in.tech_camp.prototype_d.form.SearchForm;
 import in.tech_camp.prototype_d.repository.PrototypeRepository;
 import in.tech_camp.prototype_d.repository.UserRepository;
+import in.tech_camp.prototype_d.service.PrototypeService;
 import in.tech_camp.prototype_d.validation.ValidationOrder;
 import lombok.AllArgsConstructor;
-
-import java.util.Map; 
-import org.springframework.http.ResponseEntity; 
-import org.springframework.web.bind.annotation.RequestBody; 
-
-import java.io.File;
-import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 
 @RestController
-@AllArgsConstructor
 @RequestMapping("/api/prototypes")
+@RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:3000")
 public class PrototypeController {
 
+    private final PrototypeService prototypeService;
     private final PrototypeRepository prototypeRepository;
 
+    /**
+     * プロトタイプ一覧取得
+     * GET: /api/prototypes
+     */
     @GetMapping
-    public ResponseEntity<List<PrototypeEntity>> getAllPrototypes() {
+    public ResponseEntity<?> getPrototypes() {
         try {
-            List<PrototypeEntity> prototypes = prototypeRepository.findAll();
-            return ResponseEntity.ok(prototypes);
+            List<PrototypeDto> prototypes = prototypeService.getPrototypes();
+            return ResponseEntity.ok().body(prototypes);
         } catch (Exception e) {
-            System.out.println("エラー: " + e);
-            return ResponseEntity.internalServerError().build();
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body(Map.of("messages", List.of("投稿の取得に失敗しました。")));
         }
     }
 
+    /**
+     * プロトタイプ詳細取得
+     * GET: /api/prototypes/{prototypeId}
+     */
+    @GetMapping("/{prototypeId}")
+    public ResponseEntity<?> showPrototypeDetail(@PathVariable("prototypeId") Integer prototypeId) {
+        try {
+            PrototypeEntity prototype = prototypeRepository.findById(prototypeId);
+            if (prototype == null) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok().body(prototype);
+        } catch (Exception e) {
+            System.out.println("エラー: " + e);
+            return ResponseEntity.internalServerError().body(Map.of("messages", List.of("サーバーエラーが発生しました。")));
+        }
+    }
+
+    /**
+     * プロトタイプ新規作成 (画像アップロード含む)
+     * POST: /api/prototypes
+     */
     @PostMapping
     public ResponseEntity<?> createPrototype(
-            // ★ @RequestBody から @ModelAttribute に変更し、画像ファイル(file)を受け取れるようにする
             @ModelAttribute @Validated(ValidationOrder.class) PrototypeForm prototypeForm,
             @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
-            BindingResult result,
-            @AuthenticationPrincipal CustomUserDetail currentUser) {
+            BindingResult result
+            // @AuthenticationPrincipal 
+            // CustomUserDetail currentUser
+            ) {
 
-        // 1. バリデーションエラー判定（@NotBlank や @Size チェック）
+        // 1. バリデーションエラー判定
         if (result.hasErrors()) {
             List<String> errorMessages = result.getAllErrors().stream()
                     .map(DefaultMessageSourceResolvable::getDefaultMessage)
@@ -73,22 +102,20 @@ public class PrototypeController {
             return ResponseEntity.badRequest().body(Map.of("messages", errorMessages));
         }
 
-        // 画像ファイルが必須な場合はここでチェック（必要に応じて）
+        // 2. 画像ファイルの存在チェック
         if (imageFile == null || imageFile.isEmpty()) {
             return ResponseEntity.badRequest().body(Map.of("messages", List.of("画像ファイルを選択してください")));
         }
 
-        // 2. 画像の保存処理 (uploads/ フォルダへ保存)
+        // 3. 画像の保存処理 (uploads/ フォルダへ保存)
         String fileName = null;
         try {
-            // 保存先ディレクトリの設定
             String uploadDir = Paths.get(System.getProperty("user.dir"), "uploads").toAbsolutePath().toString();
             File dir = new File(uploadDir);
             if (!dir.exists()) {
-                dir.mkdirs(); // uploadsフォルダが無ければ自動作成
+                dir.mkdirs();
             }
 
-            // 元の拡張子を取得し、UUIDで衝突しないファイル名を生成
             String originalFilename = imageFile.getOriginalFilename();
             String extension = "";
             if (originalFilename != null && originalFilename.contains(".")) {
@@ -96,7 +123,6 @@ public class PrototypeController {
             }
             fileName = UUID.randomUUID().toString() + extension;
 
-            // ディレクトリへファイルを転送保存
             File dest = new File(dir, fileName);
             imageFile.transferTo(dest);
 
@@ -105,23 +131,27 @@ public class PrototypeController {
             return ResponseEntity.internalServerError().body(Map.of("messages", List.of("画像の保存に失敗しました")));
         }
 
-        // 3. Entity への詰め替え (DBには生成したファイル名のみを保持)
+        // 4. Entity への詰め替え
         PrototypeEntity prototype = new PrototypeEntity();
         prototype.setTitle(prototypeForm.getTitle());
         prototype.setCatchcopy(prototypeForm.getCatchcopy());
         prototype.setConcept(prototypeForm.getConcept());
-        prototype.setImage(fileName); // ★ UUIDファイル名をDB登録用プロパティにセット
+        prototype.setImage(fileName);
 
-        // ログイン状態の判定
-        if (currentUser != null && currentUser.getUser() != null) {
-            prototype.setUser(currentUser.getUser());
-        } else {
-            UserEntity dummyUser = new UserEntity();
-            dummyUser.setId(1);
-            prototype.setUser(dummyUser);
-        }
+        // // ログインユーザーのセット
+        // if (currentUser != null && currentUser.getUser() != null) {
+        //     prototype.setUser(currentUser.getUser());
+        // } else {
+        //     UserEntity dummyUser = new UserEntity();
+        //     dummyUser.setId(1);
+        //     prototype.setUser(dummyUser);
+        // }
 
-        // 4. DB 登録
+        UserEntity dummyUser = new UserEntity();
+        dummyUser.setId(1);
+        prototype.setUser(dummyUser);
+
+        // 5. DB 登録
         try {
             prototypeRepository.insert(prototype);
             return ResponseEntity.ok().body(prototype);

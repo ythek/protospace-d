@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { PrototypeFormData } from '../prototypes/new/page';
-import '@/app/styles/style.css';
+
 
 interface PrototypeFormProps {
   initialData: PrototypeFormData;

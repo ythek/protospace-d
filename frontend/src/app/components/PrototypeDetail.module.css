@@ -1,0 +1,157 @@
+/*全体*/
+.container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #201f1f;
+
+}
+.prototype_title {
+  font-family: 'Noto scans CJK JP', sans-serif;
+  font-size: 24px;
+  font-weight: bold;
+  margin: 8px;
+
+
+}
+
+/*投稿者名*/
+.userName{
+  font-size: 14px;
+  color: #cac8ca;
+  font-weight: bold;
+  text-decoration: underline;
+  margin-bottom: 16px;
+  display: inline-block;
+}
+
+.prototype_manage {
+  /* 編集・削除ボタンの親要素 */
+  display: flex;
+  padding-top: 16px;
+  justify-content: center;
+
+}
+
+.prototype_button {
+  /* 編集する・削除するボタン自体 */
+     display: block;
+    padding: 0.4em 1.6em;
+    font-size: 0.4em;
+    color: #999;
+    text-decoration: none;
+    user-select: none;
+    border: 1px #999 solid;
+    border-radius: 3px;
+    transition: 0.4s ease;
+    margin: 0 4px;
+
+}
+
+.prototype_image {
+  /* 画像の親要素 */
+  width: 100%;
+  margin: 0 auto;
+  max-width: 500px;
+  padding:16px 0;
+}
+
+.image {
+  /* 画像自体（imgタグ） */
+  width: 100%;
+  height: auto;
+  max-height: 400px;
+  object-fit: contain;
+  border-radius: 8px;
+
+}
+
+.prototype_body {
+  /* キャッチコピー・コンセプトの親要素 */
+  width: 100%;
+  justify-content: center;
+  color: #242024;
+  display: flex;
+  margin-bottom: 24px;
+}
+
+.prototype_detail {
+  /* 各詳細ブロックの枠 */
+  max-width: 100%;
+  width: 200px;
+  height: auto;
+ text-align: center;
+
+
+}
+
+.detail_title {
+  /* 「キャッチコピー」「コンセプト」のタイトル文字 */
+  font-size: 20px;
+  font-weight: bold;
+  color: #252525;
+
+}
+
+.detail_messages,
+.detail_message {
+  /* キャッチコピーの本文 */
+  font-size: 14px;
+  width: 200px;
+  margin: 0 auto;
+  color: #555;
+}
+
+
+
+.prototype_comments {
+  /* コメント欄全体のグレー枠 */
+  width: 100%;
+  max-width: 1600px;
+  background-color: #f4f4f4;
+  padding: 30px;
+  margin: 28px 0 40px 0;
+  color: #272527;
+  border-radius: 4px;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.field {
+  /* フォーム要素のグループ */
+  display: flex;
+  flex-direction: column;
+ align-items: flex-start;
+ gap: 8px;
+}
+
+.comment_input {
+  /* コメント入力欄（inputタグ） */
+  width: auto;
+  height: 22px;
+  border: 1px solid #767676;
+  color: #ffffff;
+}
+
+.actions {
+  /* ボタン配置エリア */
+  display: flex;
+  flex-direction: row;
+  color: #2a77a7;
+  padding:5px 20px 6px 20px;
+  margin: 10px;
+}
+
+.form_btn {
+  /* 「送信する」ボタン（buttonタグ） */
+  background-color: #87ceeb; /* 水色 */
+  color: #ffffff;
+  border: none;
+  padding: 8px 20px;
+  font-size: 14px;
+  border-radius: 4px;
+  
+}

@@ -12,7 +12,7 @@ export default function PrototypeDetailPage() {
   const params = useParams();
   const prototypeId = params.id as string;
   const [prototype, setPrototype]= useState<PrototypeData | null>(null);
-  //const [currentUserName, serCurrentUserName]= useState<string | null> ("")
+  // const [currentUserName, serCurrentUserName]= useState<string | null> ("")
   useEffect(() => {
     if (prototypeId) {
       fetchPrototypeById(prototypeId)

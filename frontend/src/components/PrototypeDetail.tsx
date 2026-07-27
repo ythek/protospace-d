@@ -17,7 +17,8 @@ interface Props{
 
 export default function PrototypeDetail ({ prototype }: Props ) {
   // AuthContextからログイン中のユーザー情報を取得
-  const { user } = useAuthContext();
+  const { user } = useAuthContext();user?.id;
+
   const isLoggedIn = user?.isAuthenticated ?? false;
 
   const router = useRouter();
@@ -27,8 +28,7 @@ export default function PrototypeDetail ({ prototype }: Props ) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // ログイン中のユーザー＝プロトタイプ投稿ユーザーの判定
-  const isOwner = user?.username === prototype.user?.username;
-
+  const isOwner = user?.id === prototype.user?.id
   // コメント一覧を表示
   const loadComments = async () => {
     try {
@@ -94,7 +94,7 @@ export default function PrototypeDetail ({ prototype }: Props ) {
       <div className={styles.prototype_title}>{prototype.title}</div>
       <Link href={'/#'} className={styles.userName}>{prototype.user?.username}</Link> 
       {/* <Link href={`users/${prototype.user?.id}`} className={styles.userName}>{prototype.user?.username}</Link>  */}
-    
+      
       { isOwner &&(
         <div className={styles.prototype_manage}>
           <Link href={`prototypes/${prototype.id}/edit`} className={styles.prototype_button}>編集する</Link>

@@ -35,7 +35,7 @@ public class PrototypeService {
       dto.setImage(entity.getImage());
 
       UserDto userDto = new UserDto();
-      
+
       // entity.getUserId()を使ってDBからユーザー情報を取得する
       UserEntity user = userRepository.findById(entity.getUserId());
       userDto.setUsername(user.getUsername());
@@ -70,6 +70,25 @@ public class PrototypeService {
     }
 
     return dtos;
+  }
+
+  public PrototypeDto getPrototypeById(Long id) {
+    PrototypeEntity entity = prototypeRepository.findById(id);
+    PrototypeDto dto = new PrototypeDto();
+      dto.setId(entity.getId());
+      dto.setTitle(entity.getTitle());
+      dto.setCatchcopy(entity.getCatchcopy());
+      dto.setConcept(entity.getConcept());
+      dto.setImage(entity.getImage());
+
+      UserDto userDto = new UserDto();
+      
+      // entity.getUserId()を使ってDBからユーザー情報を取得する
+      UserEntity user = userRepository.findById(entity.getUserId());
+      userDto.setUsername(user.getUsername());
+      userDto.setId(user.getId());
+      dto.setUser(userDto);
+    return dto;
   }
 
   // プロトタイプ削除機能

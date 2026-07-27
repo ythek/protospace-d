@@ -27,8 +27,6 @@ public class PrototypeController {
 
   private final PrototypeService prototypeService;
 
-  private final PrototypeRepository prototypeRepository;
-
   // プロトタイプ一覧表示
   @GetMapping({"/prototypes", "/", ""})
   public ResponseEntity<?> getPrototypes() {
@@ -45,7 +43,7 @@ public class PrototypeController {
   @GetMapping("/prototypes/{prototypeId}")
   public ResponseEntity<?> showPrototypeDetail(@PathVariable("prototypeId") Long prototypeId) {
     try {
-      PrototypeEntity prototype = prototypeRepository.findById(prototypeId);
+      PrototypeDto prototype = prototypeService.getPrototypeById(prototypeId);
       if(prototype == null){
         return ResponseEntity.notFound().build(); 
       }

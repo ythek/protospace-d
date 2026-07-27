@@ -1,7 +1,7 @@
 //詳細画面の作成
 "use client";
 
-import React, { use, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link'
 import { useRouter } from 'next/navigation';
 import styles from './PrototypeDetail.module.css';

@@ -38,7 +38,7 @@ public class PrototypeService {
       // entity.getUserId()を使ってDBからユーザー情報を取得する
       UserEntity user = userRepository.findById(entity.getUserId());
       userDto.setUsername(user.getUsername());
-
+      userDto.setId(user.getId());
       dto.setUser(userDto);
       dtos.add(dto);
     }
@@ -63,7 +63,7 @@ public class PrototypeService {
       // entity.getUserId()を使ってDBからユーザー情報を取得する
       UserEntity user = userRepository.findById(entity.getUserId());
       userDto.setUsername(user.getUsername());
-
+      userDto.setId(user.getId());
       dto.setUser(userDto);
       dtos.add(dto);
     }

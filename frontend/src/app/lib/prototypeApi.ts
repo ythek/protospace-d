@@ -28,6 +28,12 @@ export const createComment = async (prototypeId: number | string , comment: stri
   return response.data;
 };
 
+// 削除機能
+export const deletePrototype = async (prototypeId: number | string ) => {
+  const response = await apiClient.delete(`/api/prototypes/${prototypeId}`);
+  return response.data;
+};
+
 //プロトタイプ一件だけ取得
 export const fetchPrototype = async ( prototypeId: number | string): Promise<PrototypeData> => {
   const response = await apiClient.get(`/api/prototypes/${prototypeId}/edit`);

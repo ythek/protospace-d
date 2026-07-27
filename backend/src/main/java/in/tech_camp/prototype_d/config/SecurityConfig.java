@@ -38,10 +38,10 @@ public class SecurityConfig {
                 // 静的ファイルやエラーページ
                 .requestMatchers(HttpMethod.GET, "/css/**", "/images/**", "/error").permitAll()
                 // GETリクエスト（閲覧系）を許可
-                .requestMatchers(HttpMethod.GET, "/users/sign_up", "/users/login", "/tweets/{id:[0-9]+}", "/users/{id:[0-9]+}", "/tweets/search").permitAll()
+                .requestMatchers(HttpMethod.GET, "/users/sign_up", "/users/sign_in", "/tweets/{id:[0-9]+}", "/users/{id:[0-9]+}", "/tweets/search").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/tweets/**", "/api/prototypes/**").permitAll()
                 // ユーザー登録・ログイン（POST）を許可
-                .requestMatchers(HttpMethod.POST, "/user", "/api/users/**", "/api/login", "/api/prototypes/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/user", "/api/users/**", "/api/sign_in").permitAll()
                 // 上記以外のAP/ページは認証が必要
                 .anyRequest().authenticated()
             )

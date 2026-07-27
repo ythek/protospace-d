@@ -34,6 +34,7 @@ export const createPrototype = async (data: PrototypeFormData): Promise<Prototyp
     headers: {
       'Content-Type': 'multipart/form-data',
     },
+    withCredentials: true, // ★ この1行を追加（ログインの証明書＝Cookieを一緒に送信する）
   });
   return response.data;
 };

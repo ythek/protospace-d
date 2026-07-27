@@ -3,9 +3,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-import { useAuthContext } from "../context/AuthContext";
+import { useAuthContext } from "../app/context/AuthContext";
 import { useRouter } from "next/navigation";
-import { logout } from "../api/users";
 
 export default function Header() {
   const router = useRouter();

@@ -1,6 +1,6 @@
 'use client';
 import { useForm } from 'react-hook-form';
-import { signUp } from '@/app/lib/userApi';
+import { signUp } from '@/lib/userApi';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from '../style.module.css';

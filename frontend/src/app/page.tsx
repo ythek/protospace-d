@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { fetchPrototypes } from './lib/prototypeApi';
-import { PrototypeData } from './lib/prototypeData';
-import { UserData } from './lib/userData';
-import PrototypeView from './components/PrototypeView';
+import { fetchPrototypes } from '../lib/prototypeApi';
+import { PrototypeData } from '../lib/prototypeData';
+import { UserData } from '../lib/userData';
+import PrototypeView from '../components/PrototypeView';
 import styles from './page.module.css';
 
 export default function Home() {

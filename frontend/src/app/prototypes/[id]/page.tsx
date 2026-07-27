@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { PrototypeData } from "@/app/lib/prototypeData";
-import { fetchPrototypeById } from "@/app/lib/prototypeApi";
-import PrototypeDetail from "@/app/components/PrototypeDetail";
+import { PrototypeData } from "@/lib/prototypeData";
+import { fetchPrototypeById } from "@/lib/prototypeApi";
+import PrototypeDetail from "@/components/PrototypeDetail";
 
 
 

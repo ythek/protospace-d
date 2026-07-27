@@ -7,4 +7,5 @@ export interface PrototypeData {
   concept: string;
   image: string;
   user?: UserData;
+  userId?: number;
 }

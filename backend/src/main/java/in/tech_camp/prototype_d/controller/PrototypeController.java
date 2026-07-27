@@ -5,6 +5,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -77,7 +79,7 @@ public class PrototypeController {
   
     //編集前画面に表示
   @GetMapping("/prototypes/{prototypeId}/edit")
-  public ResponseEntity<?> editPrototype(@PathVariable ("prototypeId") Integer prototypeId ) {
+  public ResponseEntity<?> editPrototype(@PathVariable ("prototypeId") Long prototypeId ) {
     try {
       PrototypeDto dto = prototypeService.getPrototypeForEdit(prototypeId); //サービスのRepoから一件だけのデータを取得するメソッドを使ってＤＢからもってくる
 
@@ -92,7 +94,7 @@ public class PrototypeController {
     }
   }
 //更新処理
-    @PostMapping ("/prototypes/{prototypeId}/update")
+    @PostMapping("/prototypes/{prototypeId}/update")
     public ResponseEntity<?> updatePrototype(@PathVariable ("prototypeId") Integer prototypeId, @RequestBody PrototypeDto dto) {
       try {
         prototypeService.updatePrototype(prototypeId, dto);

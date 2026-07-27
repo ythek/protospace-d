@@ -19,24 +19,15 @@ export default function PrototypeEditPage() {
   const [initialData, setInitialData] = useState<PrototypeData | undefined>();
   const [isSubmitting, setIsSubmitting]=useState(false);
   const [loading, setLoading] =useState<boolean>(true); //画面開いてからAPIからデータが届くまでの間。初期から読み込みしてるので初期値はtrue
-//未ログインの処理
-  if (!user) { 
-    router.replace('/login');
-    return;
-  }
-//投稿者IDとログインIDが一致しない場合
-  if(initialData?.user?.id !== user.id) {
-  router.replace('/');
-  return;
-  }
+
 
   useEffect(() => {
     if (isAuthLoading)  //ログイン承認終わるまで待つ
       return;
-
+   
       //未ログインの処理
   if (!user) { 
-    router.replace('/login');
+    router.replace('/users/sign_in');
     return;
   }
 
@@ -44,7 +35,13 @@ export default function PrototypeEditPage() {
     if(prototypeId) {
       fetchPrototype(prototypeId) //SpringBootへリクエストを飛ばす
       .then((data) => { //データの取得成功したら
-        if  (String(data?.user?.id) !== String(user.id)) {
+        console.log("APIから届いたデータ(data):", data);
+        const postUserId = (data as any)?.userId ?? data?.user?.id;
+
+  console.log("投稿者のID(data?.user?.id):", data?.user?.id);
+  console.log("ログイン中のユーザーID(user?.id):", user?.id);
+if (user && postUserId !== undefined && String(postUserId) !== String(user.id)) {           
+            console.log("不一致のためトップページへリダイレクト");
           router.replace('/')
           return;
         }

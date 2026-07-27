@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import in.tech_camp.prototype_d.dto.PrototypeDto;
 import in.tech_camp.prototype_d.dto.UserDto;
@@ -48,7 +49,7 @@ public class PrototypeService {
     return dtos;
   }
   //編集用データ
-    public PrototypeDto getPrototypeForEdit(Integer id) {
+    public PrototypeDto getPrototypeForEdit(Long id) {
         PrototypeEntity entity = prototypeRepository.findById(id);
         
         if (entity == null) {

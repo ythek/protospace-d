@@ -58,7 +58,7 @@ public class PrototypeController {
   }
 
   // プロトタイプ削除機能
-  @DeleteMapping("/prototypes/{prototypeId}/delete")
+  @DeleteMapping("/prototypes/{prototypeId}")
   public ResponseEntity<?> deletePrototype(@PathVariable("prototypeId") Long prototypeId, 
                                           @AuthenticationPrincipal CustomUserDetail currentUser) {
     try {

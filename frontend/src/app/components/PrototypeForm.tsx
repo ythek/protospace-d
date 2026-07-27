@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { PrototypeFormData } from '../prototypes/new/page';
+// ★ インポート元を prototypeApi に変更
+import { PrototypeFormData } from '@/app/lib/prototypeApi';
 
 
 interface PrototypeFormProps {

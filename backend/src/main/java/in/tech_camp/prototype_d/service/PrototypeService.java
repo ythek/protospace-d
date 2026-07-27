@@ -17,9 +17,6 @@ public class PrototypeService {
 
   private final PrototypeRepository prototypeRepository;
 
-  // いずれ使うので書いておく
-  // private final UserRepository userRepository;
-
   // 全件取得
   public List<PrototypeDto> getPrototypes() {
     List<PrototypeEntity> entities = prototypeRepository.findAll();
@@ -34,11 +31,6 @@ public class PrototypeService {
       dto.setImage(entity.getImage());
 
       UserDto userDto = new UserDto();
-      
-      // 本来はentity.getUserId()を使ってDBからユーザー情報を取得する
-      // UserEntity user = userRepository.findById(entity.getUserId());
-      
-      // ダミーのユーザー名
       userDto.setUsername("testuser123");
 
       dto.setUser(userDto);
@@ -46,5 +38,10 @@ public class PrototypeService {
     }
 
     return dtos;
+  }
+
+  // ★ 新規追加：Controller から呼ばれる保存処理
+  public void insert(PrototypeEntity prototypeEntity) {
+      prototypeRepository.insert(prototypeEntity);
   }
 }

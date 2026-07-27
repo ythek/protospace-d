@@ -19,8 +19,8 @@ public class PrototypeForm {
     @Size(max = 128, message = "コンセプトは128文字以内で入力してください")
     private String concept;
 
-    @NotBlank(message = "画像URLを入力してください")
-    @Size(max = 512, message = "画像URLは512文字以内で入力してください")
+    // @NotBlank(message = "画像URLを入力してください")
+    // @Size(max = 512, message = "画像URLは512文字以内で入力してください")
     private String image;
 
     // コントローラー内の prototypeForm.getText() と整合性を取るためのプロパティ

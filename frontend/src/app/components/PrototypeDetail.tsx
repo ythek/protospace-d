@@ -79,7 +79,7 @@ export default function PrototypeDetail ({ prototype }: Props ) {
     
       { isOwner &&(
         <div className={styles.prototype_manage}>
-          <Link href={`prototypes/${prototype.id}/edit`} className={styles.prototype_button}>編集する</Link>
+          <Link href={`/prototypes/${prototype.id}/edit`} className={styles.prototype_button}>編集する</Link>
           <Link href={`prototypes/${prototype.id}/delete`} className={styles.prototype_button}>削除する</Link>
         </div>
       )}

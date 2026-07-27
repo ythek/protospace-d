@@ -59,6 +59,7 @@ public class PrototypeService {
         dto.setTitle(entity.getTitle());
         dto.setCatchcopy(entity.getCatchcopy());
         dto.setConcept(entity.getConcept());
+        dto.setImage(entity.getImage());
 
         return dto;
     }
@@ -71,6 +72,7 @@ public class PrototypeService {
         entity.setTitle(dto.getTitle());
         entity.setCatchcopy(dto.getCatchcopy());
         entity.setConcept(dto.getConcept());
+        entity.setImage(dto.getImage());
 
         prototypeRepository.update(entity);
     }

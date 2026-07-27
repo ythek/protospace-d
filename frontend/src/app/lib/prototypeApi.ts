@@ -27,3 +27,15 @@ export const createComment = async (prototypeId: number | string , comment: stri
   });
   return response.data;
 };
+
+//プロトタイプ一件だけ取得
+export const fetchPrototype = async ( prototypeId: number | string): Promise<PrototypeData> => {
+  const response = await apiClient.get(`/api/prototypes/${prototypeId}/edit`);
+  return response.data;
+}
+//編集更新処理
+export const updatePrototype = async (prototypeId: number | string, dto: PrototypeData) => {
+  const response = await apiClient.post(`/api/prototypes/${prototypeId}/update`, dto);
+  return response.data;
+}
+

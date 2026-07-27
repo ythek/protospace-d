@@ -59,10 +59,9 @@ public class CommentController {
 
     // DBに保存
     try {
-        // ユーザー機能実装前なので1Lを設定
-        Long userId = (currentUser != null && currentUser.getUser() != null) 
-                ? currentUser.getId() 
-                : 1L;
+
+        Long userId = currentUser.getId();
+
 
         commentService.saveComment(prototypeId, userId, commentForm.getComment());
         

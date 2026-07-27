@@ -2,6 +2,7 @@ import apiClient from './apiClient';
 import axios from 'axios';
 import qs from 'qs';
 import { UserData } from './userData';
+import { PrototypeData } from './prototypeData';
 
 // 401が返ったときの処理
 apiClient.interceptors.response.use(
@@ -11,7 +12,7 @@ apiClient.interceptors.response.use(
   (error) => {
     if (error.response && error.response.status === 401) {
       const requestUrl = error.config?.url || '';
-      const excludedUrls = ['/api/sign_in', '/api/users'];
+      const excludedUrls = ['/api/users/sign_in', '/api/users/sign_up'];
       const isAuthRequest = excludedUrls.some(url => requestUrl.includes(url));
       if (!isAuthRequest) {
         // ローカルに残っているユーザー情報を消す
@@ -46,11 +47,15 @@ interface LoginCredentials {
   password: string;
 }
 
+export interface UserProfileResponse {
+  user: UserData;
+  prototypes: PrototypeData[];
+}
 
 // 新規登録
 export const signUp = async (formData: SignUpForm): Promise<UserResponse> => {
   try {
-    const response = await apiClient.post<UserResponse>('/api/users/', formData);
+    const response = await apiClient.post<UserResponse>('/api/users/sign_up', formData);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -65,7 +70,7 @@ export const signUp = async (formData: SignUpForm): Promise<UserResponse> => {
 // ログイン
 export const login = async (credentials: LoginCredentials): Promise<UserResponse> => {
   try {
-    const response = await apiClient.post<UserResponse >('/api/sign_in', qs.stringify({
+    const response = await apiClient.post<UserResponse >('/api/users/sign_in', qs.stringify({
       email: credentials.email,
       password: credentials.password,
     }), {
@@ -88,7 +93,7 @@ export const login = async (credentials: LoginCredentials): Promise<UserResponse
 // ログアウト
 export const logout = async (): Promise<void> => {
   try {
-    await apiClient.get('/api/sign_out');
+    await apiClient.get('/api/users/sign_out');
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.error('Logout error:', error.response?.data);
@@ -98,7 +103,7 @@ export const logout = async (): Promise<void> => {
 };
 
 // ユーザー取得
-export const fetchUserById = async (userId: number): Promise<UserData> => {
-  const response = await apiClient.get<UserData>(`/api/users/${userId}`);
+export const fetchUserById = async (userId: number): Promise<UserProfileResponse> => {
+  const response = await apiClient.get<UserProfileResponse>(`/api/users/${userId}`);
   return response.data;
 };

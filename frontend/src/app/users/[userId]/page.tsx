@@ -1,7 +1,6 @@
 'use client';
 
 import PrototypeView from "@/components/PrototypeView";
-import {fetchPrototypesByUserId } from "@/lib/prototypeApi";
 import { PrototypeData } from "@/lib/prototypeData";
 import { useEffect, useState } from "react";
 
@@ -27,9 +26,8 @@ export default function UserDetail() {
         const getPrototypesByUser = async () => {
           try {
             const selectedUser = await fetchUserById(userId);
-            setUser(selectedUser);
-            const data = await fetchPrototypesByUserId(userId);
-            setPrototypes(data);
+            setUser(selectedUser.user);
+            setPrototypes(selectedUser.prototypes);
           } catch (error) {
             console.error("取得に失敗しました", error);
           }

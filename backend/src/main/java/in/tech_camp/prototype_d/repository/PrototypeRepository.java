@@ -20,7 +20,7 @@ public interface PrototypeRepository {
 
   // 削除権限チェック用
   @Select("SELECT user_id FROM prototypes WHERE id = #{id}")
-  Integer findUserIdById(Long id);
+  Long findUserIdById(Long id);
 
   // プロトタイプ削除
   @Delete("DELETE FROM prototypes WHERE id = #{prototypeId}")
@@ -28,5 +28,5 @@ public interface PrototypeRepository {
 
   // ユーザーidで取得
   @Select("SELECT * FROM prototypes WHERE user_id = #{userId}")
-  List<PrototypeEntity> findByUserId(Integer userId);
+  List<PrototypeEntity> findByUserId(Long userId);
 }

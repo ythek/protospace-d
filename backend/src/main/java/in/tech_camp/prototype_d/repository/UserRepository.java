@@ -24,5 +24,5 @@ public interface UserRepository {
   List<UserEntity> findAll();
 
   @Select("SELECT * FROM users WHERE id = #{userId}")
-  UserEntity findById(Integer userId);
+  UserEntity findById(Long userId);
 }

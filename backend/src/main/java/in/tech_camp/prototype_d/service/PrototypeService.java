@@ -47,7 +47,7 @@ public class PrototypeService {
     return dtos;
   }
 
-    public List<PrototypeDto> getPrototypesByUserId(Integer userId) {
+    public List<PrototypeDto> getPrototypesByUserId(Long userId) {
     List<PrototypeEntity> entities = prototypeRepository.findByUserId(userId);
     List<PrototypeDto> dtos = new ArrayList<>();
 
@@ -93,8 +93,8 @@ public class PrototypeService {
 
   // プロトタイプ削除機能
   @Transactional
-  public void deletePrototype(Long prototypeId, Integer currentUserId) {
-    Integer ownerId = prototypeRepository.findUserIdById(prototypeId);
+  public void deletePrototype(Long prototypeId, Long currentUserId) {
+    Long ownerId = prototypeRepository.findUserIdById(prototypeId);
 
     if (ownerId == null) {
         throw new IllegalArgumentException("対象のプロトタイプが見つかりません");

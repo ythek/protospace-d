@@ -42,13 +42,13 @@ public class SecurityConfig {
                         })
                 )
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers(HttpMethod.GET, "/css/**", "/images/**","/users/{id:[0-9]+}","/error").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/prototypes/", "/api/prototypes/**","/api/users/*/prototypes","/api/users/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/users/", "/api/sign_in").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/css/**", "/images/**","/error").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/prototypes/", "/api/prototypes/{id:[0-9]+}","/api/users/{id:[0-9]+}").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/users/sign_up", "/api/users/sign_in").permitAll()
                         .anyRequest().authenticated())
 
                 .formLogin(login -> login
-                    .loginProcessingUrl("/api/sign_in")
+                    .loginProcessingUrl("/api/users/sign_in")
                     .usernameParameter("email")
                     .successHandler(authenticationSuccessHandler())
                     .failureHandler((request, response, exception) -> {
@@ -62,7 +62,7 @@ public class SecurityConfig {
                 )
 
                 .logout(logout -> logout
-                    .logoutUrl("/api/sign_out")
+                    .logoutUrl("/api/users/sign_out")
                     .logoutSuccessHandler((request, response, authentication) -> {
                         response.setStatus(HttpServletResponse.SC_OK);
                         response.setContentType("application/json");

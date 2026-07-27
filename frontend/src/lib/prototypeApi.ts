@@ -14,12 +14,6 @@ export const fetchPrototypeById = async (prototypeId: number | string): Promise<
   return response.data;
 };
 
-//　ユーザーIdでプロトタイプ取得
-export const fetchPrototypesByUserId = async (userId: number): Promise<PrototypeData[]> => {
-  const response = await apiClient.get<PrototypeData[]>(`/api/users/${userId}/prototypes`);
-  return response.data;
-};
-
 // 削除機能
 export const deletePrototype = async (prototypeId: number | string ) => {
   const response = await apiClient.delete(`/api/prototypes/${prototypeId}`);

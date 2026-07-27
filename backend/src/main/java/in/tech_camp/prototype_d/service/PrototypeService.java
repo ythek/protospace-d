@@ -54,6 +54,10 @@ public class PrototypeService {
   public void deletePrototype(Long prototypeId, Integer currentUserId) {
     Integer ownerId = prototypeRepository.findUserIdById(prototypeId);
 
+    if (ownerId == null) {
+        throw new IllegalArgumentException("対象のプロトタイプが見つかりません");
+    }
+
     if (!ownerId.equals(currentUserId)) {
         throw new IllegalArgumentException("削除する権限がありません");
     }

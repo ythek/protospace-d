@@ -10,12 +10,18 @@ apiClient.interceptors.response.use(
   },
   (error) => {
     if (error.response && error.response.status === 401) {
-      // ローカルに残っているユーザー情報を消す
-      localStorage.removeItem('user'); 
-      // ログイン画面に飛ばす
-      window.location.href = '/users/sign_in';
+      const requestUrl = error.config?.url || '';
+      const excludedUrls = ['/api/sign_in', '/api/users'];
+      const isAuthRequest = excludedUrls.some(url => requestUrl.includes(url));
+      if (!isAuthRequest) {
+        // ローカルに残っているユーザー情報を消す
+        localStorage.removeItem('user'); 
+        // ログイン画面に飛ばす
+        window.location.href = '/users/sign_in';
+
+      }
     }
-    return Promise.reject(error);
+      return Promise.reject(error);
   }
 );
 
@@ -32,6 +38,7 @@ interface SignUpForm {
 interface UserResponse {
   id: number;
   username: string;
+  email: string;
 }
 
 interface LoginCredentials {
@@ -64,6 +71,8 @@ export const login = async (credentials: LoginCredentials): Promise<UserResponse
     }), {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     });
+
+    console.log('APIレスポンス:', response.data);
     return response.data;
 
   } catch (error) {

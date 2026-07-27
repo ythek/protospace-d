@@ -2,6 +2,7 @@
 .container {
   padding: 40px 20px;
   max-width: 800px;
+  min-height: calc(100vh - 300px);
 }
 
 .user_info {

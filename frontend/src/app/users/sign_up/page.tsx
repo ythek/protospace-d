@@ -4,6 +4,7 @@ import { signUp } from '@/lib/userApi';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from '../style.module.css';
+import { useAuthContext } from '@/app/context/AuthContext';
 
 interface SignUpForm {
   email: string;
@@ -19,11 +20,13 @@ const SignUpPage = () => {
   const router = useRouter();
   const { register, handleSubmit, formState: { errors }, watch } = useForm<SignUpForm>();
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
+  const { registerUser } = useAuthContext();
 
   // 新規登録処理
   const onSubmit = async (formData: SignUpForm) => {
     try {
       await signUp(formData);
+      await registerUser(formData);
       router.push('/');
     } catch (error) {
       setErrorMessages([error instanceof Error ? error.message : 'エラーが発生しました']);

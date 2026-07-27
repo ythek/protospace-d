@@ -10,6 +10,7 @@ import styles from './style.module.css';
 import { useParams } from "next/navigation";
 import { fetchUserById } from "@/lib/userApi";
 import { UserData } from "@/lib/userData";
+import { useAuthContext } from "@/app/context/AuthContext";
 
 
 
@@ -17,8 +18,8 @@ export default function UserDetail() {
   const params = useParams();
   const id = params.userId;
   const [prototypes, setPrototypes] = useState<PrototypeData[]>([]);
-  
-  const [user, setUser] = useState<UserData>();
+  const {user} = useAuthContext();
+  const [searchedUser, setUser] = useState<UserData>();
 
   useEffect(() => {
       const userId = typeof id === 'string' ? Number(id) : null;
@@ -37,33 +38,42 @@ export default function UserDetail() {
     }
    }, [id]);
 
-  if(user){
+  if (!searchedUser) return <div className={styles.container}>読み込み中・・・</div>;
+
+  if(searchedUser.id){
   return (
     <main className={styles.container}>
-      <h2 className={styles.user_info}>{user.username}さんの情報</h2>
-
+      {user?.id === searchedUser.id ? (
+        <h2 className={styles.user_info}>あなたの情報</h2>
+      ) : (
+        <h2 className={styles.user_info}>{searchedUser.username}さんの情報</h2>
+      )}
       <table className={styles.userinfo}>
         <tbody>
           <tr>
             <td className={styles.recordname}>名前</td>
-            <td>{user.username}</td>
+            <td>{searchedUser.username}</td>
           </tr>
           <tr>
             <td className={styles.recordname}>プロフィール</td>
-            <td>{user.profile}</td>
+            <td>{searchedUser.profile}</td>
           </tr>
           <tr>
             <td className={styles.recordname}>所属</td>
-            <td>{user.affiliation}</td>
+            <td>{searchedUser.affiliation}</td>
           </tr>
           <tr>
             <td className={styles.recordname}>役職</td>
-            <td>{user.position}</td>
+            <td>{searchedUser.position}</td>
           </tr>
         </tbody>
      </table>
 
-      <h2 className={styles.user_info}>{user.username}さんの投稿</h2>
+      {user?.id === searchedUser.id ? (
+        <h2 className={styles.user_info}>あなたの投稿</h2>
+      ) : (
+        <h2 className={styles.user_info}>{searchedUser.username}さんの投稿</h2>
+      )}
       <div className={styles.grid}>
         {prototypes.map((prototype) => (
           <PrototypeView key={prototype.id} prototype={prototype} />

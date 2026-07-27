@@ -87,9 +87,10 @@ public class SecurityConfig {
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
             response.getWriter().write(String.format(
-                "{\"id\":%d,\"email\":\"%s\"}",
+                "{\"id\":%d,\"email\":\"%s\",\"username\":\"%s\"}",
                 userDetails.getId(),
-                userDetails.getEmail()
+                userDetails.getEmail(),
+                userDetails.getUsername()
             ));
         };
     }

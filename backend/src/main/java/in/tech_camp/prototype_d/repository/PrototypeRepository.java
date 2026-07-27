@@ -23,6 +23,6 @@ public interface PrototypeRepository {
   Integer findUserIdById(Long id);
 
   // プロトタイプ削除
-  @Delete("DELETE FROM prototypes WHERE id = #{id}")
+  @Delete("DELETE FROM prototypes WHERE id = #{prototypeId}")
   void deletePrototype(Long prototypeId);
 }

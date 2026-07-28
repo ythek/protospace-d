@@ -12,19 +12,36 @@ export default function PrototypeDetailPage() {
   const params = useParams();
   const prototypeId = params.id as string;
   const [prototype, setPrototype]= useState<PrototypeData | null>(null);
-  // const [currentUserName, serCurrentUserName]= useState<string | null> ("")
+  const [isNotFound, setIsNotFound] = useState(false);
   useEffect(() => {
     if (prototypeId) {
       fetchPrototypeById(prototypeId)
-      .then((data) => setPrototype(data))
-      .catch((err) => console.error("データ取得失敗:", err))
+      .then((data) => 
+        setPrototype(data)                  
+      )
+      .catch((err) => {
+        console.error("データ取得失敗:", err);
+        if (err.response && err.response.status === 404) {
+            setIsNotFound(true);
+          } else {
+            setIsNotFound(true);
+          }
+       });
     }
   }, [prototypeId]);
+
+  if (isNotFound) {
+  return (
+    <div>
+      <h1>404 Not Found</h1>
+      <p>存在しないプロトタイプです</p>
+    </div>
+    );
+  }
 
     if (!prototype) return <div>読み込み中・・・</div>;
 
   return (<PrototypeDetail
     prototype={prototype} 
-    //currentUserName={currentUserName}
     />);
 }

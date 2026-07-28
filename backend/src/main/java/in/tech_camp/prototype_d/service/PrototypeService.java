@@ -75,6 +75,7 @@ public class PrototypeService {
   public PrototypeDto getPrototypeById(Long id) {
     PrototypeEntity entity = prototypeRepository.findById(id);
     PrototypeDto dto = new PrototypeDto();
+    if(entity != null){
       dto.setId(entity.getId());
       dto.setTitle(entity.getTitle());
       dto.setCatchcopy(entity.getCatchcopy());
@@ -88,6 +89,9 @@ public class PrototypeService {
       userDto.setUsername(user.getUsername());
       userDto.setId(user.getId());
       dto.setUser(userDto);
+    }else{
+      dto = null;
+    }
     return dto;
   }
 

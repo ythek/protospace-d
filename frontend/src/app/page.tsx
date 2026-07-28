@@ -1,15 +1,15 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { fetchPrototypes } from './lib/prototypeApi';
-import { PrototypeData } from './lib/prototypeData';
-import { UserData } from './lib/userData';
-import PrototypeView from './components/PrototypeView';
+import { fetchPrototypes } from '../lib/prototypeApi';
+import { PrototypeData } from '../lib/prototypeData';
+import PrototypeView from '../components/PrototypeView';
 import styles from './page.module.css';
+import { useAuthContext } from './context/AuthContext';
 
 export default function Home() {
   const [prototypes, setPrototypes] = useState<PrototypeData[]>([]);
-  const [currentUser, setCurrentUser] = useState<UserData | null>(null);
+  const {user} = useAuthContext();
 
   useEffect(() => {
     const getPrototypes = async () => {
@@ -25,12 +25,12 @@ export default function Home() {
 
   return (
     <main className={styles.container}>
-      {/* ログイン中（currentUserが存在する）場合のみレンダリングされます */}
-      {currentUser && (
+      {/* ログイン中（userが存在する）場合のみレンダリングされます */}
+      {user && (
         <div className={styles.greeting}>
           こんにちは、
-          <a href="#" className={styles.usernameLink}>
-            {currentUser.username}
+          <a href={`/users/${user.id}`} className={styles.usernameLink}>
+            {user.username}
           </a>
           さん
         </div>

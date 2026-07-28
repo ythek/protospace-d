@@ -37,9 +37,9 @@ public class SecurityConfig {
                         })
                 )
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers(HttpMethod.GET, "/css/**", "/images/**", "/uploads/**", "/users/{id:[0-9]+}","/error").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/prototypes/", "/api/prototypes/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/users/", "/api/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/images/**", "/uploads/**", "/users/{id:[0-9]+}","/error").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/prototypes", "/api/prototypes/{id:[0-9]+}","/api/users/{id:[0-9]+}").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/users/sign_up", "/api/users/sign_in").permitAll()
                         .anyRequest().authenticated())
 
                 .formLogin(login -> login

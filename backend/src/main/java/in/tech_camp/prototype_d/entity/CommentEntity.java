@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class CommentEntity {
-  private Integer id;
+  private Long id;
   private String comment;
   private Long userId;
   private Long prototypeId;

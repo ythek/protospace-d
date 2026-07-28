@@ -1,7 +1,7 @@
 'use client'
 
 import React, { createContext, useContext, useState, useEffect } from 'react'
-import { login as apiLogin, logout as apiLogout } from '@/app/api/users';
+import { login as apiLogin, logout as apiLogout } from '@/lib/userApi';
 
 type User = {
   id: number
@@ -14,6 +14,7 @@ type AuthContextType = {
   setUser: React.Dispatch<React.SetStateAction<User>>
   login: (email: string, password: string) => Promise<void>
   logout: () => Promise<void>
+  registerUser: (formData: any) => Promise<void>
   isLoading: boolean
 }
 
@@ -63,8 +64,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const registerUser = async (formData: any) => {
+    try {
+      const userData = await apiLogin(formData);
+      const user = { id: userData.id, username: userData.username, isAuthenticated: true };
+      setUser(user);
+      localStorage.setItem('user', JSON.stringify(user));
+    } catch (error) {
+      console.error('Login error:', error);
+      throw error;
+    }
+  }
+
   return (
-    <AuthContext.Provider value={{ user, setUser, login, logout, isLoading }}>
+    <AuthContext.Provider value={{ user, setUser, login, logout, registerUser, isLoading }}>
       {children}
     </AuthContext.Provider>
   )

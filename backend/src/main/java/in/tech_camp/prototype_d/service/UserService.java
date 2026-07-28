@@ -1,9 +1,16 @@
 package in.tech_camp.prototype_d.service;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import in.tech_camp.prototype_d.dto.UserDetailDto;
 import in.tech_camp.prototype_d.entity.AffiliationEntity;
 import in.tech_camp.prototype_d.entity.PositionEntity;
 import in.tech_camp.prototype_d.entity.UserEntity;
@@ -11,6 +18,8 @@ import in.tech_camp.prototype_d.form.UserForm;
 import in.tech_camp.prototype_d.repository.AffiliationRepository;
 import in.tech_camp.prototype_d.repository.PositionRepository;
 import in.tech_camp.prototype_d.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 
 @Service
@@ -20,12 +29,13 @@ public class UserService {
   private final AffiliationRepository affiliationRepository;
   private final PositionRepository positionRepository;
   private final PasswordEncoder passwordEncoder;
+  private final UserAuthenticationService userAuthenticationService;
 
   @Transactional
-      public UserEntity registerUser(UserForm userForm) {
+      public UserEntity registerUser(UserForm userForm, HttpServletRequest request, HttpServletResponse response) {
 
           //所属（affiliation）テーブルへ登録
-          Integer affiliationId = affiliationRepository.findIdByName(userForm.getAffiliation());
+          Long affiliationId = affiliationRepository.findIdByName(userForm.getAffiliation());
           if (affiliationId == null) {
               AffiliationEntity affiliation = new AffiliationEntity();
               affiliation.setAffiliationName(userForm.getAffiliation());
@@ -34,7 +44,7 @@ public class UserService {
           }
           
           //役職（Position）テーブルへ登録
-          Integer positionId = positionRepository.findIdByName(userForm.getPosition());
+          Long positionId = positionRepository.findIdByName(userForm.getPosition());
           if (positionId == null) {
               PositionEntity position = new PositionEntity();
               position.setPositionName(userForm.getPosition());
@@ -51,8 +61,9 @@ public class UserService {
           userEntity.setProfile(userForm.getProfile());
           userEntity.setAffiliationId(affiliationId);
           userEntity.setPositionId(positionId);
-
           userRepository.insert(userEntity);
+
+          autoLogin(userEntity.getEmail(), request, response);
           return userEntity;
       }
 
@@ -64,4 +75,40 @@ public class UserService {
   private String encodePassword(String password) {
     return passwordEncoder.encode(password);
   }
+
+
+  // Dtoに詰め替える
+    public UserDetailDto getUser(Long userId) {
+
+    UserEntity userEntity = userRepository.findById(userId);
+      UserDetailDto dto = new UserDetailDto();    
+    if(userEntity != null){
+      dto.setId(userEntity.getId());
+      dto.setUsername(userEntity.getUsername());
+      dto.setProfile(userEntity.getProfile());
+      dto.setAffiliation(affiliationRepository.findNameById(userEntity.getAffiliationId()));
+      dto.setPosition(positionRepository.findNameById(userEntity.getPositionId()));
+    }else{
+      dto.setId(null);
+    }
+    return dto;
+  }
+
+  // 新規登録後にログイン状態
+  public void autoLogin(String email, HttpServletRequest request, HttpServletResponse response) {    
+        UserDetails userDetails = userAuthenticationService.loadUserByUsername(email);
+ 
+        // 認証トークンを作成
+        UsernamePasswordAuthenticationToken auth =
+            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        
+        // 認証情報をセット
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(auth);
+        SecurityContextHolder.setContext(context);
+
+        // Cookieに保存する
+        SecurityContextRepository contextRepository = new HttpSessionSecurityContextRepository();
+        contextRepository.saveContext(context, request, response);
+    }
 }

@@ -16,7 +16,7 @@ api.interceptors.response.use(
       // ローカルに残っているユーザー情報を消す
       localStorage.removeItem('user'); 
       // ログイン画面に飛ばす
-      window.location.href = '/login';
+      window.location.href = '/sign_in';
     }
 
     return Promise.reject(error);

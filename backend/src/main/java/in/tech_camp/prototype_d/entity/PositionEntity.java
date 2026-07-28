@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class PositionEntity {
-  private Integer id;
-  private String positionName;
+    private Long id; // Long に変更済み
+    private String positionName;
 }
+

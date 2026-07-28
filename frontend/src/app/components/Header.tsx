@@ -47,7 +47,7 @@ export default function Header() {
               style={{ border: 'none', background: 'none', color: '#30a3f0', cursor: 'pointer', fontSize: '14px' }}>
               ログアウト
             </button>
-            <Link href="/new" style={{ border: '1px solid #30a3f0', color: '#30a3f0', padding: '8px 24px', textDecoration: 'none', fontSize: '14px', backgroundColor: 'transparent' }}>
+            <Link href="/prototypes/new" style={{ border: '1px solid #30a3f0', color: '#30a3f0', padding: '8px 24px', textDecoration: 'none', fontSize: '14px', backgroundColor: 'transparent' }}>
               New Proto
             </Link>
           </>

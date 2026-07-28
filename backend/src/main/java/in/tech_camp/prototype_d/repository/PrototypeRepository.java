@@ -3,26 +3,61 @@ package in.tech_camp.prototype_d.repository;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.One;
+import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import in.tech_camp.prototype_d.entity.PrototypeEntity;
 
 @Mapper
 public interface PrototypeRepository {
-  // プロトタイプ一覧
-  @Select("SELECT * FROM prototypes")
-  List<PrototypeEntity> findAll();
 
-  // プロトタイプ詳細
-  @Select("SELECT * FROM prototypes WHERE id = #{id}") 
-  PrototypeEntity findById(Long id);
+    // プロトタイプ全件取得（作成者ユーザー情報含む）
+    @Select("SELECT id, title, catchcopy, concept, image, user_id FROM prototypes ORDER BY id DESC")
+    @Results({
+        @Result(property = "id", column = "id"),
+        @Result(property = "title", column = "title"),
+        @Result(property = "catchcopy", column = "catchcopy"),
+        @Result(property = "concept", column = "concept"),
+        @Result(property = "image", column = "image"),
+        @Result(property = "user", column = "user_id",
+                one = @One(select = "in.tech_camp.prototype_d.repository.UserRepository.findById"))
+    })
+    List<PrototypeEntity> findAll();
 
-  // 削除権限チェック用
-  @Select("SELECT user_id FROM prototypes WHERE id = #{id}")
-  Integer findUserIdById(Long id);
+    // ID指定で1件取得（作成者ユーザー情報含む）
+    @Select("SELECT id, title, catchcopy, concept, image, user_id FROM prototypes WHERE id = #{id}")
+    @Results({
+        @Result(property = "id", column = "id"),
+        @Result(property = "title", column = "title"),
+        @Result(property = "catchcopy", column = "catchcopy"),
+        @Result(property = "concept", column = "concept"),
+        @Result(property = "image", column = "image"),
+        @Result(property = "user", column = "user_id",
+                one = @One(select = "in.tech_camp.prototype_d.repository.UserRepository.findById"))
+    })
+    PrototypeEntity findById(Long id);
 
-  // プロトタイプ削除
-  @Delete("DELETE FROM prototypes WHERE id = #{prototypeId}")
-  void deletePrototype(Long prototypeId);
+    // 新規投稿
+    @Insert("INSERT INTO prototypes (title, catchcopy, concept, image, user_id) " +
+            "VALUES (#{title}, #{catchcopy}, #{concept}, #{image}, #{user.id})")
+    @Options(useGeneratedKeys = true, keyProperty = "id")
+    void insert(PrototypeEntity prototype);
+
+    // 更新
+    @Update("UPDATE prototypes SET title = #{title}, catchcopy = #{catchcopy}, concept = #{concept}, image = #{image} WHERE id = #{id}")
+    void update(PrototypeEntity prototype);
+
+    // 削除
+    @Delete("DELETE FROM prototypes WHERE id = #{id}")
+    void delete(Long id);
+
+    // 削除権限チェック用（投稿者のuser_idのみ取得したい場合）
+    @Select("SELECT user_id FROM prototypes WHERE id = #{id}")
+    Long findUserIdById(Long id);
 }

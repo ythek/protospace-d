@@ -16,52 +16,55 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PrototypeService {
 
-  private final PrototypeRepository prototypeRepository;
+    private final PrototypeRepository prototypeRepository;
 
-  // いずれ使うので書いておく
-  // private final UserRepository userRepository;
+    // 全件取得
+    public List<PrototypeDto> getPrototypes() {
+        List<PrototypeEntity> entities = prototypeRepository.findAll();
+        List<PrototypeDto> dtos = new ArrayList<>();
 
-  // 全件取得
-  public List<PrototypeDto> getPrototypes() {
-    List<PrototypeEntity> entities = prototypeRepository.findAll();
-    List<PrototypeDto> dtos = new ArrayList<>();
+        for (PrototypeEntity entity : entities) {
+            PrototypeDto dto = new PrototypeDto();
+            dto.setId(entity.getId());
+            dto.setTitle(entity.getTitle());
+            dto.setCatchcopy(entity.getCatchcopy());
+            dto.setConcept(entity.getConcept());
+            dto.setImage(entity.getImage());
 
-    for (PrototypeEntity entity : entities) {
-      PrototypeDto dto = new PrototypeDto();
-      dto.setId(entity.getId());
-      dto.setTitle(entity.getTitle());
-      dto.setCatchcopy(entity.getCatchcopy());
-      dto.setConcept(entity.getConcept());
-      dto.setImage(entity.getImage());
+            UserDto userDto = new UserDto();
+            // entity.getUser() が存在する場合はそのユーザー名をセット
+            if (entity.getUser() != null) {
+                userDto.setUsername(entity.getUser().getUsername());
+            } else {
+                userDto.setUsername("testuser123");
+            }
 
-      UserDto userDto = new UserDto();
-      
-      // 本来はentity.getUserId()を使ってDBからユーザー情報を取得する
-      // UserEntity user = userRepository.findById(entity.getUserId());
-      
-      // ダミーのユーザー名
-      userDto.setUsername("testuser123");
+            dto.setUser(userDto);
+            dtos.add(dto);
+        }
 
-      dto.setUser(userDto);
-      dtos.add(dto);
+        return dtos;
     }
 
-    return dtos;
-  }
-
-  // プロトタイプ削除機能
-  @Transactional
-  public void deletePrototype(Long prototypeId, Integer currentUserId) {
-    Integer ownerId = prototypeRepository.findUserIdById(prototypeId);
-
-    if (ownerId == null) {
-        throw new IllegalArgumentException("対象のプロトタイプが見つかりません");
+    // 新規追加：保存処理
+    @Transactional
+    public void insert(PrototypeEntity prototypeEntity) {
+        prototypeRepository.insert(prototypeEntity);
     }
 
-    if (!ownerId.equals(currentUserId)) {
-        throw new IllegalArgumentException("削除する権限がありません");
-    }
+    // プロトタイプ削除機能
+    @Transactional
+    public void deletePrototype(Long prototypeId, Long currentUserId) {
+        Long ownerId = prototypeRepository.findUserIdById(prototypeId);
 
-    prototypeRepository.deletePrototype(prototypeId);
-  }
+        if (ownerId == null) {
+            throw new IllegalArgumentException("対象のプロトタイプが見つかりません");
+        }
+
+        if (!ownerId.equals(currentUserId)) {
+            throw new IllegalArgumentException("削除する権限がありません");
+        }
+
+        prototypeRepository.delete(prototypeId);
+    }
 }

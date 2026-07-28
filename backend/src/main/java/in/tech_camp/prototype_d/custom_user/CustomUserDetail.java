@@ -7,9 +7,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import in.tech_camp.prototype_d.entity.UserEntity;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 public class CustomUserDetail implements UserDetails {
 
     private final UserEntity user;
@@ -18,27 +18,29 @@ public class CustomUserDetail implements UserDetails {
         this.user = user;
     }
 
-    public Integer getId() {
-      return user.getId();
+    // 便利なヘルパーメソッド（戻り値を Integer から Long に変更）
+    public Long getId() {
+        return user != null ? user.getId() : null;
     }
 
     public String getEmail() {
-      return user.getEmail();
+        return user != null ? user.getEmail() : null;
+    }
+
+    // UserDetails インターフェースの実装メソッド
+    @Override
+    public String getUsername() {
+        return user != null ? user.getEmail() : null;
     }
 
     @Override
-    public String getUsername() {
-      return user.getUsername();
+    public String getPassword() {
+        return user != null ? user.getPassword() : null;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.emptyList();
-    }
-
-    @Override
-    public String getPassword() {
-        return user.getPassword();
     }
 
     @Override

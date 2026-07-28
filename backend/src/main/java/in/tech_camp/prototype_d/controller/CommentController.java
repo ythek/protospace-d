@@ -3,6 +3,7 @@ package in.tech_camp.prototype_d.controller;
 import org.springframework.web.bind.annotation.RestController;
 
 import in.tech_camp.prototype_d.dto.CommentDto;
+import in.tech_camp.prototype_d.entity.CommentEntity;
 import in.tech_camp.prototype_d.form.CommentForm;
 import in.tech_camp.prototype_d.service.CommentService;
 import lombok.RequiredArgsConstructor;
@@ -30,8 +31,8 @@ public class CommentController {
 
   // コメント一覧を取得
   @GetMapping("/prototypes/{prototypeId}/comments")
-  public ResponseEntity<List<CommentDto>> getComments(@PathVariable("prototypeId") Long prototypeId) {
-      List<CommentDto> comments = commentService.getCommentsByPrototypeId(prototypeId);
+  public ResponseEntity<List<CommentEntity>> getComments(@PathVariable("prototypeId") Long prototypeId) {
+      List<CommentEntity> comments = commentService.getCommentsByPrototypeId(prototypeId);
       return ResponseEntity.ok(comments);
   }
 
@@ -57,7 +58,7 @@ public class CommentController {
 
     // DBに保存
     try {
-        // ユーザー機能実装前なので1Lを設定
+        // 仮ユーザーID（Integerの1からLongの1Lに変更）
         Long userId = 1L;
         // Long userId = (currentUser != null && currentUser.getUser() != null) 
         //         ? currentUser.getUser().getId() 

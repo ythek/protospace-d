@@ -41,7 +41,7 @@ public interface PrototypeRepository {
         @Result(property = "user", column = "user_id",
                 one = @One(select = "in.tech_camp.prototype_d.repository.UserRepository.findById"))
     })
-    PrototypeEntity findById(Integer id);
+    PrototypeEntity findById(Long id);
 
     // 新規投稿
     @Insert("INSERT INTO prototypes (title, catchcopy, concept, image, user_id) " +
@@ -55,5 +55,9 @@ public interface PrototypeRepository {
 
     // 削除
     @Delete("DELETE FROM prototypes WHERE id = #{id}")
-    void delete(Integer id);
+    void delete(Long id);
+
+    // 削除権限チェック用（投稿者のuser_idのみ取得したい場合）
+    @Select("SELECT user_id FROM prototypes WHERE id = #{id}")
+    Long findUserIdById(Long id);
 }

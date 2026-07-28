@@ -4,8 +4,10 @@ import lombok.Data;
 
 @Data
 public class CommentEntity {
-    private Integer id;
-    private String text; // DBの comment カラムに対応
+    private Long id;          // Integer -> Long
+    private Long userId;      // 外部キー用
+    private Long prototypeId; // 外部キー用
+    private String comment;
     private UserEntity user;
     private PrototypeEntity prototype;
 }

@@ -7,8 +7,8 @@ import { useRouter } from 'next/navigation';
 import styles from './PrototypeDetail.module.css';
 import { PrototypeData } from '../lib/prototypeData';
 import { CommentData } from '../lib/commentData';
-import { useAuthContext } from '../context/AuthContext';
-import { fetchComments, createComment, deletePrototype} from '../lib/prototypeApi';
+import { useAuthContext } from '../app/context/AuthContext';
+import { fetchComments, createComment, deletePrototype } from '../lib/prototypeApi';
 
 
 interface Props{
@@ -17,7 +17,8 @@ interface Props{
 
 export default function PrototypeDetail ({ prototype }: Props ) {
   // AuthContextからログイン中のユーザー情報を取得
-  const { user } = useAuthContext();
+  const { user } = useAuthContext();user?.id;
+
   const isLoggedIn = user?.isAuthenticated ?? false;
 
     const router = useRouter();

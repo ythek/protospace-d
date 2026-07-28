@@ -2,6 +2,7 @@ package in.tech_camp.prototype_d.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import in.tech_camp.prototype_d.custom_user.CustomUserDetail;
 import in.tech_camp.prototype_d.dto.CommentDto;
 import in.tech_camp.prototype_d.form.CommentForm;
 import in.tech_camp.prototype_d.service.CommentService;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,8 +41,8 @@ public class CommentController {
   @PostMapping("/prototypes/{prototypeId}/comments")
   public ResponseEntity<?> createComment(@PathVariable("prototypeId") Long prototypeId,
                                           @RequestBody @Validated CommentForm commentForm,
-                                          BindingResult result
-                                          // @AuthenticationPrincipal CustomUserDetail currentUser
+                                          BindingResult result,
+                                          @AuthenticationPrincipal CustomUserDetail currentUser
                                         ) {
                                             
     // バリデーションエラー処理
@@ -57,11 +59,9 @@ public class CommentController {
 
     // DBに保存
     try {
-        // ユーザー機能実装前なので1Lを設定
-        Long userId = 1L;
-        // Long userId = (currentUser != null && currentUser.getUser() != null) 
-        //         ? currentUser.getUser().getId() 
-        //         : 1L;
+
+        Long userId = currentUser.getId();
+
 
         commentService.saveComment(prototypeId, userId, commentForm.getComment());
         

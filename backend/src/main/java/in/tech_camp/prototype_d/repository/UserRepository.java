@@ -22,4 +22,7 @@ public interface UserRepository {
 
   @Select("SELECT * FROM users")
   List<UserEntity> findAll();
+
+  @Select("SELECT * FROM users WHERE id = #{userId}")
+  UserEntity findById(Long userId);
 }

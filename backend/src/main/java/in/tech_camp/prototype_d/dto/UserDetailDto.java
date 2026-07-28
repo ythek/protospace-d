@@ -3,9 +3,10 @@ package in.tech_camp.prototype_d.dto;
 import lombok.Data;
 
 @Data
-public class CommentDto {
+public class UserDetailDto {
   private Long id;
-  private String comment;
   private String username;
-  private Long userId;
+  private String profile;
+  private String affiliation;
+  private String position;
 }

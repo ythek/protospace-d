@@ -29,4 +29,8 @@ public interface PrototypeRepository {
 
   @Update("UPDATE prototypes SET title = #{title}, catchcopy = #{catchcopy}, concept = #{concept} WHERE id = #{id}")
     void update(PrototypeEntity prototype);
+
+  // ユーザーidで取得
+  @Select("SELECT * FROM prototypes WHERE user_id = #{userId}")
+  List<PrototypeEntity> findByUserId(Long userId);
 }

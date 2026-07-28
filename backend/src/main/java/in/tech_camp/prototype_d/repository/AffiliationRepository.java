@@ -11,13 +11,12 @@ import in.tech_camp.prototype_d.entity.AffiliationEntity;
 public interface AffiliationRepository {
 
     @Select("SELECT id, affiliation AS name FROM affiliations WHERE id = #{id}")
-    AffiliationEntity findById(Integer id);
+    AffiliationEntity findById(Long id);
 
     @Select("SELECT id FROM affiliations WHERE affiliation = #{affiliationName}")
-    Integer findIdByName(String affiliationName);
+    Long findIdByName(String affiliationName);
 
     @Insert("INSERT INTO affiliations (affiliation) VALUES (#{affiliationName})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insert(AffiliationEntity affiliation);
 }
-

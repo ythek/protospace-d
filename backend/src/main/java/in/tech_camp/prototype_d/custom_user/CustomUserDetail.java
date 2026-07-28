@@ -18,8 +18,8 @@ public class CustomUserDetail implements UserDetails {
         this.user = user;
     }
 
-    // 便利なヘルパーメソッド
-    public Integer getId() {
+    // 便利なヘルパーメソッド（戻り値を Integer から Long に変更）
+    public Long getId() {
         return user != null ? user.getId() : null;
     }
 

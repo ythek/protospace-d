@@ -1,27 +1,25 @@
 package in.tech_camp.prototype_d.repository;
 
+import java.util.List;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.One;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
-
-import java.util.List;
 import org.apache.ibatis.annotations.Select;
+
 import in.tech_camp.prototype_d.entity.UserEntity;
 
 @Mapper
 public interface UserRepository {
 
     // ユーザー新規登録
-    // ⭕ #{affiliation.id} ➔ #{affiliationId}、#{position.id} ➔ #{positionId} に変更
     @Insert("INSERT INTO users (email, password, username, profile, affiliation_id, position_id) " +
             "VALUES (#{email}, #{password}, #{username}, #{profile}, #{affiliationId}, #{positionId})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insert(UserEntity user);
 
-    // ID指定でユーザーを取得（引数も Long に変更）
+    // ID指定でユーザーを取得
     @Select("SELECT id, email, password, username, profile, affiliation_id, position_id FROM users WHERE id = #{id}")
     @Results({
         @Result(property = "id", column = "id"),

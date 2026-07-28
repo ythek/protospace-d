@@ -2,13 +2,10 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Header from '@/app/components/Header';
-import Footer from '@/app/components/Footer';
 import PrototypeForm from '@/app/components/PrototypeForm';
-// ★ インポートパスと関数名を修正
 import { createPrototype, PrototypeFormData } from '@/app/lib/prototypeApi';
 
-  const CreatePrototypePage = () => {
+const CreatePrototypePage = () => {
   const router = useRouter();
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
 
@@ -23,15 +20,16 @@ import { createPrototype, PrototypeFormData } from '@/app/lib/prototypeApi';
     setErrorMessages([]);
 
     try {
-      // ★ 直接 fetch していたのを削除して、共通関数を呼ぶ
+      // 投稿処理を実行
       await createPrototype(data);
 
-      router.push('/');
+      // キャッシュを更新してトップ（一覧画面）へ遷移
       router.refresh();
+      router.push('/');
+
     } catch (err: any) {
       console.error(err);
 
-      // Axiosのエラーハンドリング
       if (err.response?.data?.messages && Array.isArray(err.response.data.messages)) {
         setErrorMessages(err.response.data.messages);
       } else {

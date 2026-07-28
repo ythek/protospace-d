@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class AffiliationEntity {
-  private Integer id;
-  private String affiliationName;
+    private Long id; // Integer -> Long
+    private String affiliationName;
 }

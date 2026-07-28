@@ -11,13 +11,12 @@ import in.tech_camp.prototype_d.entity.PositionEntity;
 public interface PositionRepository {
 
     @Select("SELECT id, position AS name FROM positions WHERE id = #{id}")
-    PositionEntity findById(Integer id);
+    PositionEntity findById(Long id);
 
     @Select("SELECT id FROM positions WHERE position = #{positionName}")
-    Integer findIdByName(String positionName);
+    Long findIdByName(String positionName);
 
     @Insert("INSERT INTO positions (position) VALUES (#{positionName})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insert(PositionEntity position);
 }
-

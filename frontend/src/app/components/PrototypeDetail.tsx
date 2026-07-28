@@ -14,6 +14,9 @@ interface Props {
   currentUserName?: string | null;
 }
 
+// バックエンドのベースURL
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080';
+
 export default function PrototypeDetail({ prototype }: Props) {
   const { user } = useAuthContext();
   const isLoggedIn = user?.isAuthenticated ?? !!user;
@@ -24,31 +27,40 @@ export default function PrototypeDetail({ prototype }: Props) {
   const [errorMessage, setErrorMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // ★ 1. ログインユーザーIDを取得
+  // ★ 画像のフルURLを生成する関数（/uploads/ 自動付与対応）
+  const getImageUrl = (imagePath?: string | null) => {
+    if (!imagePath) return '/no-image.png'; // 画像がない場合のフォールバック
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+      return imagePath;
+    }
+    
+    // 先頭の斜線を整える
+    const cleanPath = imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
+
+    // 先頭に /uploads/ が含まれていなければ付与する
+    const finalPath = cleanPath.startsWith('/uploads/') 
+      ? cleanPath 
+      : `/uploads${cleanPath}`;
+
+    return `${API_BASE_URL}${finalPath}`;
+  };
+
+  // 1. ログインユーザーIDを取得
   const currentUserId = user?.id ? Number(user.id) : null;
 
-  // ★ 2. 投稿者のIDを取得 (prototype.user.id または prototype.userId)
+  // 2. 投稿者のIDを取得
   const authorId = prototype?.user?.id 
     ? Number(prototype.user.id) 
     : (prototype as any)?.userId 
       ? Number((prototype as any).userId) 
       : null;
 
-  // ★ 3. 安全に所有者判定
+  // 3. 安全に所有者判定
   const isOwner = Boolean(
     currentUserId !== null && 
     authorId !== null && 
     currentUserId === authorId
   );
-
-  // 開発確認用のデバッグログ（オブジェクトの中身を直接出力）
-  useEffect(() => {
-    console.log('[isOwner Check Result]', isOwner);
-    console.log('ログインユーザーID (currentUserId):', currentUserId);
-    console.log('投稿者ID (authorId):', authorId);
-    console.log('userオブジェクト:', user);
-    console.log('prototypeオブジェクト:', prototype);
-  }, [currentUserId, authorId, isOwner, user, prototype]);
 
   // コメント一覧を表示
   const loadComments = async () => {
@@ -123,7 +135,7 @@ export default function PrototypeDetail({ prototype }: Props) {
 
       <div className={styles.prototype_image}>
         <img 
-          src={prototype.image} 
+          src={getImageUrl(prototype.image)} 
           alt={prototype.title} 
           className={styles.image} 
         />

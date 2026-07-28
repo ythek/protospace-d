@@ -35,14 +35,14 @@ public class SecurityConfig {
                 })
             )
             .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                // 静的ファイルやエラーページ
-                .requestMatchers(HttpMethod.GET, "/css/**", "/images/**", "/error").permitAll()
+                // ★ /uploads/** を追加（アップロードされた画像へのアクセスを全ユーザーに許可）
+                .requestMatchers(HttpMethod.GET, "/css/**", "/images/**", "/uploads/**", "/error").permitAll()
                 // GETリクエスト（閲覧系）を許可
                 .requestMatchers(HttpMethod.GET, "/users/sign_up", "/users/sign_in", "/tweets/{id:[0-9]+}", "/users/{id:[0-9]+}", "/tweets/search").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/tweets/**", "/api/prototypes/**").permitAll()
                 // ユーザー登録・ログイン（POST）を許可
                 .requestMatchers(HttpMethod.POST, "/user", "/api/users/**", "/api/sign_in").permitAll()
-                // 上記以外のAP/ページは認証が必要
+                // 上記以外のAPI/ページは認証が必要
                 .anyRequest().authenticated()
             )
             .exceptionHandling(exceptions -> exceptions
@@ -98,7 +98,3 @@ public class SecurityConfig {
         };
     }
 }
-
-
-
-

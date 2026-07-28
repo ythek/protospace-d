@@ -1,8 +1,8 @@
 package in.tech_camp.prototype_d.config;
 
+import java.nio.file.Paths;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
@@ -10,17 +10,10 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // http://localhost:8080/uploads/ファイル名 で uploads フォルダ内の画像を表示できるように公開
+        // uploads フォルダの絶対パスを取得して URI 化 (file:///...)
+        String uploadDir = Paths.get("uploads").toAbsolutePath().toUri().toString();
+
         registry.addResourceHandler("/uploads/**")
-                .addResourceLocations("file:uploads/");
-    }
-    
-    public void addCorsMappings(CorsRegistry registry) {
-        // 全てのエンドポイント(/**)に対して、Next.js(localhost:3000)からのアクセスを許可
-        registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000") 
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                .allowedHeaders("*")
-                .allowCredentials(true);
+                .addResourceLocations(uploadDir);
     }
 }

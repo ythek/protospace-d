@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -11,6 +12,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import in.tech_camp.prototype_d.custom_user.CustomUserDetail;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,19 +24,10 @@ import jakarta.servlet.http.HttpServletResponse;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain c(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(cors -> cors
-                    .configurationSource(request -> {
-                        var corsConfiguration = new org.springframework.web.cors.CorsConfiguration();
-                        corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000"));
-                        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-                        corsConfiguration.setAllowCredentials(true);
-                        corsConfiguration.setAllowedHeaders(List.of("*"));
-                        return corsConfiguration;
-                    })
-                )
+                .cors(Customizer.withDefaults())
                 .exceptionHandling(exceptions -> exceptions
                         .authenticationEntryPoint((request, response, authException) -> {
                             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -42,7 +37,7 @@ public class SecurityConfig {
                         })
                 )
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers(HttpMethod.GET, "/css/**", "/images/**","/users/{id:[0-9]+}","/error").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/css/**", "/images/**", "/uploads/**", "/users/{id:[0-9]+}","/error").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/prototypes/", "/api/prototypes/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/users/", "/api/login").permitAll()
                         .anyRequest().authenticated())
@@ -71,6 +66,20 @@ public class SecurityConfig {
                     })
                 );
         return http.build();
+    }
+
+    // CORSの設定を独立したBeanとして定義
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
     @Bean

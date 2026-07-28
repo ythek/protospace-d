@@ -3,6 +3,7 @@ package in.tech_camp.prototype_d.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,15 +49,30 @@ public class PrototypeService {
 
     return dtos;
   }
+
+
   //編集用データ
-    public PrototypeDto getPrototypeForEdit(Long id) {
-        PrototypeEntity entity = prototypeRepository.findById(id);
+    public PrototypeDto getPrototypeForEdit(Long currentUserId, Long prototypeId) {
+
+      Long ownerId = prototypeRepository.findUserIdById(prototypeId);
+
+      if (ownerId == null){
+        throw new IllegalArgumentException("対象のプロトタイプが見つかりません");
+      }
+
+      if (!ownerId.equals(currentUserId)) {
+        throw new IllegalArgumentException("編集権限がありません");
+      }
+        PrototypeEntity entity = prototypeRepository.findById(prototypeId);
         
         if (entity == null) {
             return null;
         }
 
         PrototypeDto dto = new PrototypeDto();
+
+        dto.setId(entity.getId());
+        dto.setUserId(entity.getUserId());
         dto.setTitle(entity.getTitle());
         dto.setCatchcopy(entity.getCatchcopy());
         dto.setConcept(entity.getConcept());
@@ -66,7 +82,18 @@ public class PrototypeService {
     }
 
     //更新処理
-    public void updatePrototype(Integer prototypeId, PrototypeDto dto) {
+    public void updatePrototype(Long prototypeId, PrototypeDto dto, Long currentUserId) {
+
+      Long ownerId = prototypeRepository.findUserIdById(prototypeId);
+
+      if (ownerId == null){
+        throw new IllegalArgumentException("対象のプロトタイプが見つかりません");
+      }
+
+      if (!ownerId.equals(currentUserId)) {
+        throw new IllegalArgumentException("編集権限がありません");
+      }
+
         PrototypeEntity entity = new PrototypeEntity();
         
         entity.setId(prototypeId);
@@ -79,8 +106,8 @@ public class PrototypeService {
     }
     // プロトタイプ削除機能
   @Transactional
-  public void deletePrototype(Long prototypeId, Integer currentUserId) {
-    Integer ownerId = prototypeRepository.findUserIdById(prototypeId);
+  public void deletePrototype(Long prototypeId, Long currentUserId) {
+    Long ownerId = prototypeRepository.findUserIdById(prototypeId);
 
     if (ownerId == null) {
         throw new IllegalArgumentException("対象のプロトタイプが見つかりません");

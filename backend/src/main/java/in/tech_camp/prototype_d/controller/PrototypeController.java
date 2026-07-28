@@ -79,28 +79,35 @@ public class PrototypeController {
   
     //編集前画面に表示
   @GetMapping("/prototypes/{prototypeId}/edit")
-  public ResponseEntity<?> editPrototype(@PathVariable ("prototypeId") Long prototypeId ) {
+  public ResponseEntity<?> editPrototype(@PathVariable ("prototypeId") Long prototypeId,
+                                         @AuthenticationPrincipal CustomUserDetail currentUser) {
     try {
-      PrototypeDto dto = prototypeService.getPrototypeForEdit(prototypeId); //サービスのRepoから一件だけのデータを取得するメソッドを使ってＤＢからもってくる
+      PrototypeDto dto = prototypeService.getPrototypeForEdit(currentUser.getId(), prototypeId); //サービスのRepoから一件だけのデータを取得するメソッドを使ってＤＢからもってくる
+
 
       if  (dto == null) {
         return ResponseEntity.notFound().build();
       }
       return ResponseEntity.ok(dto); //取得できたら表示
 
+    }catch (IllegalArgumentException e) {
+      return ResponseEntity.status(403).body(Map.of("Messages", List.of(e.getMessage())));
     } catch (Exception e) {
       e.printStackTrace();
       return ResponseEntity.internalServerError().body("サーバーエラーが発生しました");
     }
   }
 //更新処理
-    @PostMapping("/prototypes/{prototypeId}/update")
-    public ResponseEntity<?> updatePrototype(@PathVariable ("prototypeId") Integer prototypeId, @RequestBody PrototypeDto dto) {
+    @PostMapping("/prototypes/{prototypeId}")
+    public ResponseEntity<?> updatePrototype(@PathVariable ("prototypeId") Long prototypeId, @RequestBody PrototypeDto dto,
+                                             @AuthenticationPrincipal CustomUserDetail currentUser) { 
       try {
-        prototypeService.updatePrototype(prototypeId, dto);
-        return ResponseEntity.ok("更新成功");
-
-      } catch (Exception e){
+        prototypeService.updatePrototype(prototypeId, dto, currentUser.getId());
+        return ResponseEntity.ok().body(Map.of("Message", "プロトタイプを保存しました", "savePrototypeId", prototypeId
+      ));
+      } catch (IllegalArgumentException e){
+        return ResponseEntity.status(403).body(Map.of("Messages", List.of(e.getMessage())));
+      } catch (Exception e) { 
         e.printStackTrace();
         return ResponseEntity.internalServerError().body("サーバーエラーが発生しました");
  

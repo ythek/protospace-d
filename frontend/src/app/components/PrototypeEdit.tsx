@@ -43,22 +43,22 @@ export const PrototypeEdit = ({ initialData, onSubmit, isSubmitting = false }: P
     }
 
     //ファイル変更時の処理
-  //const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //if (e.target.files && e.target.files[0]) {
-    //const file = e.target.files[0];
-   // const reader = new FileReader();
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  if (e.target.files && e.target.files[0]) {
+    const file = e.target.files[0];
+    const reader = new FileReader();
 
-    // ファイルの読み込みが完了した時の処理
-    //reader.onloadend = () => {
-      //setEditData((prev) => ({
-        //...prev,
-       // image: reader.result as string, 
-      //}));
-   // };
+    //ファイルの読み込みが完了した時の処理
+    reader.onloadend = () => {
+      setEditData((prev) => ({
+        ...prev,
+        image: reader.result as string, 
+      }));
+    };
 
-    //reader.readAsDataURL(file);
- // }
-//};
+    reader.readAsDataURL(file);
+  }
+  };
     //送信時の処理
     const handleSubmit = (e: React.FormEvent) => {
       e.preventDefault();
@@ -139,9 +139,9 @@ export const PrototypeEdit = ({ initialData, onSubmit, isSubmitting = false }: P
           type="file"
           id="prototype_image"
           name="image"
-          //onChange={handleFileChange}
-          onChange={handleChange}/>
-        </div>
+          onChange={handleFileChange}
+           />
+         </div>
 
         <button type="submit" className={styles.form_submit_btn} disabled={isSubmitting}>保存する</button>
 

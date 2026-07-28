@@ -36,9 +36,10 @@ export default function PrototypeEditPage() {
       fetchPrototype(prototypeId) //SpringBootへリクエストを飛ばす
       .then((data) => { //データの取得成功したら
         console.log("APIから届いたデータ(data):", data);
-        const postUserId = (data as any)?.userId ?? data?.user?.id;
+        const postUserId = data.userId;
+        console.log("判定したpostUserId:", postUserId);
 
-  console.log("投稿者のID(data?.user?.id):", data?.user?.id);
+  console.log("投稿者のID(data?.user?.id):", data.userId);
   console.log("ログイン中のユーザーID(user?.id):", user?.id);
 if (user && postUserId !== undefined && String(postUserId) !== String(user.id)) {           
             console.log("不一致のためトップページへリダイレクト");
@@ -76,11 +77,8 @@ if (user && postUserId !== undefined && String(postUserId) !== String(user.id)) 
     return <div> 読み込み中...</div>;
   }
   
-  if(loading) { 
-    return <div>読み込み中…</div>;
-  }
 
-  if (!initialData) {
+  if  (!initialData) {
     return <div> データが見つかりません</div>;
   }  
 

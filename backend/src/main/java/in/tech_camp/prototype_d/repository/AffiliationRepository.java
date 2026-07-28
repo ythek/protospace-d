@@ -10,7 +10,7 @@ import in.tech_camp.prototype_d.entity.AffiliationEntity;
 @Mapper
 public interface AffiliationRepository {
     @Select("SELECT id FROM affiliations WHERE affiliation = #{affiliationName}")
-    Integer findIdByName(String affiliationName);
+     Long findIdByName(String affiliationName);
 
     @Insert("INSERT INTO affiliations (affiliation) VALUES (#{affiliationName})")
     @Options(useGeneratedKeys = true, keyProperty = "id")

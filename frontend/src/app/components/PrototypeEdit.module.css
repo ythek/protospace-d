@@ -2,14 +2,17 @@
 .container {
   max-width: 600px;
   margin: 0 auto;
-  padding: 0;                   /* 内側の余白をなくす */
   background-color: transparent;/* 背景色を透明にする */
   border-radius: 0;             /* 角丸をなくす */
   box-shadow: none;             /* 影・枠線を消す */
   display: flex;
-  flex-direction: column;
-  gap: 20px;
+  flex-direction: column;   /* ★ 縦並び指定 */
+  align-items: flex-start;  /* 左揃え（画面左寄せに配置） */
+  gap: 20px;                /* 見出しとフォームの間の上下余白 */
+  padding: 20px 0;
+  width: 100%;
 }
+
 
 /* 各入力欄のグループ */
 .form_group {
@@ -54,13 +57,6 @@
   transition: all 0.2s ease;
 }
 
-/* 入力欄にフォーカスが当たったとき */
-/*.form_input:focus,
-.form_textarea:focus {
-  background-color: #FFFFFF;
-  border-color: #87CEFA;
-  box-shadow: 0 0 0 3px rgba(135, 206, 250, 0.3);
-}*/
 
 /* 送信ボタン（左寄せ・幅1/3・左余白あり） */
 .form_submit_btn {
@@ -97,16 +93,6 @@
   font-size: 14px;
 }
 
-/* 見出しとフォームを縦並びにするレイアウト */
-.container {
-  display: flex;
-  flex-direction: column;   /* ★ 縦並び指定 */
-  align-items: flex-start;  /* 左揃え（画面左寄せに配置） */
-  gap: 20px;                /* 見出しとフォームの間の上下余白 */
-  max-width: 600px;         /* フォームと揃える幅 */
-  margin: 0 auto;           /* 画面中央に配置 */
-  padding: 20px 0;
-}
 
 /* 見出しのスタイル調整 */
 .form_title {
@@ -118,6 +104,3 @@
 }
 
 /* フォーム本体（コンテナ幅いっぱいに広げる） */
-.container .form-container {
-  width: 100%;
-}

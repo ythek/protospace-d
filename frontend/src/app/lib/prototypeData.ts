@@ -6,6 +6,6 @@ export interface PrototypeData {
   catchcopy: string;
   concept: string;
   image: string;
-  user?: UserData;
-  userId?: number;
+  username: string;
+  userId: number;
 }

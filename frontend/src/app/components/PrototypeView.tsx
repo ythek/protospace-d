@@ -25,7 +25,7 @@ export default function PrototypeView({ prototype }: Props) {
         </h2>
         <p className={styles.catchcopy}>{prototype.catchcopy}</p>
         <div className={styles.author}>
-          by <a href="#">{prototype.user?.username}</a>
+          by <a href="#">{prototype.username}</a>
         </div>
       </div>
     </div>

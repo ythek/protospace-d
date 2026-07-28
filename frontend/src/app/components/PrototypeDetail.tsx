@@ -28,7 +28,8 @@ export default function PrototypeDetail ({ prototype }: Props ) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // ログイン中のユーザー＝プロトタイプ投稿ユーザーの判定
-  const isOwner = user?.username === prototype.user?.username;
+  const isOwner = user?.id === prototype.userId;
+  console.log('UserID:',prototype.userId)
 
   // コメント一覧を表示
   const loadComments = async () => {
@@ -93,8 +94,7 @@ export default function PrototypeDetail ({ prototype }: Props ) {
     <div className={styles.container}>
     
       <div className={styles.prototype_title}>{prototype.title}</div>
-      <Link href={'/#'} className={styles.userName}>{prototype.user?.username}</Link> 
-      {/* <Link href={`users/${prototype.user?.id}`} className={styles.userName}>{prototype.user?.username}</Link>  */}
+      <Link href={`/users/${prototype.userId}`} className={styles.userName}>{prototype.username}</Link> 
     
       { isOwner &&(
         <div className={styles.prototype_manage}>

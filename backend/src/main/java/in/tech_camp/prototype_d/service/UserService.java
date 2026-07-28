@@ -25,7 +25,7 @@ public class UserService {
       public UserEntity registerUser(UserForm userForm) {
 
           //所属（affiliation）テーブルへ登録
-          Integer affiliationId = affiliationRepository.findIdByName(userForm.getAffiliation());
+          Long affiliationId = affiliationRepository.findIdByName(userForm.getAffiliation());
           if (affiliationId == null) {
               AffiliationEntity affiliation = new AffiliationEntity();
               affiliation.setAffiliationName(userForm.getAffiliation());
@@ -34,7 +34,7 @@ public class UserService {
           }
           
           //役職（Position）テーブルへ登録
-          Integer positionId = positionRepository.findIdByName(userForm.getPosition());
+          Long positionId = positionRepository.findIdByName(userForm.getPosition());
           if (positionId == null) {
               PositionEntity position = new PositionEntity();
               position.setPositionName(userForm.getPosition());

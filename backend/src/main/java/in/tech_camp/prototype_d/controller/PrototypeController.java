@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import in.tech_camp.prototype_d.custom_user.CustomUserDetail;
 import in.tech_camp.prototype_d.dto.PrototypeDto;
+import in.tech_camp.prototype_d.dto.PrototypeListDto;
 import in.tech_camp.prototype_d.service.PrototypeService;
 import lombok.RequiredArgsConstructor;
 
@@ -29,7 +30,7 @@ public class PrototypeController {
   @GetMapping({"/prototypes", "/", ""})
   public ResponseEntity<?> getPrototypes() {
     try {
-      List<PrototypeDto> prototypes = prototypeService.getPrototypes();
+      List<PrototypeListDto> prototypes = prototypeService.getPrototypes();
       return ResponseEntity.ok().body(prototypes);
     } catch (Exception e) {
       e.printStackTrace(); // エラーあったら見たい

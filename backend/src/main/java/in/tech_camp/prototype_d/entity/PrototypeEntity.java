@@ -4,9 +4,10 @@ import lombok.Data;
 
 @Data
 public class PrototypeEntity {
-  private Integer id;
+  private Long id;
   private String title;
   private String catchcopy;
   private String concept;
   private String image;
+  private Long userId;
 }

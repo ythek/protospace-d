@@ -42,13 +42,13 @@ public class SecurityConfig {
                         })
                 )
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers(HttpMethod.GET, "/css/**", "/images/**","/users/{id:[0-9]+}","/error").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/prototypes/", "/api/prototypes/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/users/", "/api/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/css/**", "/images/**","/error").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/prototypes", "/api/prototypes/{id:[0-9]+}","/api/users/{id:[0-9]+}").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/users/sign_up", "/api/users/sign_in").permitAll()
                         .anyRequest().authenticated())
 
                 .formLogin(login -> login
-                    .loginProcessingUrl("/api/sign_in")
+                    .loginProcessingUrl("/api/users/sign_in")
                     .usernameParameter("email")
                     .successHandler(authenticationSuccessHandler())
                     .failureHandler((request, response, exception) -> {
@@ -62,7 +62,7 @@ public class SecurityConfig {
                 )
 
                 .logout(logout -> logout
-                    .logoutUrl("/api/sign_out")
+                    .logoutUrl("/api/users/sign_out")
                     .logoutSuccessHandler((request, response, authentication) -> {
                         response.setStatus(HttpServletResponse.SC_OK);
                         response.setContentType("application/json");
@@ -87,9 +87,10 @@ public class SecurityConfig {
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
             response.getWriter().write(String.format(
-                "{\"id\":%d,\"email\":\"%s\"}",
+                "{\"id\":%d,\"email\":\"%s\",\"username\":\"%s\"}",
                 userDetails.getId(),
-                userDetails.getEmail()
+                userDetails.getEmail(),
+                userDetails.getUsername()
             ));
         };
     }

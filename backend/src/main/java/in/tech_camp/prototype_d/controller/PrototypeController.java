@@ -12,8 +12,6 @@ import in.tech_camp.prototype_d.custom_user.CustomUserDetail;
 import in.tech_camp.prototype_d.dto.PrototypeDto;
 import in.tech_camp.prototype_d.service.PrototypeService;
 import lombok.RequiredArgsConstructor;
-import in.tech_camp.prototype_d.repository.PrototypeRepository;
-import in.tech_camp.prototype_d.entity.PrototypeEntity;
 
 
 import java.util.List;
@@ -26,8 +24,6 @@ import java.util.Map;
 public class PrototypeController {
 
   private final PrototypeService prototypeService;
-
-  private final PrototypeRepository prototypeRepository;
 
   // プロトタイプ一覧表示
   @GetMapping({"/prototypes", "/", ""})
@@ -45,7 +41,7 @@ public class PrototypeController {
   @GetMapping("/prototypes/{prototypeId}")
   public ResponseEntity<?> showPrototypeDetail(@PathVariable("prototypeId") Long prototypeId) {
     try {
-      PrototypeEntity prototype = prototypeRepository.findById(prototypeId);
+      PrototypeDto prototype = prototypeService.getPrototypeById(prototypeId);
       if(prototype == null){
         return ResponseEntity.notFound().build(); 
       }

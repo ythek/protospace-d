@@ -50,7 +50,7 @@ public class PrototypeController {
   @GetMapping("/prototypes/{prototypeId}")
   public ResponseEntity<?> showPrototypeDetail(@PathVariable("prototypeId") Long prototypeId) {
     try {
-      PrototypeEntity prototype = prototypeRepository.findById(prototypeId);
+      PrototypeDto prototype = prototypeService.getPrototypeById(prototypeId);
       if(prototype == null){
         return ResponseEntity.notFound().build(); 
       }

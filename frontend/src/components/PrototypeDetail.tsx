@@ -30,8 +30,8 @@ export default function PrototypeDetail ({ prototype }: Props ) {
   
 
   // ログイン中のユーザー＝プロトタイプ投稿ユーザーの判定
-  const isOwner = user?.id === prototype.userId;
-  console.log('UserID:',prototype.userId)
+  const isOwner = user?.id === prototype.user?.id;
+  console.log('UserID:',prototype.user?.id)
 
   // コメント一覧を表示
   const loadComments = async () => {
@@ -96,7 +96,7 @@ export default function PrototypeDetail ({ prototype }: Props ) {
     <div className={styles.container}>
     
       <div className={styles.prototype_title}>{prototype.title}</div>
-      <Link href={`/users/${prototype.userId}`} className={styles.userName}>{prototype.username}</Link> 
+      <Link href={`/users/${prototype.user?.id}`} className={styles.userName}>{prototype.user?.id}</Link> 
     
       { isOwner &&(
         <div className={styles.prototype_manage}>
@@ -111,8 +111,8 @@ export default function PrototypeDetail ({ prototype }: Props ) {
             prototype.image?.startsWith('http')
             ? prototype.image
             : prototype.image?.startsWith('/uploads/')
-            ? `http://localhost:8080${prototype.image}`
-            : `http://localhost:8080/uploads/${prototype.image}` 
+            ? `${process.env.NEXT_PUBLIC_API_BASE_URL}${prototype.image}`
+            : `${process.env.NEXT_PUBLIC_API_BASE_URL}/${prototype.image}` 
     }
             alt={prototype.title || 'プロトタイプ画像'} 
             className={styles.image} />

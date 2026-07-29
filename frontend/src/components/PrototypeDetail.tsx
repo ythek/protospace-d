@@ -93,7 +93,7 @@ export default function PrototypeDetail ({ prototype }: Props ) {
     <div className={styles.container}>
     
       <div className={styles.prototype_title}>{prototype.title}</div>
-      <Link href={`/users/${prototype.user?.id}`} className={styles.userName}>{prototype.user?.id}</Link> 
+      <Link href={`/users/${prototype.user?.id}`} className={styles.userName}>{prototype.user?.username}</Link> 
     
       { isOwner &&(
         <div className={styles.prototype_manage}>

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import in.tech_camp.prototype_d.dto.PrototypeDto;
+import in.tech_camp.prototype_d.dto.PrototypeListDto;
 import in.tech_camp.prototype_d.dto.UserDto;
 import in.tech_camp.prototype_d.entity.PrototypeEntity;
 import in.tech_camp.prototype_d.entity.UserEntity;
@@ -22,32 +23,11 @@ public class PrototypeService {
   private final UserRepository userRepository;
 
   // 全件取得
-  public List<PrototypeDto> getPrototypes() {
-    List<PrototypeEntity> entities = prototypeRepository.findAll();
-    List<PrototypeDto> dtos = new ArrayList<>();
-
-    for (PrototypeEntity entity : entities) {
-      PrototypeDto dto = new PrototypeDto();
-      dto.setId(entity.getId());
-      dto.setTitle(entity.getTitle());
-      dto.setCatchcopy(entity.getCatchcopy());
-      dto.setConcept(entity.getConcept());
-      dto.setImage(entity.getImage());
-
-      UserDto userDto = new UserDto();
-
-      // entity.getUserId()を使ってDBからユーザー情報を取得する
-      UserEntity user = userRepository.findById(entity.getUserId());
-      userDto.setUsername(user.getUsername());
-      userDto.setId(user.getId());
-      dto.setUser(userDto);
-      dtos.add(dto);
-    }
-
-    return dtos;
+  public List<PrototypeListDto> getPrototypes() {
+    return prototypeRepository.findAll();
   }
 
-    public List<PrototypeDto> getPrototypesByUserId(Long userId) {
+  public List<PrototypeDto> getPrototypesByUserId(Long userId) {
     List<PrototypeEntity> entities = prototypeRepository.findByUserId(userId);
     List<PrototypeDto> dtos = new ArrayList<>();
 

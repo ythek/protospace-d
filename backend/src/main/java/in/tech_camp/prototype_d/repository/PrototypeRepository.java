@@ -6,13 +6,17 @@ import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import in.tech_camp.prototype_d.dto.PrototypeListDto;
 import in.tech_camp.prototype_d.entity.PrototypeEntity;
 
 @Mapper
 public interface PrototypeRepository {
-  // プロトタイプ一覧
-  @Select("SELECT * FROM prototypes")
-  List<PrototypeEntity> findAll();
+  // プロトタイプ一覧を取得
+  @Select("SELECT p.id, p.user_id AS userId, p.title, p.catchcopy, p.image, u.username, " +
+      "FROM prototypes p " +
+      "JOIN users u ON p.user_id = u.id " +
+      "ORDER BY p.id DESC")
+  List<PrototypeListDto> findAll();
 
   // プロトタイプ詳細
   @Select("SELECT * FROM prototypes WHERE id = #{id}") 

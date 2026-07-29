@@ -1,6 +1,7 @@
 package in.tech_camp.prototype_d.config;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -19,6 +20,12 @@ import jakarta.servlet.http.HttpServletResponse;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    // 環境変数 FRONTEND_URL を取得。
+    // // 環境変数が設定されていない場合（ローカル開発時など）は、デフォルトで http://localhost:3000 を使用する
+    @Value("${FRONTEND_URL:http://localhost:3000}")private String frontendUrl;
+
+
+
     @Bean
     public SecurityFilterChain c(HttpSecurity http) throws Exception {
         http
@@ -26,7 +33,7 @@ public class SecurityConfig {
                 .cors(cors -> cors
                     .configurationSource(request -> {
                         var corsConfiguration = new org.springframework.web.cors.CorsConfiguration();
-                        corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000"));
+                        corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000", frontendUrl));
                         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
                         corsConfiguration.setAllowCredentials(true);
                         corsConfiguration.setAllowedHeaders(List.of("*"));

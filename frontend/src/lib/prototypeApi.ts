@@ -33,3 +33,31 @@ export const createComment = async (prototypeId: number | string , comment: stri
   });
   return response.data;
 };
+
+// ★ export キーワードをつけて型を定義・エクスポートする
+export interface PrototypeFormData {
+  title: string;
+  catchcopy: string;
+  concept: string;
+  imageFile?: File | null; // 画像選択用
+}
+
+// プロトタイプ新規作成
+export const createPrototype = async (data: PrototypeFormData): Promise<PrototypeData> => {
+  const formData = new FormData();
+  formData.append('title', data.title);
+  formData.append('catchcopy', data.catchcopy);
+  formData.append('concept', data.concept);
+
+  if (data.imageFile) {
+    formData.append('imageFile', data.imageFile);
+  }
+
+  const response = await apiClient.post<PrototypeData>('/api/prototypes', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    withCredentials: true, // セッションCookieを送信
+  });
+  return response.data;
+};

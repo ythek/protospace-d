@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -24,13 +23,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import in.tech_camp.prototype_d.custom_user.CustomUserDetail;
 import in.tech_camp.prototype_d.dto.PrototypeDto;
+import in.tech_camp.prototype_d.dto.PrototypeListDto;
 import in.tech_camp.prototype_d.service.PrototypeService;
 import in.tech_camp.prototype_d.validation.ValidationOrder;
 import lombok.RequiredArgsConstructor;
 import in.tech_camp.prototype_d.entity.PrototypeEntity;
-import in.tech_camp.prototype_d.entity.UserEntity;
 import in.tech_camp.prototype_d.form.PrototypeForm;
-import in.tech_camp.prototype_d.repository.PrototypeRepository;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,13 +46,11 @@ public class PrototypeController {
 
   private final PrototypeService prototypeService;
 
-  private final PrototypeRepository prototypeRepository;
-
   // プロトタイプ一覧表示
   @GetMapping({"/prototypes", "/", ""})
   public ResponseEntity<?> getPrototypes() {
     try {
-      List<PrototypeDto> prototypes = prototypeService.getPrototypes();
+      List<PrototypeListDto> prototypes = prototypeService.getPrototypes();
       return ResponseEntity.ok().body(prototypes);
     } catch (Exception e) {
       e.printStackTrace(); // エラーあったら見たい

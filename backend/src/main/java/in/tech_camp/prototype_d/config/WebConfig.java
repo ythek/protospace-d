@@ -17,15 +17,6 @@ public class WebConfig implements WebMvcConfigurer {
 
         registry.addResourceHandler("/uploads/**")
                 .addResourceLocations(uploadDir);
-    }
-
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // uploads フォルダの絶対パスを取得
-        String uploadDir = Paths.get(System.getProperty("user.dir"), "uploads").toAbsolutePath().toString();
-        
-        // /uploads/** というURLでアクセスが来たら、ローカルの uploads フォルダを見に行くようにマッピング
-        registry.addResourceHandler("/uploads/**")
-                .addResourceLocations("file:" + uploadDir + "/");
+    
 }
 }

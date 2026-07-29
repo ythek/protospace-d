@@ -133,14 +133,22 @@ public class PrototypeService {
             return null;
         }
 
+       UserDto userDto = new UserDto();
+      
+      // entity.getUserId()を使ってDBからユーザー情報を取得する
+      UserEntity user = userRepository.findById(entity.getUserId());
+      userDto.setUsername(user.getUsername());
+      userDto.setId(user.getId());
+
         PrototypeDto dto = new PrototypeDto();
 
         dto.setId(entity.getId());
-        dto.setUserId(entity.getUserId());
         dto.setTitle(entity.getTitle());
         dto.setCatchcopy(entity.getCatchcopy());
         dto.setConcept(entity.getConcept());
         dto.setImage(entity.getImage());
+
+         dto.setUser(userDto);
 
         return dto;
     }
@@ -202,5 +210,4 @@ public class PrototypeService {
     public void insert(PrototypeEntity prototypeEntity) {
         prototypeRepository.insert(prototypeEntity);
     }
-}
 }

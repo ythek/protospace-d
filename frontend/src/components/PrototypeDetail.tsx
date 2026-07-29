@@ -21,7 +21,8 @@ export default function PrototypeDetail ({ prototype }: Props ) {
 
   const isLoggedIn = user?.isAuthenticated ?? false;
 
-  const router = useRouter();
+    const router = useRouter();
+
   const [comments, setComments] = useState<CommentData[]>([]);
   const [commentText, setCommentText] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -92,20 +93,25 @@ export default function PrototypeDetail ({ prototype }: Props ) {
     <div className={styles.container}>
     
       <div className={styles.prototype_title}>{prototype.title}</div>
-      <Link href={'/#'} className={styles.userName}>{prototype.user?.username}</Link> 
-      {/* <Link href={`users/${prototype.user?.id}`} className={styles.userName}>{prototype.user?.username}</Link>  */}
-      
+      <Link href={`/users/${prototype.user?.id}`} className={styles.userName}>{prototype.user?.username}</Link> 
+    
       { isOwner &&(
         <div className={styles.prototype_manage}>
-          <Link href={`prototypes/${prototype.id}/edit`} className={styles.prototype_button}>編集する</Link>
+          <Link href={`/prototypes/${prototype.id}/edit`} className={styles.prototype_button}>編集する</Link>
           <button onClick={handleDelete} className={styles.prototype_button}>削除する</button>
         </div>
       )}
 
       <div className={styles.prototype_image}>
-          <img 
-            src={prototype.image} 
-            alt={prototype.title} 
+          <img
+            src={
+            prototype.image?.startsWith('http')
+            ? prototype.image
+            : prototype.image?.startsWith('/uploads/')
+            ? `${process.env.NEXT_PUBLIC_API_BASE_URL}${prototype.image}`
+            : `${process.env.NEXT_PUBLIC_API_BASE_URL}/${prototype.image}` 
+    }
+            alt={prototype.title || 'プロトタイプ画像'} 
             className={styles.image} />
       </div>
 

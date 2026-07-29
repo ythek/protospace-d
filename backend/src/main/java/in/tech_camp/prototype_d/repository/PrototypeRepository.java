@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import in.tech_camp.prototype_d.entity.PrototypeEntity;
 
@@ -27,6 +28,9 @@ public interface PrototypeRepository {
   // プロトタイプ削除
   @Delete("DELETE FROM prototypes WHERE id = #{prototypeId}")
   void deletePrototype(Long prototypeId);
+
+  @Update("UPDATE prototypes SET title = #{title}, catchcopy = #{catchcopy}, concept = #{concept}, image = #{image} WHERE id = #{id}")
+    void update(PrototypeEntity prototype);
 
   // ユーザーidで取得
   @Select("SELECT * FROM prototypes WHERE user_id = #{userId}")

@@ -14,12 +14,6 @@ export const fetchPrototypeById = async (prototypeId: number | string): Promise<
   return response.data;
 };
 
-// 削除機能
-export const deletePrototype = async (prototypeId: number | string ) => {
-  const response = await apiClient.delete(`/api/prototypes/${prototypeId}`);
-  return response.data;
-};
-
 // コメント一覧取得
 export const fetchComments = async (prototypeId: number | string ): Promise<CommentData[]> => {
   const response = await apiClient.get<CommentData[]>(`/api/prototypes/${prototypeId}/comments`);
@@ -33,6 +27,27 @@ export const createComment = async (prototypeId: number | string , comment: stri
   });
   return response.data;
 };
+
+// 削除機能
+export const deletePrototype = async (prototypeId: number | string ) => {
+  const response = await apiClient.delete(`/api/prototypes/${prototypeId}`);
+  return response.data;
+};
+
+//プロトタイプ一件だけ取得
+export const fetchPrototype = async ( prototypeId: number | string): Promise<PrototypeData> => {
+  const response = await apiClient.get(`/api/prototypes/${prototypeId}/edit`);
+  return response.data;
+}
+//編集更新処理
+export const updatePrototype = async (prototypeId: number | string, formData: FormData) => {
+  const response = await apiClient.post(`/api/prototypes/${prototypeId}`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  return response.data;
+}
 
 // ★ export キーワードをつけて型を定義・エクスポートする
 export interface PrototypeFormData {
@@ -53,7 +68,7 @@ export const createPrototype = async (data: PrototypeFormData): Promise<Prototyp
     formData.append('imageFile', data.imageFile);
   }
 
-  const response = await apiClient.post<PrototypeData>('/api/prototypes', formData, {
+    const response = await apiClient.post<PrototypeData>('/api/prototypes', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
@@ -61,3 +76,4 @@ export const createPrototype = async (data: PrototypeFormData): Promise<Prototyp
   });
   return response.data;
 };
+

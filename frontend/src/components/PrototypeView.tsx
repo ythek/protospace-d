@@ -27,7 +27,7 @@ export default function PrototypeView({ prototype }: Props) {
         <p className={styles.catchcopy}>{prototype.catchcopy}</p>
         <div className={styles.author}>
           {/* 紐づくユーザーidを取得する */}
-          by <a href={`/users/${prototype.userId}`}>{prototype.username}</a>
+          by <a href={`/users/${prototype.user?.id}`}>{prototype.user?.username}</a>
         </div>
       </div>
     </div>

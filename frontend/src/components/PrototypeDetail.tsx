@@ -27,12 +27,9 @@ export default function PrototypeDetail ({ prototype }: Props ) {
   const [commentText, setCommentText] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
 
   // ログイン中のユーザー＝プロトタイプ投稿ユーザーの判定
-  const isOwner = user?.id === prototype.user?.id;
-  console.log('UserID:',prototype.user?.id)
-
+  const isOwner = user?.id === prototype.user?.id
   // コメント一覧を表示
   const loadComments = async () => {
     try {

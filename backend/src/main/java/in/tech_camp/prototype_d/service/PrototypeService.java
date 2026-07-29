@@ -193,5 +193,14 @@ public class PrototypeService {
 
 
         prototypeRepository.update(entity);
+
+    
+}
+
+// 新規追加：保存処理
+    @Transactional
+    public void insert(PrototypeEntity prototypeEntity) {
+        prototypeRepository.insert(prototypeEntity);
+    }
 }
 }

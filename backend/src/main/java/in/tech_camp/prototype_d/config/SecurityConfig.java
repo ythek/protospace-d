@@ -1,4 +1,5 @@
 package in.tech_camp.prototype_d.config;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +27,8 @@ public class SecurityConfig {
 
     // 環境変数 FRONTEND_URL を取得。
     // // 環境変数が設定されていない場合（ローカル開発時など）は、デフォルトで http://localhost:3000 を使用する
-    @Value("${FRONTEND_URL:http://localhost:3000}")private String frontendUrl;
+    @Value("${FRONTEND_URL:http://localhost:3000}")
+    private String frontendUrl;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -39,42 +41,39 @@ public class SecurityConfig {
                             response.setContentType("application/json");
                             response.setCharacterEncoding("UTF-8");
                             response.getWriter().write("{\"error\":\"Unauthorized\"}");
-                        })
-                )
+                        }))
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                // ★ 1. OPTIONS リクエストを全許可（CORSプリフライト対策）
-                    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                    
-                    // 既存の設定
-                    .requestMatchers(HttpMethod.GET, "/css/**", "/images/**", "/uploads/**", "/error").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/api/prototypes", "/api/prototypes/{id:[0-9]+}", "/api/users/{id:[0-9]+}").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/api/users/sign_up", "/api/users/sign_in").permitAll()
-                    .anyRequest().authenticated()
-                )
+                        // ★ 1. OPTIONS リクエストを全許可（CORSプリフライト対策）
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                        // 既存の設定
+                        .requestMatchers(HttpMethod.GET, "/css/**", "/images/**", "/uploads/**", "/error").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/prototypes", "/api/prototypes/{id:[0-9]+}",
+                                "/api/users/{id:[0-9]+}")
+                        .permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/users/sign_up", "/api/users/sign_in").permitAll()
+                        .anyRequest().authenticated())
 
                 .formLogin(login -> login
-                    .loginProcessingUrl("/api/users/sign_in")
-                    .usernameParameter("email")
-                    .successHandler(authenticationSuccessHandler())
-                    .failureHandler((request, response, exception) -> {
-                        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                        response.setContentType("application/json");
-                        response.setCharacterEncoding("UTF-8");
-                        response.getWriter().write(
-                            "{\"error\":\"Invalid credentials\"}"
-                        );
-                    })
-                )
+                        .loginProcessingUrl("/api/users/sign_in")
+                        .usernameParameter("email")
+                        .successHandler(authenticationSuccessHandler())
+                        .failureHandler((request, response, exception) -> {
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.setContentType("application/json");
+                            response.setCharacterEncoding("UTF-8");
+                            response.getWriter().write(
+                                    "{\"error\":\"Invalid credentials\"}");
+                        }))
 
                 .logout(logout -> logout
-                    .logoutUrl("/api/users/sign_out")
-                    .logoutSuccessHandler((request, response, authentication) -> {
-                        response.setStatus(HttpServletResponse.SC_OK);
-                        response.setContentType("application/json");
-                        response.setCharacterEncoding("UTF-8");
-                        response.getWriter().write("{\"success\":true}");
-                    })
-                );
+                        .logoutUrl("/api/users/sign_out")
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                            response.setStatus(HttpServletResponse.SC_OK);
+                            response.setContentType("application/json");
+                            response.setCharacterEncoding("UTF-8");
+                            response.getWriter().write("{\"success\":true}");
+                        }));
         return http.build();
     }
 
@@ -106,11 +105,10 @@ public class SecurityConfig {
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
             response.getWriter().write(String.format(
-                "{\"id\":%d,\"email\":\"%s\",\"username\":\"%s\"}",
-                userDetails.getId(),
-                userDetails.getEmail(),
-                userDetails.getUsername()
-            ));
+                    "{\"id\":%d,\"email\":\"%s\",\"username\":\"%s\"}",
+                    userDetails.getId(),
+                    userDetails.getEmail(),
+                    userDetails.getUsername()));
         };
     }
 }

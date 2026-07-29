@@ -6,10 +6,11 @@ import { PrototypeEditData } from "../lib/PrototypeEditData";
 import { PrototypeData } from "../lib/prototypeData";
 
 import styles from './PrototypeEdit.module.css';
+import { updatePrototype } from "@/lib/prototypeApi";
 
 type Props = {
 initialData?: PrototypeData; //オプショナル
-onSubmit: (editData: PrototypeEditData) => void;
+onSubmit: (editData: FormData) => void;
 isSubmitting?: boolean;
 };
 
@@ -18,8 +19,10 @@ export const PrototypeEdit = ({ initialData, onSubmit, isSubmitting = false }: P
     title: '',
     catchcopy: '',
     concept: '',
-    image: ''
+    image:''
   });
+
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
   useEffect(() => {
     if (initialData) {
@@ -45,30 +48,20 @@ export const PrototypeEdit = ({ initialData, onSubmit, isSubmitting = false }: P
     //ファイル変更時の処理
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   if (e.target.files && e.target.files[0]) {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-
-    //ファイルの読み込みが完了した時の処理
-    reader.onloadend = () => {
-      setEditData((prev) => ({
-        ...prev,
-        image: reader.result as string, 
-      }));
+    setImageFile(e.target.files[0]);
+      }
     };
 
-    reader.readAsDataURL(file);
-  }
-  };
     //送信時の処理
     const handleSubmit = (e: React.FormEvent) => {
       e.preventDefault();
-    
-  
+
+
+
     if (
       !editData.title.trim() ||
       !editData.catchcopy.trim() ||
-      !editData.concept.trim() ||
-      !editData.image.trim()
+      !editData.concept.trim() 
     ) {
       return;
     }
@@ -88,11 +81,20 @@ export const PrototypeEdit = ({ initialData, onSubmit, isSubmitting = false }: P
     return;
   }
 
+        const formData = new FormData();
 
-    onSubmit(editData);
-  };
+      const jsonBlob = new Blob([JSON.stringify(editData)], { type: "application/json" });
+      formData.append("dto", jsonBlob);
 
+      if (imageFile) {
+    formData.append("image", imageFile);
+  }
 
+   onSubmit(formData);
+    
+};
+
+  
   return (
     <div className={styles.container}>
       <h2>プロトタイプ編集</h2>

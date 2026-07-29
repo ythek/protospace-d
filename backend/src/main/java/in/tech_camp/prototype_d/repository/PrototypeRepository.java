@@ -27,7 +27,7 @@ public interface PrototypeRepository {
   @Delete("DELETE FROM prototypes WHERE id = #{prototypeId}")
   void deletePrototype(Long prototypeId);
 
-  @Update("UPDATE prototypes SET title = #{title}, catchcopy = #{catchcopy}, concept = #{concept} WHERE id = #{id}")
+  @Update("UPDATE prototypes SET title = #{title}, catchcopy = #{catchcopy}, concept = #{concept}, image = #{image} WHERE id = #{id}")
     void update(PrototypeEntity prototype);
 
   // ユーザーidで取得

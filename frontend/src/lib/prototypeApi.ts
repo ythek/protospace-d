@@ -40,8 +40,12 @@ export const fetchPrototype = async ( prototypeId: number | string): Promise<Pro
   return response.data;
 }
 //編集更新処理
-export const updatePrototype = async (prototypeId: number | string, dto: PrototypeData) => {
-  const response = await apiClient.post(`/api/prototypes/${prototypeId}/update`, dto);
+export const updatePrototype = async (prototypeId: number | string, formData: FormData) => {
+  const response = await apiClient.post(`/api/prototypes/${prototypeId}`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
   return response.data;
 }
 

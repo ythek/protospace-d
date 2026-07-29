@@ -8,7 +8,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import in.tech_camp.prototype_d.custom_user.CustomUserDetail;
 import in.tech_camp.prototype_d.dto.PrototypeDto;
@@ -99,10 +102,13 @@ public class PrototypeController {
   }
 //更新処理
     @PostMapping("/prototypes/{prototypeId}")
-    public ResponseEntity<?> updatePrototype(@PathVariable ("prototypeId") Long prototypeId, @RequestBody PrototypeDto dto,
-                                             @AuthenticationPrincipal CustomUserDetail currentUser) { 
+    public ResponseEntity<?> updatePrototype(@PathVariable ("prototypeId") Long prototypeId, 
+                                             @AuthenticationPrincipal CustomUserDetail currentUser,
+                                            @RequestPart("dto") PrototypeDto dto,
+                                            @RequestPart(value = "image", required = false) MultipartFile imageFile
+                                           ) { 
       try {
-        prototypeService.updatePrototype(prototypeId, dto, currentUser.getId());
+        prototypeService.updatePrototype(prototypeId, dto, imageFile, currentUser.getId());
         return ResponseEntity.ok().body(Map.of("Message", "プロトタイプを保存しました", "savePrototypeId", prototypeId
       ));
       } catch (IllegalArgumentException e){

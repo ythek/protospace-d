@@ -1,12 +1,12 @@
 "use client"
 
-import { fetchPrototype, updatePrototype } from "@/app/lib/prototypeApi"
-import { PrototypeEdit } from "@/app/components/PrototypeEdit"
-import { PrototypeEditData } from "@/app/lib/PrototypeEditData"
+import { fetchPrototype, updatePrototype } from "@/lib/prototypeApi"
+import { PrototypeEdit } from "@/components/PrototypeEdit"
+import { PrototypeEditData } from "@/lib/PrototypeEditData"
 import { useParams } from "next/navigation"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
-import { PrototypeData } from "@/app/lib/prototypeData"
+import { PrototypeData } from "@/lib/prototypeData"
 import { useAuthContext } from "@/app/context/AuthContext"
 
 export default function PrototypeEditPage() {
@@ -58,11 +58,11 @@ if (user && postUserId !== undefined && String(postUserId) !== String(user.id)) 
   }, [prototypeId, user, isAuthLoading, router]); //IDが変わったときにUseEffectを処理する
 
 
-  const handleSubmit = async (editData: PrototypeEditData) => {
+  const handleSubmit = async (editData: FormData) => {
     setIsSubmitting(true)
   
   try {
-    await updatePrototype(prototypeId, editData as PrototypeData)
+    await updatePrototype(prototypeId, editData);
 
     router.push(`/prototypes/${prototypeId}`);
   } catch (err) {

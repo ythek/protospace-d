@@ -27,6 +27,7 @@ export default function PrototypeDetail ({ prototype }: Props ) {
   const [commentText, setCommentText] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
 
   // ログイン中のユーザー＝プロトタイプ投稿ユーザーの判定
   const isOwner = user?.id === prototype.userId;
@@ -105,9 +106,15 @@ export default function PrototypeDetail ({ prototype }: Props ) {
       )}
 
       <div className={styles.prototype_image}>
-          <img 
-            src={prototype.image} 
-            alt={prototype.title} 
+          <img
+            src={
+            prototype.image?.startsWith('http')
+            ? prototype.image
+            : prototype.image?.startsWith('/uploads/')
+            ? `http://localhost:8080${prototype.image}`
+            : `http://localhost:8080/uploads/${prototype.image}` 
+    }
+            alt={prototype.title || 'プロトタイプ画像'} 
             className={styles.image} />
       </div>
 

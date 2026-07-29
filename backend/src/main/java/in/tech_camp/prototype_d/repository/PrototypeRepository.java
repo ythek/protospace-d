@@ -32,9 +32,8 @@ public interface PrototypeRepository {
   @Select("SELECT * FROM prototypes WHERE user_id = #{userId}")
   List<PrototypeEntity> findByUserId(Long userId);
 
-  // 新規投稿
-    @Insert("INSERT INTO prototypes (title, catchcopy, concept, image, user_id) " +
-            "VALUES (#{title}, #{catchcopy}, #{concept}, #{image}, #{user.id})")
-    @Options(useGeneratedKeys = true, keyProperty = "id")
+  @Insert("INSERT INTO prototypes (title, catchcopy, concept, image, user_id) " +
+        "VALUES (#{title}, #{catchcopy}, #{concept}, #{image}, #{userId})")
+  @Options(useGeneratedKeys = true, keyProperty = "id")
     void insert(PrototypeEntity prototype);
 }

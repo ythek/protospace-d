@@ -11,6 +11,16 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer {
 
     @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        // 全てのエンドポイント(/**)に対して、Next.js(localhost:3000)からのアクセスを許可
+        registry.addMapping("/**")
+                .allowedOrigins("http://localhost:3000") 
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedHeaders("*")
+                .allowCredentials(true);
+    }
+    
+    @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // uploads フォルダの絶対パスを取得して URI 化 (file:///...)
         String uploadDir = Paths.get("uploads").toAbsolutePath().toUri().toString();

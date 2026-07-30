@@ -41,7 +41,12 @@ export const fetchPrototype = async ( prototypeId: number | string): Promise<Pro
 }
 //編集更新処理
 export const updatePrototype = async (prototypeId: number | string, formData: FormData) => {
-  const response = await apiClient.post(`/api/prototypes/${prototypeId}`, formData);
+  const response = await apiClient.post(`/api/prototypes/${prototypeId}`, formData, {
+      headers: {
+      'Content-Type': undefined,
+    },
+  });
+
   return response.data;
 }
 
@@ -64,7 +69,12 @@ export const createPrototype = async (data: PrototypeFormData): Promise<Prototyp
     formData.append('imageFile', data.imageFile);
   }
 
-  const response = await apiClient.post<PrototypeData>('/api/prototypes', formData);
+  const response = await apiClient.post<PrototypeData>('/api/prototypes', formData, {
+    headers: {
+      'Content-Type': undefined,
+    },
+  });
+  
   
   return response.data;
 };

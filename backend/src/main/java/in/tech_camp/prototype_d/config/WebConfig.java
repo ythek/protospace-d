@@ -12,7 +12,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // uploads フォルダの絶対パスを取得して URI 化 (file:///...)
-        String uploadDir = Paths.get(System.getProperty("user.dir"), "uploads").toAbsolutePath().toUri().toString();
+        String uploadDir = Paths.get(System.getProperty("user.dir"), "uploads").toAbsolutePath().toString();
         registry.addResourceHandler("/uploads/**")
                 .addResourceLocations("file:" + uploadDir +"/");
 

@@ -7,6 +7,7 @@ import { createPrototype, PrototypeFormData } from '@/lib/prototypeApi';
 const CreatePrototypePage = () => {
   const router = useRouter();
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const initialFormData: PrototypeFormData = {
     title: '',
@@ -18,11 +19,18 @@ const CreatePrototypePage = () => {
   const handleSubmit = async (data: PrototypeFormData) => {
     setErrorMessages([]);
 
+    if (isSubmitting) 
+      return;
+
+    setIsSubmitting(true);
+    setErrorMessages([]);
+
     try {
       // 投稿処理を実行
       await createPrototype(data);
-
+    
       // キャッシュを更新してトップ（一覧画面）へ遷移
+     
       router.refresh();
       router.push('/');
 
@@ -34,6 +42,9 @@ const CreatePrototypePage = () => {
       } else {
         setErrorMessages(['投稿に失敗しました']);
       }
+    }finally {
+      setIsSubmitting(false);
+
     }
   };
 

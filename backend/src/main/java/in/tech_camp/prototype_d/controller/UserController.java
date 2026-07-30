@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import in.tech_camp.prototype_d.dto.PrototypeDto;
+import in.tech_camp.prototype_d.dto.PrototypeListDto;
 import in.tech_camp.prototype_d.dto.UserDetailDto;
 import in.tech_camp.prototype_d.entity.UserEntity;
 import in.tech_camp.prototype_d.form.UserForm;
@@ -62,7 +62,7 @@ public class UserController {
   public ResponseEntity<?> getUserById(@PathVariable Long userId) {
         try {
       UserDetailDto userDetailDto = userService.getUser(userId);
-      List<PrototypeDto> prototypes = prototypeService.getPrototypesByUserId(userId);
+      List<PrototypeListDto> prototypes = prototypeService.getPrototypesByUserId(userId);
 
       Map<String, Object> responseData = new HashMap<>();
         responseData.put("user", userDetailDto);

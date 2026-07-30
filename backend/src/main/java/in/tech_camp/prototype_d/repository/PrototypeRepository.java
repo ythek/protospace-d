@@ -33,13 +33,21 @@ public interface PrototypeRepository {
   @Delete("DELETE FROM prototypes WHERE id = #{prototypeId}")
   void deletePrototype(Long prototypeId);
 
+  // 編集
   @Update("UPDATE prototypes SET title = #{title}, catchcopy = #{catchcopy}, concept = #{concept}, image = #{image} WHERE id = #{id}")
     void update(PrototypeEntity prototype);
 
-  // ユーザーidで取得
-  @Select("SELECT * FROM prototypes WHERE user_id = #{userId}")
-  List<PrototypeEntity> findByUserId(Long userId);
+  // ユーザーごと取得
+  @Select("""
+            SELECT p.id, p.user_id AS userId, p.title, p.catchcopy, p.image, u.username
+            FROM prototypes p
+            JOIN users u ON p.user_id = u.id
+            WHERE p.user_id = #{userId}
+            ORDER BY p.id DESC
+          """)
+  List<PrototypeListDto> findByUserId(Long userId);
 
+  // 新規投稿
   @Insert("INSERT INTO prototypes (title, catchcopy, concept, image, user_id) " +
         "VALUES (#{title}, #{catchcopy}, #{concept}, #{image}, #{userId})")
   @Options(useGeneratedKeys = true, keyProperty = "id")

@@ -7,6 +7,7 @@ import { PrototypeData } from "../lib/prototypeData";
 
 import styles from './PrototypeEdit.module.css';
 import { updatePrototype } from "@/lib/prototypeApi";
+import { title } from "process";
 
 type Props = {
 initialData?: PrototypeData; //オプショナル
@@ -22,6 +23,7 @@ export const PrototypeEdit = ({ initialData, onSubmit, isSubmitting = false }: P
     image:''
   });
 
+  const [errorMessages, setErrorMessages ] = useState<String>("");
   const [imageFile, setImageFile] = useState<File | null>(null);
 
   useEffect(() => {
@@ -39,7 +41,16 @@ export const PrototypeEdit = ({ initialData, onSubmit, isSubmitting = false }: P
     //入力変更時の処理
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const { name, value } = e.target; //JSXでname要素をつくるのでここはname
-      setEditData((prev) => ({ //prevは編集前データ
+
+      if (value.trim() === '') {
+        setErrorMessages('空欄にすることはできません');
+      } else if (value.length >= 128) {
+        setErrorMessages('128文字未満で入力してください');
+      } else {
+        setErrorMessages('');
+      }
+
+      setEditData((prev) => ({
         ...prev, //スプレッド構文で変更されていないデータが消えるの防ぐ。全部を一度コピー
         [name]: value,  //対象のみを上書き　
       }));
@@ -50,36 +61,42 @@ export const PrototypeEdit = ({ initialData, onSubmit, isSubmitting = false }: P
   if (e.target.files && e.target.files[0]) {
     setImageFile(e.target.files[0]);
       }
-    };
-
+  };
+  
+    
     //送信時の処理
     const handleSubmit = (e: React.FormEvent) => {
       e.preventDefault();
 
+      if (editData.title.trim() === '') {
+        setErrorMessages('空欄にすることはできません');
+        return;
+      }
 
+      if (editData.title.length >=128) {
+        setErrorMessages('128文字未満で入力してください。');
+        return;
+      }
 
-    if (
-      !editData.title.trim() ||
-      !editData.catchcopy.trim() ||
-      !editData.concept.trim() 
-    ) {
-      return;
-    }
-  //バリデーション
-  if (editData.title.length > 128) {
-    alert('タイトルは128文字以内で入力してください。');
-    return; 
-  }
+      if (editData.concept.trim() === '') {
+        setErrorMessages('空欄にすることはできません');
+        return;
+      }
 
-  if (editData.catchcopy.length > 128) {
-    alert('キャッチコピーは128文字以内で入力してください。');
-    return;
-  }
+      if (editData.concept.length >=128) {
+        setErrorMessages('128文字未満で入力してください。');
+        return;
+      }
 
-  if (editData.concept.length > 128) {
-    alert('コンセプトは128文字以内で入力してください。');
-    return;
-  }
+      if (editData.catchcopy.trim() === '') {
+        setErrorMessages('空欄にすることはできません');
+        return;
+      }
+
+      if (editData.catchcopy.length >=128) {
+        setErrorMessages('128文字未満で入力してください。');
+        return;
+      }
 
         const formData = new FormData();
 
@@ -98,6 +115,10 @@ export const PrototypeEdit = ({ initialData, onSubmit, isSubmitting = false }: P
   return (
     <div className={styles.container}>
       <h2>プロトタイプ編集</h2>
+
+      {errorMessages && (
+        <p className={styles.error_message}>{errorMessages}</p>
+      )}
 
       <form onSubmit={handleSubmit}>
         <div className={styles.form_group}>

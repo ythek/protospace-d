@@ -2,7 +2,6 @@ package in.tech_camp.prototype_d.service;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,32 +30,12 @@ public class PrototypeService {
     return prototypeRepository.findAll();
   }
 
-    public List<PrototypeDto> getPrototypesByUserId(Long userId) {
-    List<PrototypeEntity> entities = prototypeRepository.findByUserId(userId);
-    List<PrototypeDto> dtos = new ArrayList<>();
-
-    for (PrototypeEntity entity : entities) {
-      PrototypeDto dto = new PrototypeDto();
-      dto.setId(entity.getId());
-      dto.setTitle(entity.getTitle());
-      dto.setCatchcopy(entity.getCatchcopy());
-      dto.setConcept(entity.getConcept());
-      dto.setImage(entity.getImage());
-
-      UserDto userDto = new UserDto();
-      
-      // entity.getUserId()を使ってDBからユーザー情報を取得する
-      UserEntity user = userRepository.findById(entity.getUserId());
-      userDto.setUsername(user.getUsername());
-      userDto.setId(user.getId());
-      dto.setUser(userDto);
-      dtos.add(dto);
-    }
-
-    return dtos;
+  // ユーザー詳細で投稿一覧を取得
+  public List<PrototypeListDto> getPrototypesByUserId(Long userId) {
+    return prototypeRepository.findByUserId(userId);
   }
 
-  // ユーザー詳細で投稿一覧を取得
+  // プロトタイプ詳細
   public PrototypeDto getPrototypeById(Long id) {
     PrototypeEntity entity = prototypeRepository.findById(id);
     PrototypeDto dto = new PrototypeDto();

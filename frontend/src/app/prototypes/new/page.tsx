@@ -22,11 +22,11 @@ const CreatePrototypePage = () => {
     if (isSubmitting) 
       return;
 
-    setIsSubmitting(true);
     setErrorMessages([]);
 
     try {
       // 投稿処理を実行
+      setIsSubmitting(true);
       await createPrototype(data);
     
       // キャッシュを更新してトップ（一覧画面）へ遷移

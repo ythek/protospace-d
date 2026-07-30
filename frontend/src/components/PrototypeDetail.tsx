@@ -109,7 +109,7 @@ export default function PrototypeDetail ({ prototype }: Props ) {
             ? prototype.image
             : prototype.image?.startsWith('/uploads/')
             ? `${process.env.NEXT_PUBLIC_API_BASE_URL}${prototype.image}`
-            : `${process.env.NEXT_PUBLIC_API_BASE_URL}/${prototype.image}` 
+            : `${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/${prototype.image}` 
     }
             alt={prototype.title || 'プロトタイプ画像'} 
             className={styles.image} />

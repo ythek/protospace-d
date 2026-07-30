@@ -13,13 +13,13 @@ export default function PrototypeView({ prototype }: Props) {
     <div className={styles.card}>
       <Link href={`/prototypes/${prototype.id}`} className={styles.imageWrapper}>
         <img 
-          src={
-            prototype.image?.startsWith('http')
-            ? prototype.image
-            : prototype.image?.startsWith('uploads/')
-            ? `${process.env.NEXT_PUBLIC_API_BASE_URL}${prototype.image}`
-            : `${process.env.NEXT_PUBLIC_API_BASE_URL}uploads/${prototype.image}` 
-          } 
+            src={
+              prototype.image?.startsWith('http')
+              ? prototype.image
+              : prototype.image?.startsWith('/uploads/')
+              ? `${process.env.NEXT_PUBLIC_API_BASE_URL}${prototype.image}`
+              : `${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/${prototype.image}` 
+            }
           alt={prototype.title} 
           className={styles.image}
         />

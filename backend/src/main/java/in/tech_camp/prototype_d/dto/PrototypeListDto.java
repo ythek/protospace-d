@@ -8,5 +8,6 @@ public class PrototypeListDto {
   private String title;
   private String catchcopy;
   private String image;
+  private Long userId;
   private String username;
 }

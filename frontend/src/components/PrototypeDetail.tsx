@@ -5,14 +5,14 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link'
 import { useRouter } from 'next/navigation';
 import styles from './PrototypeDetail.module.css';
-import { PrototypeData } from '../lib/prototypeData';
 import { CommentData } from '../lib/commentData';
 import { useAuthContext } from '../app/context/AuthContext';
 import { fetchComments, createComment, deletePrototype } from '../lib/prototypeApi';
+import { PrototypeDetailData } from '@/lib/prototypeDetailData';
 
 
 interface Props{
-  prototype: PrototypeData;
+  prototype: PrototypeDetailData;
 }
 
 export default function PrototypeDetail ({ prototype }: Props ) {

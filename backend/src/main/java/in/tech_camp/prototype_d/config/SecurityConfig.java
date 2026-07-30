@@ -26,8 +26,9 @@ import jakarta.servlet.http.HttpServletResponse;
 public class SecurityConfig {
 
     // 環境変数 FRONTEND_URL を取得。
-    // // 環境変数が設定されていない場合（ローカル開発時など）は、デフォルトで http://localhost:3000 を使用する
-    @Value("${FRONTEND_URL:http://localhost:3000}")
+    @Value("${FRONTEND_URL}")
+    // ローカルで動かす場合は以下をコメントインしてください。
+    // @Value("http://localhost:3000")
     private String frontendUrl;
 
     @Bean

@@ -208,14 +208,14 @@ public class PrototypeController {
 
     }
 
-  @GetMapping("/prototype/today")
+  @GetMapping("/prototypes/today")
   public ResponseEntity<?> showPrototypeToday(@AuthenticationPrincipal CustomUserDetail currentUser) {
     try {
-      PrototypeDto prototype = prototypeService.getPrototypeToday(currentUser);
-      if(prototype == null){
+      Map<String, Object> responseData = prototypeService.getPrototypeToday(currentUser);
+      if(responseData.get("prototype") == null){
         return ResponseEntity.notFound().build(); 
       }
-        return ResponseEntity.ok().body(prototype);
+        return ResponseEntity.ok().body(responseData);
       } catch (Exception e) {
         System.out.println("エラー :" + e);
     

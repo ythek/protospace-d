@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -175,7 +177,7 @@ public class PrototypeService {
     }
 
   // プロトタイプランダム取得
-  public PrototypeDto getPrototypeToday(CustomUserDetail currentuser){
+  public Map<String, Object> getPrototypeToday(CustomUserDetail currentuser){
     // 現在あるIdをリストとして取得
     List<Long> prototypeIds= prototypeRepository.findAllId();
     // 今日の日付をパラメーターとして使用
@@ -189,6 +191,16 @@ public class PrototypeService {
     Long randomNum = prototypeIds.get(index);
     // PrototypeのDTOを取得
     PrototypeDto dto = getPrototypeById(randomNum);
-    return dto;
+
+    // 今日の運勢を決める数字を算出
+    Integer luck = (int) (Math.abs(calculatedValue) % 6);
+    System.out.println("calculatedValue"+calculatedValue);
+    System.out.println(prototypeIds.size());
+
+    // HashMapに入れる
+    Map<String, Object> responseData = new HashMap<>();
+        responseData.put("prototype", dto);
+        responseData.put("luck", luck);
+    return responseData;
   }
 }

@@ -21,6 +21,10 @@ public interface PrototypeRepository {
       "ORDER BY p.id DESC")
   List<PrototypeListDto> findAll();
 
+
+  @Select("SELECT id FROM prototypes")
+  List<Long> findAllId();
+
   // プロトタイプ詳細
   @Select("SELECT * FROM prototypes WHERE id = #{id}") 
   PrototypeEntity findById(Long id);

@@ -27,6 +27,8 @@ export default function PrototypeDetail ({ prototype }: Props ) {
   const [commentText, setCommentText] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [openModal, setOpenModal] = useState<Boolean>(false);
+  const [isCopied, setIsCopied] = useState(false);
 
   // ログイン中のユーザー＝プロトタイプ投稿ユーザーの判定
   const isOwner = user?.id === prototype.user?.id
@@ -63,7 +65,36 @@ export default function PrototypeDetail ({ prototype }: Props ) {
     }
   };
 
-  // コメント送信
+  //現在のUrLと共有したいテキストを準備
+  const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
+   //ブラウザにWindowオブジェクトがある時にwindow.location.hrefでリンクを取得して、ない時は空を返す
+
+
+  //Xにシェアする
+  const shareText = `[${prototype.title}]  ${prototype.catchcopy}`; //ｘなどで開かれた際のタイトルとキャッチコピーの表示のされ方
+  const XShareUrl = `https://x.com/intent/tweet?url=${encodeURIComponent(currentUrl)}&text=${encodeURIComponent(shareText)}`;
+
+  //LINEにシェアする
+  const LineShareUrl = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(currentUrl)}`;
+
+  //クリップボードにコピーする
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href); //今開いているリンクのURLを取得
+
+      setIsCopied(true);
+
+      setTimeout (()=> {
+        setIsCopied(false); //2秒後に元に戻す
+      }, 2000);
+      
+    } catch (error) {
+    console.log ('コピーに失敗しました')
+    }
+
+    }
+  
+  //コメント送信処理
   const handleSubmitComment = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage('');
@@ -87,14 +118,83 @@ export default function PrototypeDetail ({ prototype }: Props ) {
     } finally {
       setIsSubmitting(false);
     }
-  };
+  
+   };
 
-  return (
+   return (
     <div className={styles.container}>
     
+    <div className={styles.title_container}>
       <div className={styles.prototype_title}>{prototype.title}</div>
+      {/* 共有ボタン */}
+        <button 
+          type='button'
+          onClick={() => setOpenModal(true)}
+          className={styles.share_button}>共有する</button>    
+        </div>  
+  
+        {openModal && (
+          <div className={styles.modal_overlay}>
+            <div className={styles.modal_content}>
+              <h2 style={{color: '#ffffff'}}>プロトタイプの共有</h2>
+              <h3 style={{color: '#ffffff'}}>プロトタイプの投稿内容</h3>
+
+                <div className={styles.title}></div>
+
+                <div className={styles.image}>
+                  <img
+                   src={
+                        prototype.image?.startsWith('http')
+                        ? prototype.image
+                        : prototype.image?.startsWith('/uploads/')
+                        ? `${process.env.NEXT_PUBLIC_API_BASE_URL}${prototype.image}`
+                        : `${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/${prototype.image}`  }
+                        alt={prototype.title || 'プロトタイプ画像'} 
+                        className={styles.image} />
+                        </div>
+
+                  <div className={styles.prototype_detail}>
+                    <h3 className={styles.detail_label} style={{color: '#ffffff'}}>------タイトル------</h3>
+                    <p className={styles.detail_title_share} style={{color: '#ffffff'}}>{prototype.title}</p>
+                    <h3 style={{color: '#ffffff'}}> ---キャッチコピー---</h3>
+                    <p className={styles.detail_messages} style={{color: '#ffffff'}}>{prototype.catchcopy}</p>
+                  </div>
+                
+                <div className={styles.share_container}>
+
+                 <a href={XShareUrl} 
+                    className={styles.Xshare_button}
+                    target='_blank'
+                    rel='noopener noreferrer'>
+                      Xでシェア
+                    </a>
+
+                 <a href={LineShareUrl}
+                    className={styles.lineShare_button}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    > LINEでシェア
+                    </a>
+
+                  <button type='button'
+                          className={styles.copy_button}
+                          onClick={handleCopyLink}>
+                          {isCopied ? 'コピーが完了しました' : 'URLをコピーする'}
+                          </button>
+                </div>
+
+                {/*閉じる処理*/}
+                  <button 
+                  className={styles.close_share_button}
+                  type='button' 
+                  onClick={() => setOpenModal(false)}> 閉じる</button> 
+            </div>
+          </div>
+          )}
+
       <Link href={`/users/${prototype.user?.id}`} className={styles.userName}>{prototype.user?.username}</Link> 
-    
+
+
       { isOwner &&(
         <div className={styles.prototype_manage}>
           <Link href={`/prototypes/${prototype.id}/edit`} className={styles.prototype_button}>編集する</Link>
@@ -168,5 +268,6 @@ export default function PrototypeDetail ({ prototype }: Props ) {
         </div>
       </div>
     </div>
+   
   );
 }

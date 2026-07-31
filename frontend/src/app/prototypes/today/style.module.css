@@ -1,0 +1,18 @@
+.container{
+  padding-left: 50px;
+}
+
+.usernameLink {
+  color: #333;
+  text-decoration: underline;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+}
+
+.title{
+  margin-top: 70px;
+}

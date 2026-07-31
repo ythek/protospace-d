@@ -27,7 +27,7 @@ export default function PrototypeDetail ({ prototype }: Props ) {
   const [commentText, setCommentText] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [openModal, setOpenModal] = useState<Boolean>(false);
+  const [openModal, setOpenModal] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
 
   // ログイン中のユーザー＝プロトタイプ投稿ユーザーの判定
@@ -138,8 +138,6 @@ export default function PrototypeDetail ({ prototype }: Props ) {
             <div className={styles.modal_content}>
               <h2 style={{color: '#ffffff'}}>プロトタイプの共有</h2>
               <h3 style={{color: '#ffffff'}}>プロトタイプの投稿内容</h3>
-
-                <div className={styles.title}></div>
 
                 <div className={styles.image}>
                   <img

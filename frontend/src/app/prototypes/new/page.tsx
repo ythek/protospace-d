@@ -50,7 +50,12 @@ const CreatePrototypePage = () => {
     }
   };
   if(isLoading) return <div>読み込み中</div>
-  if(!user)  return redirect('/users/sign_in');
+
+  //未ログインの処理
+  if (!user) { 
+    router.replace('/users/sign_in');
+    return;
+  }
   
   return (
     <div className="contents row">

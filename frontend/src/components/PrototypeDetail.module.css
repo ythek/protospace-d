@@ -6,9 +6,33 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: #201f1f;
+  color: hsl(0, 2%, 12%);
 
 }
+
+.title_container {
+  position:relative;
+  text-align: center;
+  width: 100%;
+  padding: 0 25%;
+  box-sizing: border-box;
+}
+
+.share_button {
+  position: absolute;
+  right: 20%;
+  transform: translateY(-50%);
+  width:  10%;
+  background-color: #87CEFA; /* 水色 */
+  color: #FFFFFF;            /* 文字の色は白 */
+  border: none;
+  padding: 0.6em 0;          /* ボタン幅を固定にしたため横paddingを調整 */
+  font-size: 0.8em;
+  font-weight: bold;
+  text-align: center;        /* ボタン内の文字を中央寄せ */
+  border-radius: 10px;
+}
+
 .prototype_title {
   font-family: 'Noto scans CJK JP', sans-serif;
   font-size: 24px;
@@ -181,4 +205,81 @@
   color: #666;
   font-size: 14px;
   margin-left: 8px;
+}
+
+.modal_overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* 画面を薄暗くする半透明の黒 */
+  display: flex;
+  justify-content: center; /* 横方向の中央揃え */
+  align-items: center;     /* 縦方向の中央揃え */
+  z-index: 1000;           /* 他のパーツより一番手前に表示する */
+}
+
+.modal_content {
+  background-color: #acf9ff;
+  border: 2px solid #ffffff;
+  border-radius: 12px; /*角に丸みを4つけるやつ*/
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  max-width: 500px;
+  width: 90%; 
+  gap: 10 px;
+  align-items: center;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  max-height: 80vh;
+  overflow: auto; /*中身が長い時だけスクロールできるようにする*/
+}
+
+.close_share_button {
+   background-color: #87CEFA; /* 水色 */
+  color: #FFFFFF;            /* 文字の色は白 */
+  padding: 0.6em 0;          /* ボタン幅を固定にしたため横paddingを調整 */
+  font-size: 0.8em;
+  font-weight: bold;
+  padding: 10px;
+  border: 1px #999 solid;
+  border-radius: 3px;
+  margin-top: 30px;
+
+}
+
+.share_container {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  
+}
+
+.Xshare_button {
+  background-color: #87CEFA;
+  color: #ffffff;
+  padding: 10px;
+  border-radius: 3px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.lineShare_button {
+  background-color: #87CEFA;
+  color: #ffffff;
+  padding: 10px;
+  border-radius: 3px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.copy_button {
+  background-color: #87CEFA;
+  color: #ffffff;
+  padding: 10px;
+  border-radius: 3px;
+  font-weight: bold;
+  border: #999;
 }

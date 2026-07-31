@@ -1,13 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import PrototypeForm from '@/components/PrototypeForm';
 import { createPrototype, PrototypeFormData } from '@/lib/prototypeApi';
+import { useAuthContext } from '@/app/context/AuthContext';
 const CreatePrototypePage = () => {
   const router = useRouter();
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const {user, isLoading} = useAuthContext();
 
   const initialFormData: PrototypeFormData = {
     title: '',
@@ -47,7 +49,9 @@ const CreatePrototypePage = () => {
 
     }
   };
-
+  if(isLoading) return <div>読み込み中</div>
+  if(!user)  return redirect('/users/sign_in');
+  
   return (
     <div className="contents row">
       <div className="container">

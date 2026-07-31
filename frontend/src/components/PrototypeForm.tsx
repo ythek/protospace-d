@@ -7,7 +7,7 @@ import { PrototypeFormData } from '@/lib/prototypeApi';
 interface PrototypeFormProps {
   initialData: PrototypeFormData;
   errorMessages: string[];
-  onSubmit: (formData: PrototypeFormData) => void;
+  onSubmit: (formData: PrototypeFormData) => Promise<void>;
 }
 
 export const PrototypeForm = ({
@@ -17,6 +17,8 @@ export const PrototypeForm = ({
 }: PrototypeFormProps) => {
   const [formData, setFormData] = useState<PrototypeFormData>(initialData);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<String | null>("");
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -42,9 +44,20 @@ export const PrototypeForm = ({
     setPreviewUrl(URL.createObjectURL(file));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+
+    if (isSubmitting)
+      return;
+
+    setIsSubmitting(true);
+    setErrorMessage('')
+
+    try {
+     await onSubmit(formData);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

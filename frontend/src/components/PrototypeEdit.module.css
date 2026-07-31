@@ -103,4 +103,7 @@
   margin-left: 12px;        /* フォーム入力欄やボタンの左位置と揃える調整 */
 }
 
-/* フォーム本体（コンテナ幅いっぱいに広げる） */
+.error_message {
+  color: #DC2626;
+  font-size: 14px;
+}

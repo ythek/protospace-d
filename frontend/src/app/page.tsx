@@ -46,12 +46,19 @@ export default function Home() {
     
         
       {user && (
-        <div className={styles.greeting}>
-          こんにちは、
-          <a href={`/users/${user.id}`} className={styles.usernameLink}>
-            {user.username}
-          </a>
-          さん
+        <div className={styles.messageArea}>
+          <div className={styles.greeting}>
+            こんにちは、
+            <a href={`/users/${user.id}`} className={styles.usernameLink}>
+              {user.username}
+            </a>
+            さん
+          </div>
+          <div className={styles.greeting}>
+            <a href={`/prototypes/today`} className={styles.luck}>
+              運勢🔮
+            </a>
+          </div>
         </div>
       )}
 

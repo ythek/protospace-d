@@ -104,3 +104,15 @@
     transform: translateY(0);
   }
 }
+.messageArea{
+  display: flex;
+  justify-content: space-between;
+}
+
+.luck{
+  color: #333;
+  text-decoration: none;
+  background: linear-gradient(-45deg, transparent 10px, salmon 50);
+  padding : 10px;
+  box-shadow: 4px 4px 5px 0px rgba(0, 0, 0, 0.2);
+}

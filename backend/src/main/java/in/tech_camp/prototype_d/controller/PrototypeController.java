@@ -138,74 +138,61 @@ public class PrototypeController {
      * POST: /api/prototypes
      */
     @PostMapping("/prototypes")
-    public ResponseEntity<?> createPrototype(
-        @Validated(ValidationOrder.class) @ModelAttribute PrototypeForm prototypeForm,
-        BindingResult bindingResult,
-        @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
-        @AuthenticationPrincipal CustomUserDetail customUserDetails // ★ 1. ログインユーザー情報を取得
-    ) {
-        // 未ログイン時のチェック (必要に応じて)
-        if (customUserDetails == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("messages", List.of("ログインが必要です")));
-        }
-
-        // 1. フォームの基本入力チェック
-        if (bindingResult.hasErrors()) {
-            List<String> errorMessages = bindingResult.getAllErrors().stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .collect(Collectors.toList());
-            return ResponseEntity.badRequest().body(Map.of("messages", errorMessages));
-        }
-    // 2. 画像ファイルの必須チェック
-        if (imageFile == null || imageFile.isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("messages", List.of("画像ファイルを選択してください")));
-        }
-
-        try {
-            // 3. 画像の保存処理 (uploads/ フォルダへ保存)
-            String uploadDir = Paths.get(System.getProperty("user.dir"), "uploads").toAbsolutePath().toString();
-            File dir = new File(uploadDir);
-            if (!dir.exists()) {
-                dir.mkdirs();
-            }
-
-            String originalFilename = imageFile.getOriginalFilename();
-            String extension = "";
-            if (originalFilename != null && originalFilename.contains(".")) {
-                extension = originalFilename.substring(originalFilename.lastIndexOf("."));
-            }
-            String fileName = UUID.randomUUID().toString() + extension;
-
-            File dest = new File(dir, fileName);
-            imageFile.transferTo(dest);
-
-            // 4. Entityへのセット
-              PrototypeEntity entity = new PrototypeEntity();
-              entity.setTitle(prototypeForm.getTitle());
-              entity.setCatchcopy(prototypeForm.getCatchcopy());
-              entity.setConcept(prototypeForm.getConcept());
-              entity.setImage(fileName);
-
-              // ★ customUserDetails からユーザーIDを取り出して setUserId にセット
-              Long currentUserId = customUserDetails.getUser().getId(); 
-              entity.setUserId(currentUserId);
-
-              // 5. DB保存
-              prototypeService.insert(entity);
-
-            return ResponseEntity.ok().body(entity);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("messages", List.of("画像の保存に失敗しました")));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("messages", List.of("データベースへの保存に失敗しました")));
-        }
-
+public ResponseEntity<?> createPrototype(
+    @Validated(ValidationOrder.class) @ModelAttribute PrototypeForm prototypeForm,
+    BindingResult bindingResult,
+    @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
+    @AuthenticationPrincipal CustomUserDetail customUserDetails
+) {
+    // 未ログインチェック
+    if (customUserDetails == null) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(Map.of("messages", List.of("ログインが必要です")));
     }
 
+    // 1. フォームの基本入力チェック
+    if (bindingResult.hasErrors()) {
+        List<String> errorMessages = bindingResult.getAllErrors().stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .collect(Collectors.toList());
+        return ResponseEntity.badRequest().body(Map.of("messages", errorMessages));
+    }
+
+    // 2. 画像ファイルの必須チェック
+    if (imageFile == null || imageFile.isEmpty()) {
+        return ResponseEntity.badRequest().body(Map.of("messages", List.of("画像ファイルを選択してください")));
+    }
+
+    try {
+        // 3. サービスクラスに登録処理を一任
+        Long currentUserId = customUserDetails.getUser().getId();
+        PrototypeEntity savedEntity = prototypeService.createPrototype(prototypeForm, imageFile, currentUserId);
+
+        return ResponseEntity.ok().body(savedEntity);
+
+    } catch (IOException e) {
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("messages", List.of("画像の保存に失敗しました")));
+    } catch (Exception e) {
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("messages", List.of("データベースへの保存に失敗しました")));
+    }
+}
+
+  @GetMapping("/prototypes/today")
+  public ResponseEntity<?> showPrototypeToday(@AuthenticationPrincipal CustomUserDetail currentUser) {
+    try {
+      Map<String, Object> responseData = prototypeService.getPrototypeToday(currentUser);
+      if(responseData.get("prototype") == null){
+        return ResponseEntity.notFound().build(); 
+      }
+        return ResponseEntity.ok().body(responseData);
+      } catch (Exception e) {
+        System.out.println("エラー :" + e);
+    
+      return ResponseEntity.internalServerError().body("サーバーエラー");
+    }
+  }
 }

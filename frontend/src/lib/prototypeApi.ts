@@ -1,5 +1,6 @@
 import apiClient from './apiClient';
 import { PrototypeData } from './prototypeData';
+import { prototypeTodayData } from './prototypeTodayData';
 import { CommentData } from './commentData';
 
 // プロトタイプ一覧取得
@@ -11,6 +12,12 @@ export const fetchPrototypes = async (): Promise<PrototypeData[]> => {
 // 詳細画面取得
 export const fetchPrototypeById = async (prototypeId: number | string): Promise<PrototypeData> => {
   const response = await apiClient.get(`/api/prototypes/${prototypeId}`);
+  return response.data;
+};
+
+// 今日のプロトタイプの取得
+export const fetchPrototypeToday = async (): Promise<prototypeTodayData> => {
+  const response = await apiClient.get(`/api/prototypes/today`);
   return response.data;
 };
 

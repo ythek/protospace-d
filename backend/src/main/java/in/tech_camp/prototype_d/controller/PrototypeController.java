@@ -181,4 +181,18 @@ public ResponseEntity<?> createPrototype(
     }
 }
 
+  @GetMapping("/prototypes/today")
+  public ResponseEntity<?> showPrototypeToday(@AuthenticationPrincipal CustomUserDetail currentUser) {
+    try {
+      Map<String, Object> responseData = prototypeService.getPrototypeToday(currentUser);
+      if(responseData.get("prototype") == null){
+        return ResponseEntity.notFound().build(); 
+      }
+        return ResponseEntity.ok().body(responseData);
+      } catch (Exception e) {
+        System.out.println("エラー :" + e);
+    
+      return ResponseEntity.internalServerError().body("サーバーエラー");
+    }
+  }
 }

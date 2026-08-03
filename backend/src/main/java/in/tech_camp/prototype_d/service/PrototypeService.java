@@ -2,14 +2,19 @@ package in.tech_camp.prototype_d.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import in.tech_camp.prototype_d.custom_user.CustomUserDetail;
 import in.tech_camp.prototype_d.dto.PrototypeDto;
 import in.tech_camp.prototype_d.dto.PrototypeListDto;
 import in.tech_camp.prototype_d.dto.UserDto;
@@ -173,6 +178,33 @@ public class PrototypeService {
         prototypeRepository.insert(prototypeEntity);
     }
 
+  // プロトタイプランダム取得
+  public Map<String, Object> getPrototypeToday(CustomUserDetail currentuser){
+    // 現在あるIdをリストとして取得
+    List<Long> prototypeIds= prototypeRepository.findAllId();
+    // 今日の日付をパラメーターとして使用
+    LocalDate today = LocalDate.now();
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+    String dateString = today.format(formatter);
+    int dateNumber = Integer.parseInt(dateString);
+    // 検索のidとする数字を決定
+    long calculatedValue = (long) dateNumber * dateNumber + currentuser.getId();
+    int index = (int) (Math.abs(calculatedValue) % prototypeIds.size());
+    Long randomNum = prototypeIds.get(index);
+    // PrototypeのDTOを取得
+    PrototypeDto dto = getPrototypeById(randomNum);
+
+    // 今日の運勢を決める数字を算出
+    Integer luck = (int) (Math.abs(calculatedValue) % 6);
+    System.out.println("calculatedValue"+calculatedValue);
+    System.out.println(prototypeIds.size());
+
+    // HashMapに入れる
+    Map<String, Object> responseData = new HashMap<>();
+        responseData.put("prototype", dto);
+        responseData.put("luck", luck);
+    return responseData;
+  }
     /**
      * プロトタイプの登録処理（画像保存 ＋ DB登録）
      */

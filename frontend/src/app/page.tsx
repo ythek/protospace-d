@@ -9,7 +9,7 @@ import { useAuthContext } from './context/AuthContext';
 
 export default function Home() {
   const [prototypes, setPrototypes] = useState<PrototypeData[]>([]);
-  const {user} = useAuthContext();
+  const { user } = useAuthContext();
 
   useEffect(() => {
     const getPrototypes = async () => {
@@ -27,12 +27,19 @@ export default function Home() {
     <main className={styles.container}>
       {/* ログイン中（userが存在する）場合のみレンダリングされます */}
       {user && (
-        <div className={styles.greeting}>
-          こんにちは、
-          <a href={`/users/${user.id}`} className={styles.usernameLink}>
-            {user.username}
-          </a>
-          さん
+        <div className={styles.messageArea}>
+          <div className={styles.greeting}>
+            こんにちは、
+            <a href={`/users/${user.id}`} className={styles.usernameLink}>
+              {user.username}
+            </a>
+            さん
+          </div>
+          <div className={styles.greeting}>
+            <a href={`/prototypes/today`} className={styles.luck}>
+              運勢🔮
+            </a>
+          </div>
         </div>
       )}
 

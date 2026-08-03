@@ -6,6 +6,7 @@ import { fetchPrototypeToday } from "@/lib/prototypeApi";
 import { useAuthContext } from "@/app/context/AuthContext";
 import styles from './style.module.css';
 import PrototypeView from "@/components/PrototypeView";
+import Link from "next/link";
 
 
 
@@ -50,11 +51,11 @@ export default function PrototypeTodayPage() {
   }[luck] ?? "大凶";
 
   const message = {
-    "凶" : "今日は何をしてもうまくいかない日。",
-    "小吉" : "今日はちょっとだけいいことがあるかもしれない日。",
-    "末吉" : "今日はいつもと変わらない平凡な一日。",
-    "大吉" : "今日はすべてがうまくいく日。",
-    "吉" : "今日はいい日。",
+    "凶": "今日は何をしてもうまくいかない日。",
+    "小吉": "今日はちょっとだけいいことがあるかもしれない日。",
+    "末吉": "今日はいつもと変わらない平凡な一日。",
+    "大吉": "今日はすべてがうまくいく日。",
+    "吉": "今日はいい日。",
   }[result] ?? "";
 
   return (
@@ -64,7 +65,29 @@ export default function PrototypeTodayPage() {
 
       <h3 className={styles.title}>おすすめのラッキープロトタイプ👇</h3>
       <div className={styles.grid}>
-        <PrototypeView key={prototype.id} prototype={prototype} />
+        <div className={styles.card}>
+          <Link href={`/prototypes/${prototype.id}`} className={styles.imageWrapper}>
+            <img
+              src={
+                prototype.image?.startsWith('http')
+                  ? prototype.image
+                  : prototype.image?.startsWith('/uploads/')
+                    ? `${process.env.NEXT_PUBLIC_API_BASE_URL}${prototype.image}`
+                    : `${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/${prototype.image}`
+              }
+              alt={prototype.title}
+              className={styles.image}
+            />
+          </Link>
+          <div className={styles.content}>
+            <h2 className={styles.title}>
+              <Link href={`/prototypes/${prototype.id}`} className={styles.titleLink}>
+                {prototype.title}
+              </Link>
+            </h2>
+            <p className={styles.catchcopy}>{prototype.catchcopy}</p>
+          </div>
+        </div>
       </div>
     </main>
   );

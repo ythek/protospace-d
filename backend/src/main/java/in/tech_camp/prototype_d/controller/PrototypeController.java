@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import in.tech_camp.prototype_d.custom_user.CustomUserDetail;
 import in.tech_camp.prototype_d.dto.PrototypeDto;
 import in.tech_camp.prototype_d.dto.PrototypeListDto;
+import in.tech_camp.prototype_d.dto.PrototypeStatusDto;
 import in.tech_camp.prototype_d.service.PrototypeService;
 import in.tech_camp.prototype_d.validation.ValidationOrder;
 import lombok.RequiredArgsConstructor;
@@ -189,6 +190,22 @@ public ResponseEntity<?> createPrototype(
         return ResponseEntity.notFound().build(); 
       }
         return ResponseEntity.ok().body(responseData);
+      } catch (Exception e) {
+        System.out.println("エラー :" + e);
+    
+      return ResponseEntity.internalServerError().body("サーバーエラー");
+    }
+  }
+
+    // プロトタイプgacha取得
+  @GetMapping("/prototypes/gacha")
+  public ResponseEntity<?> showPrototypeRandom() {
+    try {
+      PrototypeStatusDto prototype = prototypeService.getPrototypeRandom();
+      if(prototype == null){
+        return ResponseEntity.notFound().build(); 
+      }
+        return ResponseEntity.ok().body(prototype);
       } catch (Exception e) {
         System.out.println("エラー :" + e);
     

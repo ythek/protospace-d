@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import in.tech_camp.prototype_d.custom_user.CustomUserDetail;
 import in.tech_camp.prototype_d.dto.PrototypeDto;
 import in.tech_camp.prototype_d.dto.PrototypeListDto;
+import in.tech_camp.prototype_d.dto.PrototypeStatusDto;
 import in.tech_camp.prototype_d.dto.UserDto;
 import in.tech_camp.prototype_d.entity.PrototypeEntity;
 import in.tech_camp.prototype_d.entity.UserEntity;
@@ -249,4 +251,31 @@ public class PrototypeService {
 
         return fileName;
     }
+
+    public PrototypeStatusDto getPrototypeRandom() {
+      List<Long> prototypeIds= prototypeRepository.findAllId();
+      Random random = new Random();
+      int randomInt = random.nextInt(prototypeIds.size());
+      Long index = prototypeIds.get(randomInt);
+      PrototypeDto prototypeDto = getPrototypeById(index);
+      PrototypeStatusDto dto = new PrototypeStatusDto();
+
+
+      // レアリティを算出
+      String baseName = prototypeDto.getImage().replaceFirst("[.][^.]+$", "");
+
+        long seed;
+        // 内部の64bit数値を合成してシードにする
+        UUID uuid = UUID.fromString(baseName);
+        seed = uuid.getMostSignificantBits() ^ uuid.getLeastSignificantBits();
+        // シード値を元に乱数生成器を作成
+        Random generator = new Random(seed);
+        // 1〜10000の数値を生成
+        Long score = (long) (generator.nextInt(10000) + 1);
+          
+        dto.setRarity(score);
+        //↓ここはいいね数などによって調整
+        dto.setAttack(score * prototypeDto.getId() / 10);
+        dto.setDefense(score * prototypeDto.getId());
+      return dto;
 }

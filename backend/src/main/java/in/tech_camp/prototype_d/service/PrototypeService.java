@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -19,6 +20,7 @@ import in.tech_camp.prototype_d.dto.PrototypeListDto;
 import in.tech_camp.prototype_d.dto.UserDto;
 import in.tech_camp.prototype_d.entity.PrototypeEntity;
 import in.tech_camp.prototype_d.entity.UserEntity;
+import in.tech_camp.prototype_d.form.PrototypeForm;
 import in.tech_camp.prototype_d.repository.PrototypeRepository;
 import in.tech_camp.prototype_d.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -203,4 +205,48 @@ public class PrototypeService {
         responseData.put("luck", luck);
     return responseData;
   }
+    /**
+     * プロトタイプの登録処理（画像保存 ＋ DB登録）
+     */
+    @Transactional
+    public PrototypeEntity createPrototype(PrototypeForm form, MultipartFile imageFile, Long userId) throws IOException {
+        // 1. 画像ファイルをローカルストレージへ保存
+        String fileName = saveImageFile(imageFile);
+
+        // 2. Entityの作成と値のセット
+        PrototypeEntity entity = new PrototypeEntity();
+        entity.setTitle(form.getTitle());
+        entity.setCatchcopy(form.getCatchcopy());
+        entity.setConcept(form.getConcept());
+        entity.setImage(fileName);
+        entity.setUserId(userId);
+
+        // 3. DBへ保存（既存のinsert/save処理）
+        prototypeRepository.insert(entity);
+
+        return entity;
+    }
+
+    /**
+     * 画像ファイルの保存処理（プライベートヘルパーメソッド）
+     */
+    private String saveImageFile(MultipartFile imageFile) throws IOException {
+        String uploadDir = Paths.get(System.getProperty("user.dir"), "uploads").toAbsolutePath().toString();
+        File dir = new File(uploadDir);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+
+        String originalFilename = imageFile.getOriginalFilename();
+        String extension = "";
+        if (originalFilename != null && originalFilename.contains(".")) {
+            extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+        }
+        String fileName = UUID.randomUUID().toString() + extension;
+
+        File dest = new File(dir, fileName);
+        imageFile.transferTo(dest);
+
+        return fileName;
+    }
 }

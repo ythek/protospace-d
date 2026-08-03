@@ -1,5 +1,7 @@
 package in.tech_camp.prototype_d.dto;
 
+import java.time.LocalDateTime;
+
 import lombok.Data;
 
 @Data
@@ -10,4 +12,5 @@ public class PrototypeDto {
   private String concept;
   private String image;
   private UserDto user;
+  private LocalDateTime createdAt;
 }

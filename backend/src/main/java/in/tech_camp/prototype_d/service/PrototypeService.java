@@ -186,7 +186,7 @@ public class PrototypeService {
     String dateString = today.format(formatter);
     int dateNumber = Integer.parseInt(dateString);
     // 検索のidとする数字を決定
-    long calculatedValue = (long) dateNumber * currentuser.getId();
+    long calculatedValue = (long) dateNumber * dateNumber + currentuser.getId();
     int index = (int) (Math.abs(calculatedValue) % prototypeIds.size());
     Long randomNum = prototypeIds.get(index);
     // PrototypeのDTOを取得

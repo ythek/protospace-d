@@ -47,7 +47,6 @@ export default function PrototypeTodayPage() {
     3: "小吉",
     4: "末吉",
     5: "小吉",
-    6: "凶"
   }[luck] ?? "大凶";
 
   const message = {

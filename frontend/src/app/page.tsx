@@ -6,7 +6,6 @@ import { PrototypeData } from '../lib/prototypeData';
 import PrototypeView from '../components/PrototypeView';
 import styles from './page.module.css';
 import { useAuthContext } from './context/AuthContext';
-import { prototype } from 'events';
 
 export default function Home() {
   const [prototypes, setPrototypes] = useState<PrototypeData[]>([]);

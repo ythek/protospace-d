@@ -21,6 +21,89 @@
   gap: 40px;
 }
 
+.list {
+  position: relative;
+  display: inline-block;
+}
+
+.list > button {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #334155;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.list > button:hover {
+  background-color: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: calc(100% + 6px); 
+  left: 0;
+  min-width: 130px;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 6px;
+  margin: 0;
+  list-style: none; /* リストの黒丸を削除 */
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); 
+  z-index: 50; 
+  animation: fadeIn 0.15s ease-out; 
+}
+
+
+.dropdownMenu li {
+  margin: 0;
+  padding: 0;
+}
+
+
+.dropdownMenu button {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #475569;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between; /* 文字と「✓」を左右端に配置 */
+  align-items: center;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+
+.dropdownMenu button:hover {
+  background-color: #f1f5f9;
+  color: #0f172a;
+  font-weight: 500;
+}
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 .messageArea{
   display: flex;
   justify-content: space-between;

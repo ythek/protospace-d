@@ -260,10 +260,18 @@ public class PrototypeService {
       PrototypeDto prototypeDto = getPrototypeById(index);
       PrototypeStatusDto dto = new PrototypeStatusDto();
 
+      dto.setId(prototypeDto.getId());
+      dto.setTitle(prototypeDto.getTitle());
+      dto.setCatchcopy(prototypeDto.getCatchcopy());
+      dto.setImage(prototypeDto.getImage());
+      dto.setUserId(prototypeDto.getUser().getId());
+      dto.setUsername(prototypeDto.getUser().getUsername());
+
 
       // レアリティを算出
       String baseName = prototypeDto.getImage().replaceFirst("[.][^.]+$", "");
-
+      Long score;
+      try{
         long seed;
         // 内部の64bit数値を合成してシードにする
         UUID uuid = UUID.fromString(baseName);
@@ -271,11 +279,14 @@ public class PrototypeService {
         // シード値を元に乱数生成器を作成
         Random generator = new Random(seed);
         // 1〜10000の数値を生成
-        Long score = (long) (generator.nextInt(10000) + 1);
-          
+        score = (long) (generator.nextInt(10000) + 1);
+      }catch(Exception e){
+        score = 1L;
+      }
         dto.setRarity(score);
         //↓ここはいいね数などによって調整
         dto.setAttack(score * prototypeDto.getId() / 10);
         dto.setDefense(score * prototypeDto.getId());
       return dto;
+    }
 }

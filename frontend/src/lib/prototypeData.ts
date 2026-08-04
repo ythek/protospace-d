@@ -6,4 +6,5 @@ export interface PrototypeData {
   image: string;
   userId: number;
   username: string;
+  createdAt : string;
 }

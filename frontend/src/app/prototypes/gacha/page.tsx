@@ -18,6 +18,16 @@ export default function UserDetail() {
   const { user } = useAuthContext();
 
   useEffect(() => {
+        // 隠しコマンド経由でのアクセスかどうかチェック
+    const isUnlocked = sessionStorage.getItem('isGachaUnlocked');
+    if (isUnlocked !== 'true') {
+      // トップページなどに返却
+      window.location.href = '/'; 
+    } else {
+      // リロードで何度も引けないようにする
+      sessionStorage.removeItem('isGachaUnlocked');
+    }
+
     const getPrototypeGacha = async () => {
       try {
         const prototype = await fetchPrototypeGacha();

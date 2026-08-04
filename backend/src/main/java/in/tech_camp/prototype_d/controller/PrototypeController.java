@@ -182,7 +182,7 @@ public ResponseEntity<?> createPrototype(
     }
 }
 
-  @GetMapping("/prototypes/today")
+  @GetMapping("/prototype/today")
   public ResponseEntity<?> showPrototypeToday(@AuthenticationPrincipal CustomUserDetail currentUser) {
     try {
       Map<String, Object> responseData = prototypeService.getPrototypeToday(currentUser);
@@ -198,7 +198,7 @@ public ResponseEntity<?> createPrototype(
   }
 
     // プロトタイプgacha取得
-  @GetMapping("/prototypes/gacha")
+  @GetMapping("/prototype/gacha")
   public ResponseEntity<?> showPrototypeRandom() {
     try {
       PrototypeStatusDto prototype = prototypeService.getPrototypeRandom();

@@ -15,9 +15,10 @@ import in.tech_camp.prototype_d.entity.PrototypeEntity;
 @Mapper
 public interface PrototypeRepository {
   // プロトタイプ一覧
-  @Select("SELECT p.id, p.user_id AS userId, p.title, p.catchcopy, p.image, u.username, p.created_at AS createdAt " +
+  @Select("SELECT p.id, p.user_id AS userId, p.title, p.catchcopy, p.image, u.username, p.created_at AS createdAt, COUNT(l.id) AS likecount, CASE WHEN l.user_id THEN 1 ELSE 0 END AS likecheck" +
       "FROM prototypes p " +
       "JOIN users u ON p.user_id = u.id " +
+      "LEFT JOIN likes ON p.id = l.prototype_id" +
       "ORDER BY p.id DESC")
   List<PrototypeListDto> findAll();
 
@@ -56,4 +57,8 @@ public interface PrototypeRepository {
         "VALUES (#{title}, #{catchcopy}, #{concept}, #{image}, #{userId})")
   @Options(useGeneratedKeys = true, keyProperty = "id")
     void insert(PrototypeEntity prototype);
+
+  
+
+
 }

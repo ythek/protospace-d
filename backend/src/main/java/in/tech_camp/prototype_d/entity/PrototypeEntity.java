@@ -12,5 +12,7 @@ public class PrototypeEntity {
   private String concept;
   private String image;
   private Long userId;
+  private boolean likecheck;
+  private long likecount;
   private  LocalDateTime createdAt;
 }

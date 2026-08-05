@@ -1,4 +1,4 @@
-export interface PrototypeData {
+export interface PrototypeGachaData {
   id: number;
   title: string;
   catchcopy: string;
@@ -6,5 +6,7 @@ export interface PrototypeData {
   image: string;
   userId: number;
   username: string;
-  createdAt? : string;
+  rarity: number;
+  attack: number;
+  defense: number;
 }

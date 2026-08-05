@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import in.tech_camp.prototype_d.custom_user.CustomUserDetail;
 import in.tech_camp.prototype_d.dto.PrototypeDto;
 import in.tech_camp.prototype_d.dto.PrototypeListDto;
+import in.tech_camp.prototype_d.service.LikeService;
 import in.tech_camp.prototype_d.service.PrototypeService;
 import in.tech_camp.prototype_d.validation.ValidationOrder;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,8 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 @RestController
@@ -46,6 +49,8 @@ public class PrototypeController {
 
   private final PrototypeService prototypeService;
 
+  private final LikeService likeService;
+  
   // プロトタイプ一覧表示
   @GetMapping({"/prototypes", "/", ""})
   public ResponseEntity<?> getPrototypes() {
@@ -62,7 +67,7 @@ public class PrototypeController {
   @GetMapping("/prototypes/{prototypeId}")
   public ResponseEntity<?> showPrototypeDetail(@PathVariable("prototypeId") Long prototypeId) {
     try {
-      PrototypeDto prototype = prototypeService.getPrototypeById(prototypeId);
+      PrototypeDto prototype = prototypeService.getPrototypeById(null, null, prototypeId);
       if(prototype == null){
         return ResponseEntity.notFound().build(); 
       }
@@ -195,4 +200,35 @@ public ResponseEntity<?> createPrototype(
       return ResponseEntity.internalServerError().body("サーバーエラー");
     }
   }
-}
+
+  //いいね追加
+  @PostMapping("prototypes/{prototypeId}/likes")
+  public ResponseEntity<?> addLikeToPrototype(@PathVariable ("prototypeId") Long prototypeId, @AuthenticationPrincipal CustomUserDetail currentUser) {
+  
+    try{
+        if (currentUser == null) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("ログインが必要です");
+      }
+      Long userId = currentUser.getId();
+
+      likeService.toggleLike(prototypeId, userId);
+
+      return ResponseEntity.ok().build();
+    } catch ( RuntimeException e ) {
+      return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+  }
+  //いいね順
+  @GetMapping("prototypes/likes")
+  public ResponseEntity<?> getPrototypeOrderByLikes() {
+    try{
+    likeService.getPrototypeOrderByLikes();
+    return ResponseEntity.ok().body("PrototypeListDto");
+  } catch (NullPointerException e){
+    return ResponseEntity.internalServerError().body("サーバーエラー");
+  }  }
+  
+  }
+
+  

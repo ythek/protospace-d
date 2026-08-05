@@ -96,7 +96,7 @@ export const fetchPrototypeGacha = async (): Promise<PrototypeGachaData> => {
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.error('Sign up error:', error.response?.data);
+      console.error('fetch gacha error:', error.response?.data);
       const messages = error.response?.data?.messages;
       throw new Error(messages ? messages.join(', ') : '登録に失敗しました');
     }

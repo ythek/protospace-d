@@ -184,6 +184,11 @@ public class PrototypeService {
   public Map<String, Object> getPrototypeToday(CustomUserDetail currentuser){
     // 現在あるIdをリストとして取得
     List<Long> prototypeIds= prototypeRepository.findAllId();
+    //プロトタイプないときはprototype:nullを返却（コントローラー側でnullの処理）
+    if(prototypeIds.size() == 0){
+    Map<String, Object> responseData = new HashMap<>();
+        responseData.put("prototype", null);
+    }
     // 今日の日付をパラメーターとして使用
     LocalDate today = LocalDate.now();
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
@@ -254,6 +259,10 @@ public class PrototypeService {
 
     public PrototypeStatusDto getPrototypeRandom() {
       List<Long> prototypeIds= prototypeRepository.findAllId();
+      //プロトタイプないときはnullを返却（コントローラー側でnullの処理）
+      if(prototypeIds.size() == 0){
+        return null;
+      }
       Random random = new Random();
       int randomInt = random.nextInt(prototypeIds.size());
       Long index = prototypeIds.get(randomInt);
@@ -268,10 +277,11 @@ public class PrototypeService {
       dto.setUsername(prototypeDto.getUser().getUsername());
 
 
-      // レアリティを算出
-      String baseName = prototypeDto.getImage().replaceFirst("[.][^.]+$", "");
+
       Long score;
       try{
+        // レアリティを算出
+        String baseName = prototypeDto.getImage().replaceFirst("[.][^.]+$", "");
         long seed;
         // 内部の64bit数値を合成してシードにする
         UUID uuid = UUID.fromString(baseName);

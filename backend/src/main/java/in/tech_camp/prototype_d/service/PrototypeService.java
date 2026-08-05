@@ -23,6 +23,7 @@ import in.tech_camp.prototype_d.entity.UserEntity;
 import in.tech_camp.prototype_d.form.PrototypeForm;
 import in.tech_camp.prototype_d.repository.PrototypeRepository;
 import in.tech_camp.prototype_d.repository.UserRepository;
+import in.tech_camp.prototype_d.repository.LikeRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -31,7 +32,7 @@ public class PrototypeService {
 
   private final PrototypeRepository prototypeRepository;
   private final UserRepository userRepository;
-
+  private final LikeRepository likeRepository;
   // 全件取得
   public List<PrototypeListDto> getPrototypes() {
     return prototypeRepository.findAll();
@@ -43,7 +44,7 @@ public class PrototypeService {
   }
 
   // プロトタイプ詳細
-  public PrototypeDto getPrototypeById(Long id) {
+  public PrototypeDto getPrototypeById(Long id, Long userId, Long prototypeId) {
     PrototypeEntity entity = prototypeRepository.findById(id);
     PrototypeDto dto = new PrototypeDto();
     if(entity != null){
@@ -52,6 +53,10 @@ public class PrototypeService {
       dto.setCatchcopy(entity.getCatchcopy());
       dto.setConcept(entity.getConcept());
       dto.setImage(entity.getImage());
+
+      Boolean likeCheck = likeRepository.existLikes(prototypeId, userId);
+      dto.setLikecheck(likeCheck);
+      dto.setLikecount(entity.getLikecount());
 
       UserDto userDto = new UserDto();
       
@@ -114,7 +119,7 @@ public class PrototypeService {
         dto.setCatchcopy(entity.getCatchcopy());
         dto.setConcept(entity.getConcept());
         dto.setImage(entity.getImage());
-
+        
          dto.setUser(userDto);
 
         return dto;
@@ -192,7 +197,7 @@ public class PrototypeService {
     int index = (int) (Math.abs(calculatedValue) % prototypeIds.size());
     Long randomNum = prototypeIds.get(index);
     // PrototypeのDTOを取得
-    PrototypeDto dto = getPrototypeById(randomNum);
+    PrototypeDto dto = getPrototypeById(randomNum, null,null);
 
     // 今日の運勢を決める数字を算出
     Integer luck = (int) (Math.abs(calculatedValue) % 6);

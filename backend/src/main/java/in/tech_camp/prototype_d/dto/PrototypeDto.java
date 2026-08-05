@@ -13,4 +13,6 @@ public class PrototypeDto {
   private String image;
   private UserDto user;
   private LocalDateTime createdAt;
+  private boolean likecheck;
+  private Long likecount;
 }

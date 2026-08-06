@@ -231,8 +231,7 @@ public ResponseEntity<?> createPrototype(
     return ResponseEntity.internalServerError().body(Map.of("messages", List.of("いいね順の取得に失敗しました。")));
   }  }
   
-  }
-
+  
   
     // プロトタイプgacha取得
   @GetMapping("/prototype/gacha")

@@ -279,15 +279,20 @@ public class PrototypeService {
     public PrototypeStatusDto getPrototypeRandom() {
       List<Long> prototypeIds= prototypeRepository.findAllId();
       //プロトタイプないときはnullを返却（コントローラー側でnullの処理）
-      if(prototypeIds.size() == 0){
+      if(prototypeIds.size() == 0 || prototypeIds.isEmpty()){
         return null;
       }
+
       Random random = new Random();
       int randomInt = random.nextInt(prototypeIds.size());
       Long index = prototypeIds.get(randomInt);
-      PrototypeDto prototypeDto = getPrototypeById(index);
-      PrototypeStatusDto dto = new PrototypeStatusDto();
 
+      PrototypeDto prototypeDto = getPrototypeById(index, null);
+      if (prototypeDto == null) {
+        return null;
+    }
+
+      PrototypeStatusDto dto = new PrototypeStatusDto();
       dto.setId(prototypeDto.getId());
       dto.setTitle(prototypeDto.getTitle());
       dto.setCatchcopy(prototypeDto.getCatchcopy());
@@ -297,18 +302,27 @@ public class PrototypeService {
 
 
 
-      Long score;
+      if (prototypeDto.getUser() != null) {
+        dto.setUserId(prototypeDto.getUser().getId());
+        dto.setUsername(prototypeDto.getUser().getUsername());
+    } else {
+        // user情報がない場合のフォールバック値（DTOの定義に合わせて調整）
+       dto.setUserId(null);
+        dto.setUsername("名無しユーザー");
+    }
+
+      Long score = 1L;
       try{
+        if (prototypeDto.getImage() != null && !prototypeDto.getImage().isEmpty()) {
+        String imageName = prototypeDto.getImage();
         // レアリティを算出
-        String baseName = prototypeDto.getImage().replaceFirst("[.][^.]+$", "");
-        long seed;
-        // 内部の64bit数値を合成してシードにする
-        UUID uuid = UUID.fromString(baseName);
-        seed = uuid.getMostSignificantBits() ^ uuid.getLeastSignificantBits();
-        // シード値を元に乱数生成器を作成
+        String baseName = imageName.substring(imageName.lastIndexOf("/") + 1).replaceFirst("[.][^.]+$", "");
+
+        long seed = (long) baseName.hashCode();
         Random generator = new Random(seed);
-        // 1〜10000の数値を生成
+                // 1〜10000の数値を生成
         score = (long) (generator.nextInt(10000) + 1);
+        }
       }catch(Exception e){
         score = 1L;
       }

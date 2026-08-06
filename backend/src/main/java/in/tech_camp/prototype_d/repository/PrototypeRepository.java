@@ -33,7 +33,7 @@ public interface PrototypeRepository {
   // プロトタイプ詳細
   @Select("SELECT p.id, p.user_id AS userId, p.title, p.catchcopy, p.concept, p.image, p.created_at AS createdAt " +
           "FROM prototypes p WHERE p.id = #{id}")
-  PrototypeEntity findById(@Param("id") Long id, @Param("userId") Long userId);
+  PrototypeEntity findById( @Param("id") Long id, @Param("userId") Long userId);
 
   // 削除権限チェック用
   @Select("SELECT user_id FROM prototypes WHERE id = #{id}")

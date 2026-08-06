@@ -34,8 +34,8 @@ public class PrototypeService {
   private final UserRepository userRepository;
   private final LikeRepository likeRepository;
   // 全件取得
-  public List<PrototypeListDto> getPrototypes() {
-    return prototypeRepository.findAll();
+  public List<PrototypeListDto> getPrototypes(Long userId) {
+    return prototypeRepository.findAll(userId);
   }
 
   // ユーザー詳細で投稿一覧を取得
@@ -44,30 +44,43 @@ public class PrototypeService {
   }
 
   // プロトタイプ詳細
-  public PrototypeDto getPrototypeById(Long id, Long userId, Long prototypeId) {
-    PrototypeEntity entity = prototypeRepository.findById(id);
-    PrototypeDto dto = new PrototypeDto();
-    if(entity != null){
+  public PrototypeDto getPrototypeById(Long prototypeId, Long userId) {
+    PrototypeEntity entity = prototypeRepository.findById(prototypeId, userId);
+    if(entity == null){
+      return null;
+    }
+      PrototypeDto dto = new PrototypeDto();
       dto.setId(entity.getId());
       dto.setTitle(entity.getTitle());
       dto.setCatchcopy(entity.getCatchcopy());
       dto.setConcept(entity.getConcept());
       dto.setImage(entity.getImage());
 
-      Boolean likeCheck = likeRepository.existLikes(prototypeId, userId);
-      dto.setLikecheck(likeCheck);
-      dto.setLikecount(entity.getLikecount());
+      //いいね数確認
+      long likeCount = likeRepository.countAllLikes(prototypeId);
+     dto.setLikecount(likeCount);
 
-      UserDto userDto = new UserDto();
+     //
+      boolean likeCheck = false;
+      if(userId != null) {
+          likeCheck = likeRepository.existLikes(userId, prototypeId);
+      }
+      dto.setLikecheck(likeCheck);
+
       
+      if(entity.getUserId() != null) {
       // entity.getUserId()を使ってDBからユーザー情報を取得する
       UserEntity user = userRepository.findById(entity.getUserId());
+      if (user != null) {
+      UserDto userDto = new UserDto();
       userDto.setUsername(user.getUsername());
       userDto.setId(user.getId());
       dto.setUser(userDto);
-    }else{
-      dto = null;
+      }
+
     }
+    
+
     return dto;
   }
 
@@ -99,7 +112,7 @@ public class PrototypeService {
       if (!ownerId.equals(currentUserId)) {
         throw new IllegalArgumentException("編集権限がありません");
       }
-        PrototypeEntity entity = prototypeRepository.findById(prototypeId);
+        PrototypeEntity entity = prototypeRepository.findById(prototypeId, null);
         
         if (entity == null) {
             return null;
@@ -197,7 +210,8 @@ public class PrototypeService {
     int index = (int) (Math.abs(calculatedValue) % prototypeIds.size());
     Long randomNum = prototypeIds.get(index);
     // PrototypeのDTOを取得
-    PrototypeDto dto = getPrototypeById(randomNum, null,null);
+    Long userId = (currentuser != null) ? currentuser.getId() : null;
+    PrototypeDto dto = getPrototypeById(randomNum, userId);
 
     // 今日の運勢を決める数字を算出
     Integer luck = (int) (Math.abs(calculatedValue) % 6);

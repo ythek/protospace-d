@@ -9,6 +9,7 @@ import { CommentData } from '../lib/commentData';
 import { useAuthContext } from '../app/context/AuthContext';
 import { fetchComments, createComment, deletePrototype } from '../lib/prototypeApi';
 import { PrototypeDetailData } from '@/lib/prototypeDetailData';
+import { PrototypeLike } from './PrototypeLike';
 
 
 interface Props{
@@ -16,6 +17,8 @@ interface Props{
 }
 
 export default function PrototypeDetail ({ prototype }: Props ) {
+
+  
   // AuthContextからログイン中のユーザー情報を取得
   const { user } = useAuthContext();user?.id;
 
@@ -118,14 +121,30 @@ export default function PrototypeDetail ({ prototype }: Props ) {
     } finally {
       setIsSubmitting(false);
     }
+
   
    };
+console.log("【詳細画面のデータ確認】", {
+  likecheck: prototype?.likecheck,
+  likecount: prototype?.likecount,
+  // もし大文字混ざりのプロパティ名で届いている可能性もチェック
+  likeCheck: (prototype as any).likeCheck,
+  likeCount: (prototype as any).likeCount,
+});
 
    return (
     <div className={styles.container}>
     
     <div className={styles.title_container}>
       <div className={styles.prototype_title}>{prototype.title}</div>
+      {prototype && (
+      <PrototypeLike
+              key={`${prototype.id}-${prototype.likecount}`}
+              prototypeId={prototype.id}
+              initialLikeCount={prototype.likecount ?? 0}
+              initialLikeCheck={prototype.likecheck ?? false}
+              />
+      )}
       {/* 共有ボタン */}
         <button 
           type='button'

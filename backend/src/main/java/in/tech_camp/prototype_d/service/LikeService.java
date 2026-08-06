@@ -31,7 +31,7 @@ public class LikeService {
   public void toggleLike (Long prototypeId,Long userId){
 
   //投稿があるか確認
-  PrototypeEntity prototype = prototypeRepository.findById(prototypeId);
+  PrototypeEntity prototype = prototypeRepository.findById(prototypeId, null);
 
   if (prototype == null) {
     throw new IllegalArgumentException("指定された投稿が見つかりません");

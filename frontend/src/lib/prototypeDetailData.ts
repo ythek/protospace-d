@@ -7,4 +7,6 @@ export interface PrototypeDetailData {
   concept: string;
   image: string;
   user? :UserData;
+  likecount :number;
+  likecheck :boolean;
 }

@@ -31,14 +31,10 @@ import lombok.RequiredArgsConstructor;
 import in.tech_camp.prototype_d.entity.PrototypeEntity;
 import in.tech_camp.prototype_d.form.PrototypeForm;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.UUID;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 
@@ -53,9 +49,10 @@ public class PrototypeController {
   
   // プロトタイプ一覧表示
   @GetMapping({"/prototypes", "/", ""})
-  public ResponseEntity<?> getPrototypes() {
+  public ResponseEntity<?> getPrototypes(@AuthenticationPrincipal CustomUserDetail currentUser) {
     try {
-      List<PrototypeListDto> prototypes = prototypeService.getPrototypes();
+      Long userId = (currentUser != null) ? currentUser.getId() : null;
+      List<PrototypeListDto> prototypes = prototypeService.getPrototypes(userId);
       return ResponseEntity.ok().body(prototypes);
     } catch (Exception e) {
       e.printStackTrace(); // エラーあったら見たい
@@ -65,9 +62,11 @@ public class PrototypeController {
 
   // プロトタイプ詳細表示
   @GetMapping("/prototypes/{prototypeId}")
-  public ResponseEntity<?> showPrototypeDetail(@PathVariable("prototypeId") Long prototypeId) {
+  public ResponseEntity<?> showPrototypeDetail(@PathVariable("prototypeId") Long prototypeId, @AuthenticationPrincipal CustomUserDetail currentUser) {
     try {
-      PrototypeDto prototype = prototypeService.getPrototypeById(null, null, prototypeId);
+      Long userId = (currentUser != null) ? currentUser.getId() : null;
+      
+      PrototypeDto prototype = prototypeService.getPrototypeById(prototypeId, userId);
       if(prototype == null){
         return ResponseEntity.notFound().build(); 
       }
@@ -202,7 +201,7 @@ public ResponseEntity<?> createPrototype(
   }
 
   //いいね追加
-  @PostMapping("prototypes/{prototypeId}/likes")
+  @PostMapping("/prototypes/{prototypeId}/likes")
   public ResponseEntity<?> addLikeToPrototype(@PathVariable ("prototypeId") Long prototypeId, @AuthenticationPrincipal CustomUserDetail currentUser) {
   
     try{
@@ -220,7 +219,7 @@ public ResponseEntity<?> createPrototype(
 
   }
   //いいね順
-  @GetMapping("prototypes/likes")
+  @GetMapping("/prototypes/likes")
   public ResponseEntity<?> getPrototypeOrderByLikes() {
     try{
     likeService.getPrototypeOrderByLikes();

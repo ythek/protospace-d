@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import in.tech_camp.prototype_d.custom_user.CustomUserDetail;
 import in.tech_camp.prototype_d.dto.PrototypeDto;
 import in.tech_camp.prototype_d.dto.PrototypeListDto;
+import in.tech_camp.prototype_d.dto.PrototypeStatusDto;
 import in.tech_camp.prototype_d.dto.UserDto;
 import in.tech_camp.prototype_d.entity.PrototypeEntity;
 import in.tech_camp.prototype_d.entity.UserEntity;
@@ -200,6 +202,11 @@ public class PrototypeService {
   public Map<String, Object> getPrototypeToday(CustomUserDetail currentuser){
     // 現在あるIdをリストとして取得
     List<Long> prototypeIds= prototypeRepository.findAllId();
+    //プロトタイプないときはprototype:nullを返却（コントローラー側でnullの処理）
+    if(prototypeIds.size() == 0){
+    Map<String, Object> responseData = new HashMap<>();
+        responseData.put("prototype", null);
+    }
     // 今日の日付をパラメーターとして使用
     LocalDate today = LocalDate.now();
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
@@ -267,5 +274,48 @@ public class PrototypeService {
         imageFile.transferTo(dest);
 
         return fileName;
+    }
+
+    public PrototypeStatusDto getPrototypeRandom() {
+      List<Long> prototypeIds= prototypeRepository.findAllId();
+      //プロトタイプないときはnullを返却（コントローラー側でnullの処理）
+      if(prototypeIds.size() == 0){
+        return null;
+      }
+      Random random = new Random();
+      int randomInt = random.nextInt(prototypeIds.size());
+      Long index = prototypeIds.get(randomInt);
+      PrototypeDto prototypeDto = getPrototypeById(index);
+      PrototypeStatusDto dto = new PrototypeStatusDto();
+
+      dto.setId(prototypeDto.getId());
+      dto.setTitle(prototypeDto.getTitle());
+      dto.setCatchcopy(prototypeDto.getCatchcopy());
+      dto.setImage(prototypeDto.getImage());
+      dto.setUserId(prototypeDto.getUser().getId());
+      dto.setUsername(prototypeDto.getUser().getUsername());
+
+
+
+      Long score;
+      try{
+        // レアリティを算出
+        String baseName = prototypeDto.getImage().replaceFirst("[.][^.]+$", "");
+        long seed;
+        // 内部の64bit数値を合成してシードにする
+        UUID uuid = UUID.fromString(baseName);
+        seed = uuid.getMostSignificantBits() ^ uuid.getLeastSignificantBits();
+        // シード値を元に乱数生成器を作成
+        Random generator = new Random(seed);
+        // 1〜10000の数値を生成
+        score = (long) (generator.nextInt(10000) + 1);
+      }catch(Exception e){
+        score = 1L;
+      }
+        dto.setRarity(score);
+        //↓ここはいいね数などによって調整
+        dto.setAttack(score * prototypeDto.getId() / 10);
+        dto.setDefense(score * prototypeDto.getId());
+      return dto;
     }
 }

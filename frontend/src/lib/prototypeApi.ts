@@ -3,6 +3,8 @@ import { PrototypeData } from './prototypeData';
 import { prototypeTodayData } from './prototypeTodayData';
 import { CommentData } from './commentData';
 import { prototype } from 'events';
+import axios from 'axios';
+import { PrototypeGachaData } from './PrototypeGachaData';
 
 // プロトタイプ一覧取得
 export const fetchPrototypes = async (): Promise<PrototypeData[]> => {
@@ -28,18 +30,18 @@ export const fetchPrototypeById = async (prototypeId: number | string): Promise<
 
 // 今日のプロトタイプの取得
 export const fetchPrototypeToday = async (): Promise<prototypeTodayData> => {
-  const response = await apiClient.get(`/api/prototypes/today`);
+  const response = await apiClient.get(`/api/prototype/today`);
   return response.data;
 };
 
 // コメント一覧取得
-export const fetchComments = async (prototypeId: number | string ): Promise<CommentData[]> => {
+export const fetchComments = async (prototypeId: number | string): Promise<CommentData[]> => {
   const response = await apiClient.get<CommentData[]>(`/api/prototypes/${prototypeId}/comments`);
   return response.data;
 };
 
 // コメント投稿
-export const createComment = async (prototypeId: number | string , comment: string) => {
+export const createComment = async (prototypeId: number | string, comment: string) => {
   const response = await apiClient.post(`/api/prototypes/${prototypeId}/comments`, {
     comment,
   });
@@ -47,20 +49,20 @@ export const createComment = async (prototypeId: number | string , comment: stri
 };
 
 // 削除機能
-export const deletePrototype = async (prototypeId: number | string ) => {
+export const deletePrototype = async (prototypeId: number | string) => {
   const response = await apiClient.delete(`/api/prototypes/${prototypeId}`);
   return response.data;
 };
 
 //プロトタイプ一件だけ取得
-export const fetchPrototype = async ( prototypeId: number | string): Promise<PrototypeData> => {
+export const fetchPrototype = async (prototypeId: number | string): Promise<PrototypeData> => {
   const response = await apiClient.get(`/api/prototypes/${prototypeId}/edit`);
   return response.data;
 }
 //編集更新処理
 export const updatePrototype = async (prototypeId: number | string, formData: FormData) => {
   const response = await apiClient.post(`/api/prototypes/${prototypeId}`, formData, {
-      headers: {
+    headers: {
       'Content-Type': undefined,
     },
   });
@@ -92,8 +94,8 @@ export const createPrototype = async (data: PrototypeFormData): Promise<Prototyp
       'Content-Type': undefined,
     },
   });
-  
-  
+
+
   return response.data;
 };
 
@@ -120,3 +122,18 @@ export const fetchPrototypesOrderByLikes = async () => {
 };
 
 
+
+//プロトタイプ一件だけ取得
+export const fetchPrototypeGacha = async (): Promise<PrototypeGachaData> => {
+  try {
+    const response = await apiClient.get(`/api/prototype/gacha`);
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error('fetch gacha error:', error.response?.data);
+      const messages = error.response?.data?.messages;
+      throw new Error(messages ? messages.join(', ') : '登録に失敗しました');
+    }
+    throw error;
+  }
+}

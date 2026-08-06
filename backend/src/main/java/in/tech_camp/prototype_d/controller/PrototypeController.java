@@ -25,6 +25,7 @@ import in.tech_camp.prototype_d.custom_user.CustomUserDetail;
 import in.tech_camp.prototype_d.dto.PrototypeDto;
 import in.tech_camp.prototype_d.dto.PrototypeListDto;
 import in.tech_camp.prototype_d.service.LikeService;
+import in.tech_camp.prototype_d.dto.PrototypeStatusDto;
 import in.tech_camp.prototype_d.service.PrototypeService;
 import in.tech_camp.prototype_d.validation.ValidationOrder;
 import lombok.RequiredArgsConstructor;
@@ -185,7 +186,7 @@ public ResponseEntity<?> createPrototype(
     }
 }
 
-  @GetMapping("/prototypes/today")
+  @GetMapping("/prototype/today")
   public ResponseEntity<?> showPrototypeToday(@AuthenticationPrincipal CustomUserDetail currentUser) {
     try {
       Map<String, Object> responseData = prototypeService.getPrototypeToday(currentUser);
@@ -233,3 +234,19 @@ public ResponseEntity<?> createPrototype(
   }
 
   
+    // プロトタイプgacha取得
+  @GetMapping("/prototype/gacha")
+  public ResponseEntity<?> showPrototypeRandom() {
+    try {
+      PrototypeStatusDto prototype = prototypeService.getPrototypeRandom();
+      if(prototype == null){
+        return ResponseEntity.notFound().build(); 
+      }
+        return ResponseEntity.ok().body(prototype);
+      } catch (Exception e) {
+        System.out.println("エラー :" + e);
+    
+      return ResponseEntity.internalServerError().body("サーバーエラー");
+    }
+  }
+}

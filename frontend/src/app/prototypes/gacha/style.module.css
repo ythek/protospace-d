@@ -1,0 +1,116 @@
+.usernameLink {
+  color: #333;
+  text-decoration: underline;
+}
+
+.area {
+  display: flex;
+  justify-content: left;
+  width: 100vw;
+}
+
+.grid {
+  width: 30%;
+  border: 1px solid yellow;
+  padding: 10px;
+  margin-top: 10px;
+  animation: shake 0.5s, cardslide 0.5s 1s forwards;
+  box-shadow: 0 0 10px 2px rgba(255, 215, 0, 0.8);
+  color: gold;
+}
+
+.title {
+  margin-top: 70px;
+}
+
+@keyframes shake {
+  0% {
+    transform: translate(1px, 1px) rotate(0deg);
+  }
+
+  10% {
+    transform: translate(-1px, -2px) rotate(-5deg);
+  }
+
+  20% {
+    transform: translate(-3px, 0px) rotate(5deg);
+  }
+
+  30% {
+    transform: translate(3px, 2px) rotate(0deg);
+  }
+
+  40% {
+    transform: translate(1px, -1px) rotate(5deg);
+  }
+
+  50% {
+    transform: translate(-1px, 2px) rotate(-5deg);
+  }
+
+  60% {
+    transform: translate(-3px, 1px) rotate(0deg);
+  }
+
+  70% {
+    transform: translate(3px, 1px) rotate(-5deg);
+  }
+
+  80% {
+    transform: translate(-1px, -1px) rotate(5deg);
+  }
+
+  90% {
+    transform: translate(1px, 2px) rotate(0deg);
+  }
+
+  100% {
+    transform: translate(1px, -2px) rotate(-5deg);
+  }
+}
+
+@keyframes cardslide {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(70%);
+  }
+}
+
+@keyframes statuspop {
+  0% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(60%);
+  }
+}
+
+.userinfo {
+  margin-top: 10px;
+  width: 30vw;
+  border-collapse: collapse;
+  text-align: left;
+  animation: statuspop 5s  forwards;
+}
+
+.userinfo td {
+  padding: 20px 24px;
+  border: 1px solid #eeeeee;
+  color: #333333;
+  font-size: 16px;
+  vertical-align: middle;
+}
+
+
+.recordname {
+  background-color: #f7f7f7;
+  font-weight: bold;
+  width: 25%;
+  white-space: nowrap;
+}

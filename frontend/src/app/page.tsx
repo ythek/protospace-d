@@ -37,6 +37,32 @@ const sortedPrototypes = [...prototypes].sort((a, b) => {
       } catch (error) {
         console.error("プロトタイプの取得に失敗しました", error);
       }
+
+      // 隠しコマンドを配列で設定
+      const secretCommand = ['g', 'a', 'c', 'h', 'a'];
+
+      //ユーザーの入力履歴を保存する配列を定義
+      let inputKeys: string[] = [];
+
+      //キーボードが押されたときのイベントリスナーを設定
+      window.addEventListener('keydown', (e) => {
+        // 押されたキーを履歴配列の最後に追加する
+        inputKeys.push(e.key);
+
+        // 履歴がコマンドの文字数を超えたら、一番先頭の文字を削除する
+        if (inputKeys.length > secretCommand.length) {
+          inputKeys.shift();
+        }
+
+        //隠しコマンド成功時の処理
+        // 入力履歴と正解コマンドが完全に一致したか判定
+        if (inputKeys.join(',') === secretCommand.join(',')) {
+          alert("隠しコマンド：ガチャページに移動します");
+          sessionStorage.setItem('isGachaUnlocked', 'true');
+          window.location.href = `/prototypes/gacha`;
+          inputKeys = [];
+        }
+      });
     };
     getPrototypes();
   }, [changeOrder]);

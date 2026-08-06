@@ -49,7 +49,7 @@ public class SecurityConfig {
 
                         // 既存の設定
                         .requestMatchers(HttpMethod.GET, "/css/**", "/images/**", "/uploads/**", "/error").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/prototypes", "/api/prototypes/{id:[0-9]+}", "/api/prototypes/{id:[0-9]+}/comments", "/api/users/{id:[0-9]+}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/prototypes", "/api/prototypes/{id:[0-9]+}", "/api/prototypes/{id:[0-9]+}/comments", "/api/users/{id:[0-9]+}","/api/prototypes/likes").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/users/sign_up", "/api/users/sign_in").permitAll()
                         .anyRequest().authenticated())
 

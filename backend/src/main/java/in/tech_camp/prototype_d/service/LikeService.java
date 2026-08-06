@@ -46,8 +46,8 @@ public class LikeService {
 
   //いいね順
   @Transactional(readOnly = true)
-  public List<PrototypeListDto> getPrototypeOrderByLikes () {
-  return likeRepository.orderByLikes();
+  public List<PrototypeListDto> getPrototypeOrderByLikes (Long userId) {
+  return likeRepository.orderByLikes(userId);
 }
   
 }

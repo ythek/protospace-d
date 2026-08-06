@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { fetchPrototypes } from '../lib/prototypeApi';
+import { fetchPrototypes, fetchPrototypesOrderByLikes } from '../lib/prototypeApi';
 import { PrototypeData } from '../lib/prototypeData';
 import PrototypeView from '../components/PrototypeView';
 import styles from './page.module.css';
@@ -14,11 +14,13 @@ export default function Home() {
   const [changeOrder, setChangeOrder] = useState<'desc' | 'asc' | 'likes'>('desc');
 
 
-  const sortedPrototypes = prototypes.toSorted((a, b) => {
-    const dateA = new Date(a.createdAt).getTime();
-    const dateB = new Date(b.createdAt) .getTime();
-    return changeOrder === 'desc' ? dateB - dateA :dateA - dateB;
-  });
+const sortedPrototypes = [...prototypes].sort((a, b) => {
+  if (changeOrder === 'likes') return 0;
+
+  const dateA = new Date(a.createdAt).getTime();
+  const dateB = new Date(b.createdAt).getTime();
+  return changeOrder === 'desc' ? dateB - dateA : dateA - dateB;
+});
   // changeOrder が 'desc' なら dateB - dateA（新しい順）
   // そうでなければ dateA - dateB（古い順）
 
@@ -27,14 +29,17 @@ export default function Home() {
   useEffect(() => {
     const getPrototypes = async () => {
       try {
-        const data = await fetchPrototypes();
+        const data = changeOrder === 'likes'
+        ? await fetchPrototypesOrderByLikes() 
+        : await fetchPrototypes();
+
         setPrototypes(data);
       } catch (error) {
         console.error("プロトタイプの取得に失敗しました", error);
       }
     };
     getPrototypes();
-  }, []);
+  }, [changeOrder]);
 
 
 
@@ -86,10 +91,14 @@ export default function Home() {
             </li>
             
             <li>
-            {user && (
-            <button>
-              いいね順 {changeOrder === 'likes' && '✓' }</button>
-            )}
+                <button
+                  onClick={() => {
+                    setChangeOrder('likes'); 
+                    setIsOpen(false);
+                  }}
+                >
+                  いいね順 {changeOrder === 'likes' && '✓'}
+                </button>
             </li>
 
            </ul>
@@ -97,8 +106,8 @@ export default function Home() {
      </div>
 
       <div className={styles.grid}>
-        {sortedPrototypes.map((prototype) => (
-          <PrototypeView key={prototype.id} prototype={prototype} />
+        {sortedPrototypes.map((prototype, index) => (
+          <PrototypeView key={prototype.id ?? index} prototype={prototype} />
         ))}
       </div>
     </main>

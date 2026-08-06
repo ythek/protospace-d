@@ -32,13 +32,22 @@ public interface LikeRepository {
   long countAllLikes(Long prototypeId);
 
   //いいねが多い順
-  @Select("""
-          SELECT p.title, u.username, p.catchcopy, p.image  COUNT(l.id) AS likecount
-          FROM prototypes p  
-          JOIN users ON p.user_id = u.id
-          LEFT JOIN likes l ON p.id = l.prototype_id
-          GROUP BY p.id
-          ORDER BY likeCount DESC
-          """)
-  List<PrototypeListDto> orderByLikes ();
+   
+@Select("""
+         SELECT p.id,
+               p.user_id AS userId,
+               p.title,
+               p.catchcopy,
+               p.image,
+               u.username,
+               p.created_at AS createdAt,
+               COUNT(l.id) AS likecount,
+               BOOL_OR(l.user_id = #{userId, jdbcType=BIGINT}) AS likecheck
+        FROM prototypes p
+        JOIN users u ON p.user_id = u.id
+        LEFT JOIN likes l ON p.id = l.prototype_id
+        GROUP BY p.id, u.username
+        ORDER BY likecount DESC
+        """)
+  List<PrototypeListDto> orderByLikes (Long userId);
 }

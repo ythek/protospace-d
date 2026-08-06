@@ -107,10 +107,16 @@ export const likePrototype = async (prototypeId: number) => {
   return response.data;
 }
 
-//いいね順表示
-export const fetchPrototypeOrderByLikes = async() => {
-  const response = await apiClient.get(`api/prototypes/likes` );
-  return response.data;
 
-}
+// いいね順のプロトタイプ一覧を取得
+export const fetchPrototypesOrderByLikes = async () => {
+  const response = await apiClient.get('api/prototypes/likes', {
+    headers: {
+      'Cache-Control': 'no-store, no-cache, must-revalidate',
+    },
+    withCredentials: true,
+  });
+  return response.data;
+};
+
 

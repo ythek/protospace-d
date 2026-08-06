@@ -220,12 +220,14 @@ public ResponseEntity<?> createPrototype(
   }
   //いいね順
   @GetMapping("/prototypes/likes")
-  public ResponseEntity<?> getPrototypeOrderByLikes() {
+  public ResponseEntity<?> getPrototypeOrderByLikes(@AuthenticationPrincipal CustomUserDetail currentUser) {
     try{
-    likeService.getPrototypeOrderByLikes();
-    return ResponseEntity.ok().body("PrototypeListDto");
+      Long userId = (currentUser != null) ? currentUser.getId() : null;
+   List<PrototypeListDto> prototypes = likeService.getPrototypeOrderByLikes(userId);
+    return ResponseEntity.ok().body(prototypes);
   } catch (NullPointerException e){
-    return ResponseEntity.internalServerError().body("サーバーエラー");
+    e.printStackTrace();
+    return ResponseEntity.internalServerError().body(Map.of("messages", List.of("いいね順の取得に失敗しました。")));
   }  }
   
   }

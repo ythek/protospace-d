@@ -74,33 +74,4 @@ public class UserController {
       return ResponseEntity.internalServerError().body(Map.of("messages", List.of("取得に失敗しました。")));
     }
   }
-
-  @PostMapping("/sign_in")
-public ResponseEntity<?> signIn(
-    @RequestBody @Validated SignInForm signInForm, 
-    BindingResult result,
-    HttpServletRequest request,
-    HttpServletResponse response) {
-
-  // 1. バリデーションエラー（@がない、空欄など）のチェック
-  if (result.hasErrors()) {
-    List<String> errorMessages = result.getAllErrors().stream()
-        .map(error -> error.getDefaultMessage())
-        .toList();
-    return ResponseEntity.badRequest().body(Map.of("messages", errorMessages));
-  }
-
-  // 2. ログイン処理を実行
-  try {
-    UserEntity userEntity = userService.loginUser(signInForm, request, response);
-    
-    // DTOを使わず、Mapで必要な値だけを返却
-    return ResponseEntity.ok().body(Map.of(
-      "id", userEntity.getId(),
-      "username", userEntity.getUsername()
-    ));
-  } catch (Exception e) {
-    return ResponseEntity.status(401).body(Map.of("messages", List.of("メールアドレスまたはパスワードが正しくありません")));
-  }
-}
 }

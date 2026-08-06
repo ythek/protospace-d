@@ -113,24 +113,4 @@ public class UserService {
         contextRepository.saveContext(context, request, response);
     }
 
-
-    // ログイン処理（メールアドレスとパスワードの検証）
-    public UserEntity loginUser(SignInForm signInForm, HttpServletRequest request, HttpServletResponse response) {
-    // 1. メールアドレスでユーザーを検索
-    UserEntity userEntity = userRepository.findByEmail(signInForm.getEmail());
-    if (userEntity == null) {
-      throw new RuntimeException("ユーザーが存在しません");
-    }
-
-    // 2. パスワードの照合 (入力された平文 vs DBの暗号化パスワード)
-    if (!passwordEncoder.matches(signInForm.getPassword(), userEntity.getPassword())) {
-      throw new RuntimeException("パスワードが一致しません");
-    }
-
-    // 3. 認証成功時、セッション/Cookieに保存 (既存のautoLoginを活用)
-    autoLogin(userEntity.getEmail(), request, response);
-
-    return userEntity;
-  }
-
 }

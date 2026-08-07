@@ -17,8 +17,9 @@ export default function Home() {
 const sortedPrototypes = [...prototypes].sort((a, b) => {
   if (changeOrder === 'likes') return 0;
 
-  const dateA = new Date(a.createdAt).getTime();
-  const dateB = new Date(b.createdAt).getTime();
+
+  const dateA = new Date(Number(a.createdAt)).getTime();
+  const dateB = new Date(Number(b.createdAt)).getTime();
   return changeOrder === 'desc' ? dateB - dateA : dateA - dateB;
 });
   // changeOrder が 'desc' なら dateB - dateA（新しい順）

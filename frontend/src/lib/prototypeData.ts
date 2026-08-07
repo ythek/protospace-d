@@ -8,6 +8,5 @@ export interface PrototypeData {
   username: string;
   likecheck: boolean;
   likecount: number;
-  createdAt : string;
   createdAt? : string;
 }

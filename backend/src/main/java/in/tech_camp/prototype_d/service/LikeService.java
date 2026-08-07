@@ -1,14 +1,12 @@
 package in.tech_camp.prototype_d.service;
 
-import java.beans.Transient;
-import java.util.ArrayList;
+
 import java.util.List;
 
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import in.tech_camp.prototype_d.dto.PrototypeDto;
 import in.tech_camp.prototype_d.dto.PrototypeListDto;
 import in.tech_camp.prototype_d.entity.PrototypeEntity;
 import in.tech_camp.prototype_d.repository.LikeRepository;

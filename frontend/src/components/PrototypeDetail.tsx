@@ -124,13 +124,7 @@ export default function PrototypeDetail ({ prototype }: Props ) {
 
   
    };
-console.log("【詳細画面のデータ確認】", {
-  likecheck: prototype?.likecheck,
-  likecount: prototype?.likecount,
-  // もし大文字混ざりのプロパティ名で届いている可能性もチェック
-  likeCheck: (prototype as any).likeCheck,
-  likeCount: (prototype as any).likeCount,
-});
+
 
    return (
     <div className={styles.container}>

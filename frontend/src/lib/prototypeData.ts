@@ -6,5 +6,7 @@ export interface PrototypeData {
   image: string;
   userId: number;
   username: string;
+  likecheck: boolean;
+  likecount: number;
   createdAt? : string;
 }

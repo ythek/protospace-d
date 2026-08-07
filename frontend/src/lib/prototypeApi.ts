@@ -2,18 +2,29 @@ import apiClient from './apiClient';
 import { PrototypeData } from './prototypeData';
 import { prototypeTodayData } from './prototypeTodayData';
 import { CommentData } from './commentData';
+import { prototype } from 'events';
 import axios from 'axios';
 import { PrototypeGachaData } from './PrototypeGachaData';
 
 // プロトタイプ一覧取得
 export const fetchPrototypes = async (): Promise<PrototypeData[]> => {
-  const response = await apiClient.get('/api/prototypes');
+  const response = await apiClient.get('/api/prototypes', {
+    headers: {
+      'Cache-Control': 'no-store, no-cache, must-revalidate', // キャッシュを使わず最新のDB状態を取る
+    },
+    withCredentials: true,
+  });
   return response.data;
 };
 
 // 詳細画面取得
 export const fetchPrototypeById = async (prototypeId: number | string): Promise<PrototypeData> => {
-  const response = await apiClient.get(`/api/prototypes/${prototypeId}`);
+  const response = await apiClient.get(`/api/prototypes/${prototypeId}`,{
+  withCredentials: true,
+    headers: {
+      'Cache-Control': 'o-store, no-cache, must-revalidate',
+    },
+  });
   return response.data;
 };
 
@@ -87,6 +98,29 @@ export const createPrototype = async (data: PrototypeFormData): Promise<Prototyp
 
   return response.data;
 };
+
+//いいね追加削除機能
+export const likePrototype = async (prototypeId: number) => {
+  const response = await apiClient.post(`api/prototypes/${prototypeId}/likes`, {
+    headers: {
+      'Cache-Control': 'no-cache', // ★ キャッシュを無視して最新のDB状態を取得する
+    },
+  });
+  return response.data;
+}
+
+
+// いいね順のプロトタイプ一覧を取得
+export const fetchPrototypesOrderByLikes = async () => {
+  const response = await apiClient.get('api/prototypes/likes', {
+    headers: {
+      'Cache-Control': 'no-store, no-cache, must-revalidate',
+    },
+    withCredentials: true,
+  });
+  return response.data;
+};
+
 
 
 //プロトタイプ一件だけ取得

@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import in.tech_camp.prototype_d.custom_user.CustomUserDetail;
 import in.tech_camp.prototype_d.dto.PrototypeDto;
 import in.tech_camp.prototype_d.dto.PrototypeListDto;
+import in.tech_camp.prototype_d.service.LikeService;
 import in.tech_camp.prototype_d.dto.PrototypeStatusDto;
 import in.tech_camp.prototype_d.service.PrototypeService;
 import in.tech_camp.prototype_d.validation.ValidationOrder;
@@ -31,13 +32,11 @@ import lombok.RequiredArgsConstructor;
 import in.tech_camp.prototype_d.entity.PrototypeEntity;
 import in.tech_camp.prototype_d.form.PrototypeForm;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.UUID;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 
 
 @RestController
@@ -47,11 +46,14 @@ public class PrototypeController {
 
   private final PrototypeService prototypeService;
 
+  private final LikeService likeService;
+  
   // プロトタイプ一覧表示
   @GetMapping({"/prototypes", "/", ""})
-  public ResponseEntity<?> getPrototypes() {
+  public ResponseEntity<?> getPrototypes(@AuthenticationPrincipal CustomUserDetail currentUser) {
     try {
-      List<PrototypeListDto> prototypes = prototypeService.getPrototypes();
+      Long userId = (currentUser != null) ? currentUser.getId() : null;
+      List<PrototypeListDto> prototypes = prototypeService.getPrototypes(userId);
       return ResponseEntity.ok().body(prototypes);
     } catch (Exception e) {
       e.printStackTrace(); // エラーあったら見たい
@@ -61,9 +63,11 @@ public class PrototypeController {
 
   // プロトタイプ詳細表示
   @GetMapping("/prototypes/{prototypeId}")
-  public ResponseEntity<?> showPrototypeDetail(@PathVariable("prototypeId") Long prototypeId) {
+  public ResponseEntity<?> showPrototypeDetail(@PathVariable("prototypeId") Long prototypeId, @AuthenticationPrincipal CustomUserDetail currentUser) {
     try {
-      PrototypeDto prototype = prototypeService.getPrototypeById(prototypeId);
+      Long userId = (currentUser != null) ? currentUser.getId() : null;
+      
+      PrototypeDto prototype = prototypeService.getPrototypeById(prototypeId, userId);
       if(prototype == null){
         return ResponseEntity.notFound().build(); 
       }
@@ -197,6 +201,38 @@ public ResponseEntity<?> createPrototype(
     }
   }
 
+  //いいね追加
+  @PostMapping("/prototypes/{prototypeId}/likes")
+  public ResponseEntity<?> addLikeToPrototype(@PathVariable ("prototypeId") Long prototypeId, @AuthenticationPrincipal CustomUserDetail currentUser) {
+  
+    try{
+        if (currentUser == null) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("ログインが必要です");
+      }
+      Long userId = currentUser.getId();
+
+      likeService.toggleLike(prototypeId, userId);
+
+      return ResponseEntity.ok().build();
+    } catch ( RuntimeException e ) {
+      return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+  }
+  //いいね順
+  @GetMapping("/prototypes/likes")
+  public ResponseEntity<?> getPrototypeOrderByLikes(@AuthenticationPrincipal CustomUserDetail currentUser) {
+    try{
+      Long userId = (currentUser != null) ? currentUser.getId() : null;
+   List<PrototypeListDto> prototypes = likeService.getPrototypeOrderByLikes(userId);
+    return ResponseEntity.ok().body(prototypes);
+  } catch (NullPointerException e){
+    e.printStackTrace();
+    return ResponseEntity.internalServerError().body(Map.of("messages", List.of("いいね順の取得に失敗しました。")));
+  }  }
+  
+  
+  
     // プロトタイプgacha取得
   @GetMapping("/prototype/gacha")
   public ResponseEntity<?> showPrototypeRandom() {

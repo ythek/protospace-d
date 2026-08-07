@@ -13,4 +13,6 @@ public class PrototypeListDto {
   private Long userId;
   private String username;
   private LocalDateTime createdAt;
+  private boolean likecheck;
+  private Long likecount;
 }

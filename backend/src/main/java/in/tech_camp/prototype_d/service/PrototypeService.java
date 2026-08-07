@@ -25,6 +25,7 @@ import in.tech_camp.prototype_d.entity.UserEntity;
 import in.tech_camp.prototype_d.form.PrototypeForm;
 import in.tech_camp.prototype_d.repository.PrototypeRepository;
 import in.tech_camp.prototype_d.repository.UserRepository;
+import in.tech_camp.prototype_d.repository.LikeRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -33,10 +34,10 @@ public class PrototypeService {
 
   private final PrototypeRepository prototypeRepository;
   private final UserRepository userRepository;
-
+  private final LikeRepository likeRepository;
   // 全件取得
-  public List<PrototypeListDto> getPrototypes() {
-    return prototypeRepository.findAll();
+  public List<PrototypeListDto> getPrototypes(Long userId) {
+    return prototypeRepository.findAll(userId);
   }
 
   // ユーザー詳細で投稿一覧を取得
@@ -45,26 +46,43 @@ public class PrototypeService {
   }
 
   // プロトタイプ詳細
-  public PrototypeDto getPrototypeById(Long id) {
-    PrototypeEntity entity = prototypeRepository.findById(id);
-    PrototypeDto dto = new PrototypeDto();
-    if(entity != null){
+  public PrototypeDto getPrototypeById(Long prototypeId, Long userId) {
+    PrototypeEntity entity = prototypeRepository.findById(prototypeId, userId);
+    if(entity == null){
+      return null;
+    }
+      PrototypeDto dto = new PrototypeDto();
       dto.setId(entity.getId());
       dto.setTitle(entity.getTitle());
       dto.setCatchcopy(entity.getCatchcopy());
       dto.setConcept(entity.getConcept());
       dto.setImage(entity.getImage());
 
-      UserDto userDto = new UserDto();
+      //いいね数確認
+      long likeCount = likeRepository.countAllLikes(prototypeId);
+     dto.setLikecount(likeCount);
+
+     //
+      boolean likeCheck = false;
+      if(userId != null) {
+          likeCheck = likeRepository.existLikes(userId, prototypeId);
+      }
+      dto.setLikecheck(likeCheck);
+
       
+      if(entity.getUserId() != null) {
       // entity.getUserId()を使ってDBからユーザー情報を取得する
       UserEntity user = userRepository.findById(entity.getUserId());
+      if (user != null) {
+      UserDto userDto = new UserDto();
       userDto.setUsername(user.getUsername());
       userDto.setId(user.getId());
       dto.setUser(userDto);
-    }else{
-      dto = null;
+      }
+
     }
+    
+
     return dto;
   }
 
@@ -96,7 +114,7 @@ public class PrototypeService {
       if (!ownerId.equals(currentUserId)) {
         throw new IllegalArgumentException("編集権限がありません");
       }
-        PrototypeEntity entity = prototypeRepository.findById(prototypeId);
+        PrototypeEntity entity = prototypeRepository.findById(prototypeId, null);
         
         if (entity == null) {
             return null;
@@ -116,7 +134,7 @@ public class PrototypeService {
         dto.setCatchcopy(entity.getCatchcopy());
         dto.setConcept(entity.getConcept());
         dto.setImage(entity.getImage());
-
+        
          dto.setUser(userDto);
 
         return dto;
@@ -199,7 +217,8 @@ public class PrototypeService {
     int index = (int) (Math.abs(calculatedValue) % prototypeIds.size());
     Long randomNum = prototypeIds.get(index);
     // PrototypeのDTOを取得
-    PrototypeDto dto = getPrototypeById(randomNum);
+    Long userId = (currentuser != null) ? currentuser.getId() : null;
+    PrototypeDto dto = getPrototypeById(randomNum, userId);
 
     // 今日の運勢を決める数字を算出
     Integer luck = (int) (Math.abs(calculatedValue) % 6);
@@ -260,15 +279,20 @@ public class PrototypeService {
     public PrototypeStatusDto getPrototypeRandom() {
       List<Long> prototypeIds= prototypeRepository.findAllId();
       //プロトタイプないときはnullを返却（コントローラー側でnullの処理）
-      if(prototypeIds.size() == 0){
+      if(prototypeIds.size() == 0 || prototypeIds.isEmpty()){
         return null;
       }
+
       Random random = new Random();
       int randomInt = random.nextInt(prototypeIds.size());
       Long index = prototypeIds.get(randomInt);
-      PrototypeDto prototypeDto = getPrototypeById(index);
-      PrototypeStatusDto dto = new PrototypeStatusDto();
 
+      PrototypeDto prototypeDto = getPrototypeById(index, null);
+      if (prototypeDto == null) {
+        return null;
+    }
+
+      PrototypeStatusDto dto = new PrototypeStatusDto();
       dto.setId(prototypeDto.getId());
       dto.setTitle(prototypeDto.getTitle());
       dto.setCatchcopy(prototypeDto.getCatchcopy());
@@ -278,18 +302,27 @@ public class PrototypeService {
 
 
 
-      Long score;
+      if (prototypeDto.getUser() != null) {
+        dto.setUserId(prototypeDto.getUser().getId());
+        dto.setUsername(prototypeDto.getUser().getUsername());
+    } else {
+        // user情報がない場合のフォールバック値（DTOの定義に合わせて調整）
+       dto.setUserId(null);
+        dto.setUsername("名無しユーザー");
+    }
+
+      Long score = 1L;
       try{
+        if (prototypeDto.getImage() != null && !prototypeDto.getImage().isEmpty()) {
+        String imageName = prototypeDto.getImage();
         // レアリティを算出
-        String baseName = prototypeDto.getImage().replaceFirst("[.][^.]+$", "");
-        long seed;
-        // 内部の64bit数値を合成してシードにする
-        UUID uuid = UUID.fromString(baseName);
-        seed = uuid.getMostSignificantBits() ^ uuid.getLeastSignificantBits();
-        // シード値を元に乱数生成器を作成
+        String baseName = imageName.substring(imageName.lastIndexOf("/") + 1).replaceFirst("[.][^.]+$", "");
+
+        long seed = (long) baseName.hashCode();
         Random generator = new Random(seed);
-        // 1〜10000の数値を生成
+                // 1〜10000の数値を生成
         score = (long) (generator.nextInt(10000) + 1);
+        }
       }catch(Exception e){
         score = 1L;
       }

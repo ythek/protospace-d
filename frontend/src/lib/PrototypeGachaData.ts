@@ -9,4 +9,6 @@ export interface PrototypeGachaData {
   rarity: number;
   attack: number;
   defense: number;
+  likecheck: boolean;
+  likecount: number
 }

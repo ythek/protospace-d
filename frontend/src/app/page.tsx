@@ -18,8 +18,8 @@ const sortedPrototypes = [...prototypes].sort((a, b) => {
   if (changeOrder === 'likes') return 0;
 
 
-  const dateA = new Date(Number(a.createdAt)).getTime();
-  const dateB = new Date(Number(b.createdAt)).getTime();
+  const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+  const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
   return changeOrder === 'desc' ? dateB - dateA : dateA - dateB;
 });
   // changeOrder が 'desc' なら dateB - dateA（新しい順）
